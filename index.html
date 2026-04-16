@@ -1,11 +1,45 @@
-﻿<script type="module">
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Keluhan Karyawan</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+<h2>Login</h2>
+<input id="nik" placeholder="Masukkan NIK">
+<button onclick="login()">Login</button>
+
+<h2>Form Laporan</h2>
+<input id="judul" placeholder="Judul Keluhan">
+<button onclick="kirim()">Kirim</button>
+
+<h2>Data</h2>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Judul</th>
+      <th>Departemen</th>
+      <th>Status</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="data"></tbody>
+</table>
+
+<canvas id="chart"></canvas>
+
+<script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
   getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// CONFIG FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
   authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
@@ -17,7 +51,6 @@ const db = getFirestore(app);
 
 let user = null;
 
-// ✅ LOGIN
 window.login = async function(){
   let nikInput = document.getElementById("nik").value;
 
@@ -25,21 +58,19 @@ window.login = async function(){
   const snap = await getDocs(q);
 
   if(snap.empty){
-    alert("❌ NIK tidak ditemukan");
+    alert("NIK tidak ditemukan");
     return;
   }
 
   snap.forEach(d=>{
     user = d.data();
-    alert("✅ Login: " + user.nama);
+    alert("Login: " + user.nama);
   });
 
   load();
 }
 
-// ✅ KIRIM LAPORAN
 window.kirim = async function(){
-
   if(!user){
     alert("Login dulu");
     return;
@@ -53,11 +84,10 @@ window.kirim = async function(){
     status: "Menunggu HRD"
   });
 
-  alert("Laporan berhasil dikirim");
+  alert("Laporan terkirim");
   load();
 }
 
-// ✅ LOAD DATA
 async function load(){
   const snap = await getDocs(collection(db,"laporan"));
   let html = "";
@@ -66,9 +96,6 @@ async function load(){
   snap.forEach(d=>{
     let x = d.data();
 
-    if(user.role==="karyawan" && x.nik!==user.nik) return;
-    if(user.role==="manager" && x.departemen!==user.departemen) return;
-
     if(x.status==="Selesai") selesai++;
 
     html += `
@@ -76,11 +103,6 @@ async function load(){
         <td>${x.judul}</td>
         <td>${x.departemen}</td>
         <td>${x.status}</td>
-        <td>
-          <button onclick="approveHR('${d.id}')">HR</button>
-          <button onclick="approveManager('${d.id}')">Manager</button>
-          <button onclick='selesai("${d.id}",${JSON.stringify(x)})'>Selesai</button>
-        </td>
       </tr>
     `;
   });
@@ -96,30 +118,7 @@ async function load(){
   });
 }
 
-// ✅ APPROVAL
-window.approveHR = async function(id){
-  await updateDoc(doc(db,"laporan",id),{status:"HR Approved"});
-  load();
-}
-
-window.approveManager = async function(id){
-  await updateDoc(doc(db,"laporan",id),{status:"Manager Approved"});
-  load();
-}
-
-// ✅ SELESAI + PDF
-window.selesai = async function(id,data){
-  await updateDoc(doc(db,"laporan",id),{status:"Selesai"});
-
-  const { jsPDF } = window.jspdf;
-  const pdf = new jsPDF();
-  pdf.text("PT. BIO INTI AGRINDO",10,10);
-  pdf.text("BAP PENYELESAIAN",10,20);
-  pdf.text("Judul: "+data.judul,10,30);
-  pdf.save("BAP.pdf");
-
-  alert("Selesai + BAP dibuat");
-  load();
-}
-
 </script>
+
+</body>
+</html>
