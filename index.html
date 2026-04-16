@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Keluhan Karyawan</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+<h2>Login</h2>
+<input id="nik" placeholder="Masukkan NIK">
+<button onclick="login()">Login</button>
+
+<h2>Form Laporan</h2>
+<input id="judul" placeholder="Judul Keluhan">
+<button onclick="kirim()">Kirim</button>
+
+<h2>Data</h2>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Judul</th>
+      <th>Departemen</th>
+      <th>Status</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody id="data"></tbody>
+</table>
+
+<canvas id="chart"></canvas>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
+  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
+  projectId: "keluahan-karyawan--ptbia",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let user = null;
+
+window.login = async function(){
+  let nikInput = document.getElementById("nik").value;
+
+  const q = query(collection(db, "karyawan"), where("nik", "==", nikInput));
+  const snap = await getDocs(q);
+
+  if(snap.empty){
+    alert("NIK tidak ditemukan");
+    return;
+  }
+
+  snap.forEach(d=>{
+    user = d.data();
+    alert("Login: " + user.nama);
+  });
+
+  load();
+}
+
+window.kirim = async function(){
+  if(!user){
+    alert("Login dulu");
+    return;
+  }
+
+  await addDoc(collection(db, "laporan"), {
+    nik: user.nik,
+    nama: user.nama,
+    departemen: user.departemen,
+    judul: document.getElementById("judul").value,
+    status: "Menunggu HRD"
+  });
+
+  alert("Laporan terkirim");
+  load();
+}
+
+async function load(){
+  const snap = await getDocs(collection(db,"laporan"));
+  let html = "";
+  let selesai = 0;
+
+  snap.forEach(d=>{
+    let x = d.data();
+
+    if(x.status==="Selesai") selesai++;
+
+    html += `
+      <tr>
+        <td>${x.judul}</td>
+        <td>${x.departemen}</td>
+        <td>${x.status}</td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("data").innerHTML = html;
+
+  new Chart(document.getElementById("chart"),{
+    type:"bar",
+    data:{
+      labels:["Total","Selesai"],
+      datasets:[{data:[snap.size,selesai]}]
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>
