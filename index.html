@@ -81,19 +81,30 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
     return;
   }
 
- await addDoc(collection(db,"laporan"),{
-  nik: user.nik,
-  nama: user.nama,
-  departemen: user.departemen,
-  jabatan: user.jabatan || "-",
-  judul: judulInput,
-  tanggal: new Date().toISOString(),
-  status: "Menunggu HR"
-});
+  let judulInput = document.getElementById("judul").value.trim().replace(/"/g,'');
+
+  await addDoc(collection(db,"laporan"),{
+    nik: user.nik,
+    nama: user.nama,
+    departemen: user.departemen,
+    jabatan: user.jabatan || "-",
+    judul: judulInput,
+    tanggal: new Date().toISOString(),
+    status: "Menunggu HR"
   });
 
   alert("Laporan terkirim");
-  load();
+  load();html+=`
+<tr>
+  <td>${x.judul}</td>
+  <td>${x.status}</td>
+  <td>
+    <button onclick="approveHR('${d.id}')">HR</button>
+    <button onclick="approveManager('${d.id}')">Manager</button>
+    <button onclick="selesai('${d.id}')">Selesai</button>
+  </td>
+</tr>
+`;
 });
 
 async function load(){
@@ -112,3 +123,17 @@ async function load(){
 
 </body>
 </html>
+window.approveHR = async function(id){
+  await updateDoc(doc(db,"laporan",id),{status:"HR Approved"});
+  load();
+}
+
+window.approveManager = async function(id){
+  await updateDoc(doc(db,"laporan",id),{status:"Manager Approved"});
+  load();
+}
+
+window.selesai = async function(id){
+  await updateDoc(doc(db,"laporan",id),{status:"Selesai"});
+  load();
+}
