@@ -81,11 +81,13 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
     return;
   }
 
-  await addDoc(collection(db,"laporan"),{
-    nik:user.nik,
-    nama:user.nama,
-    judul:document.getElementById("judul").value,
-    status:"Menunggu"
+ await addDoc(collection(db,"laporan"),{
+  nik:user.nik,
+  nama:user.nama,
+  departemen:user.departemen,
+  judul:judulInput,
+  status:"Menunggu HR"
+});
   });
 
   alert("Laporan terkirim");
