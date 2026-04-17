@@ -1,49 +1,36 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Keluhan Karyawan - PT BIA</title>
+<meta charset="UTF-8">
+<title>Keluhan Karyawan</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    body { font-family: Arial; background:#eef2f7; padding:20px }
-    .card { background:white; padding:15px; margin-bottom:15px; border-radius:10px }
-    button { background:green; color:white; padding:8px; border:none }
-    input { width:100%; padding:8px; margin:5px 0 }
-  </style>
+<style>
+body{font-family:Arial;background:#eef2f7;padding:20px}
+.card{background:white;padding:15px;margin-bottom:15px;border-radius:10px}
+button{background:green;color:white;padding:8px;border:none}
+input{padding:8px;width:100%;margin:5px 0}
+</style>
 </head>
 
 <body>
 
-<h2>📋 Sistem Keluhan Karyawan</h2>
-
 <div class="card">
-  <h3>Login (NIK)</h3>
-  <input id="nik" placeholder="Masukkan NIK">
-  <button onclick="login()">Login</button>
+<h3>Login</h3>
+<input id="nik" placeholder="Masukkan NIK">
+<button id="btnLogin">Login</button>
 </div>
 
 <div class="card">
-  <h3>Kirim Keluhan</h3>
-  <input id="judul" placeholder="Judul Keluhan">
-  <button onclick="kirim()">Kirim</button>
+<h3>Kirim Laporan</h3>
+<input id="judul" placeholder="Judul">
+<button id="btnKirim">Kirim</button>
 </div>
 
-<div class="card">
-  <h3>Data Laporan</h3>
-  <table border="1" width="100%">
-    <thead>
-      <tr>
-        <th>Judul</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody id="data"></tbody>
-  </table>
-</div>
-
-<canvas id="chart"></canvas>
+<table border="1">
+<tbody id="data"></tbody>
+</table>
 
 <script type="module">
 
@@ -51,9 +38,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, addDoc, getDocs, query, where } 
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 GANTI DENGAN CONFIG KAMU
-const firebaseConfig = {
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
   authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
@@ -68,32 +52,30 @@ const db = getFirestore(app);
 
 let user = null;
 
-// LOGIN
-window.login = async function(){
-  let nikInput = document.getElementById("nik").value.trim();
+// 🔥 FIX BUTTON CLICK
+document.getElementById("btnLogin").addEventListener("click", async () => {
 
-  console.log("NIK input:", nikInput);
+  let nik = document.getElementById("nik").value.trim();
+  console.log("Klik login:", nik);
 
-  const q = query(collection(db, "karyawan"), where("nik", "==", nikInput));
+  const q = query(collection(db,"karyawan"), where("nik","==",nik));
   const snap = await getDocs(q);
 
-  console.log("Jumlah data:", snap.size);
-
   if(snap.empty){
-    alert("❌ NIK tidak ditemukan");
+    alert("NIK tidak ditemukan");
     return;
   }
 
   snap.forEach(d=>{
     user = d.data();
-    alert("✅ Login berhasil: " + user.nama);
+    alert("Login berhasil: " + user.nama);
   });
 
   load();
-}
+});
 
-// KIRIM LAPORAN
-window.kirim = async function(){
+document.getElementById("btnKirim").addEventListener("click", async () => {
+
   if(!user){
     alert("Login dulu");
     return;
@@ -108,34 +90,18 @@ window.kirim = async function(){
 
   alert("Laporan terkirim");
   load();
-}
+});
 
-// LOAD DATA
 async function load(){
   const snap = await getDocs(collection(db,"laporan"));
   let html="";
-  let selesai=0;
 
   snap.forEach(d=>{
     let x=d.data();
-
-    if(x.status==="Selesai") selesai++;
-
-    html+=`<tr>
-      <td>${x.judul}</td>
-      <td>${x.status}</td>
-    </tr>`;
+    html+=`<tr><td>${x.judul}</td><td>${x.status}</td></tr>`;
   });
 
   document.getElementById("data").innerHTML=html;
-
-  new Chart(document.getElementById("chart"),{
-    type:"bar",
-    data:{
-      labels:["Total","Selesai"],
-      datasets:[{data:[snap.size,selesai]}]
-    }
-  });
 }
 
 </script>
