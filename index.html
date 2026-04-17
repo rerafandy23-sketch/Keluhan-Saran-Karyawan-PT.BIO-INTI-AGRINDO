@@ -82,11 +82,13 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
   }
 
  await addDoc(collection(db,"laporan"),{
-  nik:user.nik,
-  nama:user.nama,
-  departemen:user.departemen,
-  judul:judulInput,
-  status:"Menunggu HR"
+  nik: user.nik,
+  nama: user.nama,
+  departemen: user.departemen,
+  jabatan: user.jabatan || "-",
+  judul: judulInput,
+  tanggal: new Date().toISOString(),
+  status: "Menunggu HR"
 });
   });
 
