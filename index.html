@@ -65,19 +65,23 @@ let user = null;
 
 // LOGIN
 window.login = async function(){
-  let nik = document.getElementById("nik").value;
+  let nikInput = document.getElementById("nik").value.trim();
 
-  const q = query(collection(db,"karyawan"), where("nik","==",nik));
+  console.log("NIK input:", nikInput);
+
+  const q = query(collection(db, "karyawan"), where("nik", "==", nikInput));
   const snap = await getDocs(q);
 
+  console.log("Jumlah data:", snap.size);
+
   if(snap.empty){
-    alert("NIK tidak ditemukan");
+    alert("❌ NIK tidak ditemukan");
     return;
   }
 
   snap.forEach(d=>{
     user = d.data();
-    alert("Login berhasil: " + user.nama);
+    alert("✅ Login berhasil: " + user.nama);
   });
 
   load();
