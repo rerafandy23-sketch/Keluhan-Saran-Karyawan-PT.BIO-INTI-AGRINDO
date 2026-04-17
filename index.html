@@ -1,1 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Keluhan Karyawan - PT BIA</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { font-family: Arial; background:#eef2f7; padding:20px }
+    .card { background:white; padding:15px; margin-bottom:15px; border-radius:10px }
+    button { background:green; color:white; padding:8px; border:none }
+    input { width:100%; padding:8px; margin:5px 0 }
+  </style>
+</head>
+
+<body>
+
+<h2>📋 Sistem Keluhan Karyawan</h2>
+
+<div class="card">
+  <h3>Login (NIK)</h3>
+  <input id="nik" placeholder="Masukkan NIK">
+  <button onclick="login()">Login</button>
+</div>
+
+<div class="card">
+  <h3>Kirim Keluhan</h3>
+  <input id="judul" placeholder="Judul Keluhan">
+  <button onclick="kirim()">Kirim</button>
+</div>
+
+<div class="card">
+  <h3>Data Laporan</h3>
+  <table border="1" width="100%">
+    <thead>
+      <tr>
+        <th>Judul</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="data"></tbody>
+  </table>
+</div>
+
+<canvas id="chart"></canvas>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// 🔥 GANTI DENGAN CONFIG KAMU
+const firebaseConfig = {
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_PROJECT.firebaseapp.com",
+  projectId: "ISI_PROJECT",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let user = null;
+
+// LOGIN
+window.login = async function(){
+  let nik = document.getElementById("nik").value;
+
+  const q = query(collection(db,"karyawan"), where("nik","==",nik));
+  const snap = await getDocs(q);
+
+  if(snap.empty){
+    alert("NIK tidak ditemukan");
+    return;
+  }
+
+  snap.forEach(d=>{
+    user = d.data();
+    alert("Login berhasil: " + user.nama);
+  });
+
+  load();
+}
+
+// KIRIM LAPORAN
+window.kirim = async function(){
+  if(!user){
+    alert("Login dulu");
+    return;
+  }
+
+  await addDoc(collection(db,"laporan"),{
+    nik:user.nik,
+    nama:user.nama,
+    judul:document.getElementById("judul").value,
+    status:"Menunggu"
+  });
+
+  alert("Laporan terkirim");
+  load();
+}
+
+// LOAD DATA
+async function load(){
+  const snap = await getDocs(collection(db,"laporan"));
+  let html="";
+  let selesai=0;
+
+  snap.forEach(d=>{
+    let x=d.data();
+
+    if(x.status==="Selesai") selesai++;
+
+    html+=`<tr>
+      <td>${x.judul}</td>
+      <td>${x.status}</td>
+    </tr>`;
+  });
+
+  document.getElementById("data").innerHTML=html;
+
+  new Chart(document.getElementById("chart"),{
+    type:"bar",
+    data:{
+      labels:["Total","Selesai"],
+      datasets:[{data:[snap.size,selesai]}]
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>
