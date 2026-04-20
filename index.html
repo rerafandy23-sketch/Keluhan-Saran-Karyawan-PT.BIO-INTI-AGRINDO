@@ -80,7 +80,13 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
     return;
   }
 
-  let judulInput = document.getElementById("judul").value.trim();
+ let judulInput = document.getElementById("judul")
+.value.trim()
+.replace(/"/g,'');
+  if(!judulInput){
+  alert("Judul tidak boleh kosong");
+  return;
+}
 
   await addDoc(collection(db,"laporan"),{
     nik: user.nik,
