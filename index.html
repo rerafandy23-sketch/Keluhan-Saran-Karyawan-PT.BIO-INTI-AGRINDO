@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <title>Sistem Keluhan Karyawan</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 body{
   font-family:Arial;
@@ -21,9 +19,7 @@ header{
   font-size:20px;
 }
 
-.container{
-  padding:20px;
-}
+.container{padding:20px;}
 
 .card{
   background:white;
@@ -48,9 +44,7 @@ button{
   cursor:pointer;
 }
 
-button:hover{
-  background:#1b5e20;
-}
+button:hover{background:#1b5e20;}
 
 table{
   width:100%;
@@ -89,11 +83,22 @@ img{
 <input id="judul" placeholder="Judul laporan">
 <input id="buktiLink" placeholder="Link bukti (Google Drive / gambar)">
 
+<!-- PILIHAN -->
 <label>
-  <input type="checkbox" id="anonim"> Kirim sebagai anonim
+  <input type="radio" name="mode" value="anonim" checked> Kirim sebagai Anonim
 </label>
 
-<br><br>
+<label>
+  <input type="radio" name="mode" value="identitas"> Tampilkan Identitas
+</label>
+
+<!-- IDENTITAS -->
+<div id="identitasBox" style="display:none;">
+  <input id="namaInput" placeholder="Nama (opsional)">
+  <input id="jabatanInput" placeholder="Jabatan (opsional)">
+</div>
+
+<br>
 <button id="btnKirim">Kirim</button>
 </div>
 
@@ -105,6 +110,8 @@ img{
 <thead>
 <tr>
   <th>Judul</th>
+  <th>Nama</th>
+  <th>Jabatan</th>
   <th>Status</th>
   <th>Bukti</th>
   <th>Aksi</th>
@@ -126,16 +133,25 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-   apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
-  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
-  projectId: "keluahan-karyawan--ptbia"
+  apiKey: "ISI_API_KEY_KAMU",
+authDomain: "ISI_PROJECT.firebaseapp.com",
+projectId: "ISI_PROJECT"
 };
-
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let user = null;
+
+// TOGGLE IDENTITAS
+document.querySelectorAll('input[name="mode"]').forEach(radio=>{
+  radio.addEventListener("change", ()=>{
+    let mode = document.querySelector('input[name="mode"]:checked').value;
+
+    document.getElementById("identitasBox").style.display =
+      mode==="identitas" ? "block" : "none";
+  });
+});
 
 // LOGIN
 document.getElementById("btnLogin").addEventListener("click", async () => {
@@ -152,13 +168,13 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
 
   snap.forEach(d=>{
     user = d.data();
-    alert("Login berhasil: " + user.nama + " (" + user.role + ")");
+    alert("Login: " + user.nama + " (" + user.role + ")");
   });
 
   load();
 });
 
-// KIRIM LAPORAN
+// KIRIM
 document.getElementById("btnKirim").addEventListener("click", async () => {
 
   if(!user){
@@ -168,28 +184,39 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
 
   let judulInput = document.getElementById("judul").value.trim();
   let buktiLink = document.getElementById("buktiLink").value.trim();
-  let anonim = document.getElementById("anonim").checked;
+  let mode = document.querySelector('input[name="mode"]:checked').value;
 
   if(!judulInput){
-    alert("Judul tidak boleh kosong");
+    alert("Judul wajib diisi");
     return;
   }
 
-  await addDoc(collection(db,"laporan"),{
-    nik: anonim ? "-" : user.nik,
-    nama: anonim ? "Anonim" : user.nama,
-    departemen: anonim ? "-" : user.departemen,
+  let data = {
     judul: judulInput,
     bukti: buktiLink,
     status: "Menunggu HR"
-  });
+  };
+
+  if(mode==="anonim"){
+    data.nama = "Anonim";
+    data.jabatan = "-";
+    data.nik = "-";
+    data.departemen = "-";
+  } else {
+    data.nama = document.getElementById("namaInput").value || user.nama;
+    data.jabatan = document.getElementById("jabatanInput").value || user.jabatan;
+    data.nik = user.nik;
+    data.departemen = user.departemen;
+  }
+
+  await addDoc(collection(db,"laporan"), data);
 
   alert("Laporan terkirim");
   load();
 });
 
 // WARNA STATUS
-function warnaStatus(status){
+function warna(status){
   if(status==="Menunggu HR") return "orange";
   if(status==="HR Approved") return "blue";
   if(status==="Manager Approved") return "purple";
@@ -205,26 +232,16 @@ async function load(){
   snap.forEach(d=>{
     let x=d.data();
 
-    // FILTER ROLE
     if(user.role==="karyawan" && x.nik!==user.nik) return;
     if(user.role==="manager" && x.departemen!==user.departemen) return;
 
     html+=`
     <tr>
       <td>${x.judul}</td>
-
-      <td style="color:${warnaStatus(x.status)}">
-        ${x.status}
-      </td>
-
-      <td>
-        ${
-          x.bukti 
-          ? `<img src="${x.bukti}" width="80">` 
-          : "-"
-        }
-      </td>
-
+      <td>${x.nama}</td>
+      <td>${x.jabatan}</td>
+      <td style="color:${warna(x.status)}">${x.status}</td>
+      <td>${x.bukti ? `<img src="${x.bukti}" width="80">` : "-"}</td>
       <td>
         ${user.role==="hr" ? `<button onclick="approveHR('${d.id}')">HR</button>` : ""}
         ${user.role==="manager" ? `<button onclick="approveManager('${d.id}')">Manager</button>` : ""}
