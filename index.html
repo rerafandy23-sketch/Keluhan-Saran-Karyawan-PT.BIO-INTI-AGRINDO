@@ -2,10 +2,18 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login Karyawan</title>
+
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
     body {
-      font-family: Arial;
       background: #f2f2f2;
       display: flex;
       justify-content: center;
@@ -14,115 +22,187 @@
     }
 
     .login-box {
-      background: white;
+      background: #ffffff;
+      width: 350px;
       padding: 30px;
-      border-radius: 10px;
-      width: 300px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.15);
     }
 
-    h2 {
+    .login-box h2 {
       text-align: center;
+      margin-bottom: 20px;
+      color: #2e7d32;
     }
 
-    input {
+    .login-box input {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #cccccc;
+      border-radius: 6px;
+      font-size: 14px;
     }
 
-    button {
+    .login-box button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       background: #2e7d32;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 15px;
       cursor: pointer;
+      margin-top: 10px;
     }
 
-    button:hover {
+    .login-box button:hover {
       background: #1b5e20;
     }
 
     #error {
-      color: red;
+      margin-top: 15px;
       text-align: center;
-      margin-top: 10px;
+      color: red;
+      font-size: 14px;
+    }
+
+    #success {
+      margin-top: 15px;
+      text-align: center;
+      color: green;
+      font-size: 14px;
     }
   </style>
 </head>
-
 <body>
 
-<div class="login-box">
-  <h2>Login Karyawan</h2>
+  <div class="login-box">
+    <h2>Login Karyawan</h2>
 
-  <form id="loginForm">
-    <input type="text" id="nik" placeholder="Masukkan NIK" required>
+    <form id="loginForm">
+      <input 
+        type="text" 
+        id="nik" 
+        placeholder="Masukkan NIK" 
+        required
+      >
 
-    <input type="date" id="dob" required>
+      <input 
+        type="date" 
+        id="dob" 
+        required
+      >
 
-    <button type="submit">Login</button>
+      <button type="submit">
+        Login
+      </button>
 
-    <p id="error"></p>
-  </form>
-</div>
+      <p id="error"></p>
+      <p id="success"></p>
+    </form>
+  </div>
 
-<!-- Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+  <!-- FIREBASE SCRIPT -->
+  <script type="module">
 
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "XXXX",
-    appId: "XXXX"
-  };
+    /*
+    ==========================================
+    GANTI DENGAN FIREBASE CONFIG ASLI KAMU
+    ==========================================
+    */
+const firebaseConfig = {
+  apiKey: "ISI_API_KEY_KAMU",
+authDomain: "ISI_PROJECT.firebaseapp.com",
+projectId: "ISI_PROJECT"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+  
 
-  document.getElementById("loginForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
+    /*
+    ==========================================
+    INISIALISASI FIREBASE
+    ==========================================
+    */
 
-    const nik = document.getElementById("nik").value;
-    const dob = document.getElementById("dob").value;
-    const error = document.getElementById("error");
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-    error.textContent = "";
+    /*
+    ==========================================
+    LOGIN DENGAN NIK + TANGGAL LAHIR
+    ==========================================
+    */
 
-    try {
-      const snapshot = await get(ref(db, "karyawan/" + nik));
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async function (e) {
 
-      if (!snapshot.exists()) {
-        error.textContent = "NIK tidak ditemukan";
-        return;
-      }
+        e.preventDefault();
 
-      const data = snapshot.val();
+        const nik = document.getElementById("nik").value.trim();
+        const dob = document.getElementById("dob").value;
 
-      if (data.tanggalLahir === dob) {
-        // login sukses
-        localStorage.setItem("user", JSON.stringify(data));
-        window.location.href = "dashboard.html";
-      } else {
-        error.textContent = "Tanggal lahir salah";
-      }
+        const error = document.getElementById("error");
+        const success = document.getElementById("success");
 
-    } catch (err) {
-      error.textContent = "Terjadi kesalahan sistem";
-      console.log(err);
-    }
-  });
-</script>
+        error.textContent = "";
+        success.textContent = "";
+
+        console.log("LOGIN ATTEMPT:", nik, dob);
+
+        try {
+          // ambil data dari Firebase
+          const snapshot = await get(
+            ref(db, "karyawan/" + nik)
+          );
+
+          // cek apakah NIK ada
+          if (!snapshot.exists()) {
+            error.textContent = "NIK tidak ditemukan";
+            return;
+          }
+
+          const user = snapshot.val();
+
+          console.log("DATA USER:", user);
+
+          // cek apakah tanggal lahir ada
+          if (!user.tanggalLahir) {
+            error.textContent = "Tanggal lahir tidak ada di database";
+            return;
+          }
+
+          // validasi tanggal lahir
+          if (user.tanggalLahir === dob) {
+
+            // simpan session login
+            localStorage.setItem(
+              "user",
+              JSON.stringify(user)
+            );
+
+            success.textContent = "Login berhasil...";
+
+            // redirect ke dashboard lama kamu
+            setTimeout(() => {
+              window.location.href = "dashboard.html";
+            }, 1000);
+
+          } else {
+            error.textContent = "Tanggal lahir salah";
+          }
+
+        } catch (err) {
+          console.log("FIREBASE ERROR:", err);
+          error.textContent = "Gagal koneksi ke Firebase";
+        }
+      });
+
+  </script>
 
 </body>
 </html>
