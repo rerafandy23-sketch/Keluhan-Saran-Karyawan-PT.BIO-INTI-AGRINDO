@@ -71,7 +71,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
 
   load();
 });
-
+console.log("ROLE USER:", user.role);
 // KIRIM
 document.getElementById("btnKirim").addEventListener("click", async () => {
 
@@ -91,7 +91,16 @@ let no = 1;
 
 snap.forEach(d=>{
   let x=d.data();
+// 🔐 FILTER ROLE
+  if(user.role === "karyawan"){
+    if(x.nik !== user.nik) return;
+  }
 
+  if(user.role === "manager"){
+    if(x.departemen !== user.departemen) return;
+  }
+
+  // HR tidak difilter
   html+=`
   <tr>
     <td>${no++}</td>
