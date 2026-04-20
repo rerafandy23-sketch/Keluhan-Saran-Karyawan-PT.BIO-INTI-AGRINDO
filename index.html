@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Sistem Keluhan Karyawan</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -17,7 +16,6 @@
   --card:#ffffff;
 }
 
-/* BODY */
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
@@ -90,11 +88,12 @@ button:hover{
 table{width:100%;border-collapse:collapse}
 th{background:var(--secondary);color:white}
 th,td{padding:10px;border:1px solid #ddd;text-align:center}
-
 tr:hover{background:#f1f5f9}
 
 /* STATUS */
 .menunggu{color:orange}
+.hr{color:blue}
+.manager{color:purple}
 .selesai{color:green}
 </style>
 </head>
@@ -114,18 +113,23 @@ tr:hover{background:#f1f5f9}
 <!-- MAIN -->
 <div class="main">
 
+<!-- TOPBAR -->
 <div class="topbar">
-  <b>Sistem Keluhan</b>
+  <b>Sistem Keluhan Karyawan</b>
   <div id="userInfo">Belum login</div>
 </div>
 
+<!-- CONTENT -->
 <div class="content">
 
 <div class="card">
 <h3>Login</h3>
+
+
 <input id="nik" placeholder="Masukkan NIK">
 <input id="password" type="password" placeholder="Tanggal Lahir (DDMMYYYY)">
 <button id="btnLogin">Login</button>
+
 </div>
 
 <div class="card">
@@ -144,7 +148,6 @@ tr:hover{background:#f1f5f9}
 </div>
 
 </div>
-
 </div>
 </div>
 
@@ -156,10 +159,11 @@ import {
   query, where
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+
 const firebaseConfig = {
-  apiKey: "ISI_API_KEY_KAMU",
-authDomain: "ISI_PROJECT.firebaseapp.com",
-projectId: "ISI_PROJECT"
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_PROJECT.firebaseapp.com",
+  projectId: "ISI_PROJECT"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -167,7 +171,7 @@ const db = getFirestore(app);
 
 let user=null;
 
-/* LOGIN */
+/* 🔥 LOGIN BARU (NIK + TGL LAHIR) */
 document.getElementById("btnLogin").onclick = async () => {
 
   let nikInput = document.getElementById("nik").value.trim();
@@ -198,7 +202,7 @@ document.getElementById("btnLogin").onclick = async () => {
   });
 
   if(!found){
-    alert("Password salah");
+    alert("Password salah (tanggal lahir tidak cocok)");
     return;
   }
 
@@ -209,27 +213,28 @@ document.getElementById("btnLogin").onclick = async () => {
   load();
 };
 
-/* LOAD DATA */
+/* 🔵 FUNCTION LAMA TETAP */
 async function load(){
   const snap = await getDocs(collection(db,"laporan"));
   let html="";
 
   snap.forEach(d=>{
-    let x = d.data();
+    let x=d.data();
 
-    // filter berdasarkan role
     if(user.role==="karyawan" && x.nik!==user.nik) return;
     if(user.role==="manager" && x.departemen!==user.departemen) return;
 
     html+=`
     <tr>
       <td>${x.judul}</td>
-      <td class="${x.status==='Selesai'?'selesai':'menunggu'}">${x.status}</td>
+      <td class="${x.status==='Selesai'?'selesai':'menunggu'}">
+        ${x.status}
+      </td>
     </tr>
     `;
   });
 
-  document.getElementById("data").innerHTML = html;
+  document.getElementById("data").innerHTML=html;
 }
 
 </script>
