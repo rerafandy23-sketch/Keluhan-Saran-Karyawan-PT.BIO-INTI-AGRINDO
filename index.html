@@ -20,7 +20,34 @@ body{
   background:var(--bg);
   color:var(--text);
 }
+.header{
+  background:#1b5e20;
+  color:white;
+  padding:12px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo{
+  height:45px;
+}
+
+.company{
+  font-size:16px;
+  font-weight:bold;
+}
+
+.subtitle{
+  font-size:12px;
+  opacity:0.8;
+}
 /* HEADER */
 header{
   background:var(--primary);
@@ -124,14 +151,17 @@ small.note{color:#666}
 <body>
 
 <header>
+<header class="header">
   <div class="brand">
-    <img src="logo.png" alt="Logo">
-    <span>PT. Bio Inti Agrindo</span>
+    <img src="logo.png" class="logo">
+    <div>
+      <div class="company">PT. Bio Inti Agrindo</div>
+      <div class="subtitle">Sistem Keluhan & Saran Karyawan</div>
+    </div>
   </div>
+
   <div id="userInfo">Belum login</div>
 </header>
-
-<div class="container">
 
 <!-- KIRI -->
 <div>
