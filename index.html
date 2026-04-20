@@ -329,21 +329,48 @@ document.querySelectorAll('input[name="mode"]').forEach(r=>{
 });
 
 // LOGIN
-btnLogin.onclick=async()=>{
-  let email=document.getElementById("email").value;
-  let password=document.getElementById("password").value;
+document.getElementById("btnLogin").onclick = async () => {
 
-  const q=query(collection(db,"karyawan"), where("email","==",email));
-  const snap=await getDocs(q);
+  let nikInput = document.getElementById("nik").value.trim();
+  let passInput = document.getElementById("password").value.trim();
 
-  if(snap.empty) return alert("User tidak ditemukan");
+  // validasi format tanggal lahir
+  if(passInput.length !== 8){
+    alert("Format password harus DDMMYYYY");
+    return;
+  }
 
-  snap.forEach(d=>user=d.data());
+  const q = query(collection(db,"karyawan"), where("nik","==",nikInput));
+  const snap = await getDocs(q);
 
-  userInfo.innerText=user.nama+" ("+user.role+")";
+  if(snap.empty){
+    alert("NIK tidak ditemukan");
+    return;
+  }
+
+  let found = false;
+
+  snap.forEach(d=>{
+    let data = d.data();
+
+    // cek tanggal lahir
+    if(data.tgl_lahir === passInput){
+      user = data;
+      found = true;
+    }
+  });
+
+  if(!found){
+    alert("Password salah (tanggal lahir tidak cocok)");
+    return;
+  }
+
+  document.getElementById("userInfo").innerText =
+    user.nama + " (" + user.role + ")";
+
+  alert("Login berhasil");
   load();
 };
-
 // KIRIM
 btnKirim.onclick=async()=>{
   if(!user) return alert("Login dulu");
