@@ -5,20 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistem Keluhan Karyawan</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 :root{
   --primary:#1b5e20;
   --secondary:#2e7d32;
   --bg:#eef2f7;
-  --card:#ffffff;
-  --text:#333;
 }
 
 body{
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial;
   background:var(--bg);
-  color:var(--text);
 }
 
 /* HEADER */
@@ -27,8 +26,8 @@ header{
   color:white;
   padding:12px 20px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
+  align-items:center;
 }
 
 .brand{
@@ -37,14 +36,7 @@ header{
   gap:10px;
 }
 
-.brand img{
-  height:40px;
-}
-
-.brand span{
-  font-weight:bold;
-  font-size:18px;
-}
+.logo{height:40px}
 
 /* LAYOUT */
 .container{
@@ -56,23 +48,17 @@ header{
 
 /* CARD */
 .card{
-  background:var(--card);
+  background:white;
   padding:15px;
   border-radius:10px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
-
-h3{
-  margin-top:0;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 
 /* INPUT */
-input{
+input,select{
   width:100%;
   padding:8px;
   margin:5px 0;
-  border:1px solid #ccc;
-  border-radius:5px;
 }
 
 /* BUTTON */
@@ -86,113 +72,121 @@ button{
   cursor:pointer;
 }
 
-button:hover{
-  background:var(--primary);
+button:hover{background:var(--primary)}
+
+/* KPI */
+.kpi{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
 }
+
+.box{
+  background:#f5f5f5;
+  padding:10px;
+  text-align:center;
+  border-radius:8px;
+}
+
+.box h2{margin:0;color:var(--primary)}
 
 /* TABLE */
-table{
-  width:100%;
-  border-collapse:collapse;
-}
+table{width:100%;border-collapse:collapse}
+th{background:var(--secondary);color:white}
+th,td{padding:8px;border:1px solid #ddd;text-align:center}
 
-th{
-  background:var(--secondary);
-  color:white;
-}
-
-th,td{
-  padding:8px;
-  border:1px solid #ddd;
-  text-align:center;
-}
-
-img{
-  border-radius:5px;
-}
-
-/* STATUS COLOR */
-.status-menunggu{color:orange;}
-.status-hr{color:blue;}
-.status-manager{color:purple;}
-.status-selesai{color:green;}
-
-small.note{color:#666}
+/* STATUS */
+.menunggu{color:orange}
+.hr{color:blue}
+.manager{color:purple}
+.selesai{color:green}
 </style>
 </head>
 
 <body>
 
 <header>
-<header class="header">
   <div class="brand">
     <img src="logo.png" class="logo">
-    <div>
-      <div class="company">PT. Bio Inti Agrindo</div>
-      <div class="subtitle">Sistem Keluhan & Saran Karyawan</div>
-    </div>
+    <b>PT. Bio Inti Agrindo</b>
   </div>
-
   <div id="userInfo">Belum login</div>
 </header>
 
-<!-- KIRI -->
+<div class="container">
+
+<!-- LEFT -->
 <div>
 
 <div class="card">
 <h3>Login</h3>
 <input id="nik" placeholder="Masukkan NIK">
 <button id="btnLogin">Login</button>
-<small class="note">Login untuk melihat & mengirim laporan</small>
 </div>
 
 <div class="card">
 <h3>Kirim Laporan</h3>
 
-<input id="judul" placeholder="Judul laporan">
-<input id="buktiLink" placeholder="Link bukti (Google Drive / gambar)">
+<input id="judul" placeholder="Judul">
+<input id="buktiLink" placeholder="Link bukti">
 
-<label>
-  <input type="radio" name="mode" value="anonim" checked> Anonim
-</label>
-<label>
-  <input type="radio" name="mode" value="identitas"> Identitas
-</label>
+<label><input type="radio" name="mode" value="anonim" checked> Anonim</label>
+<label><input type="radio" name="mode" value="identitas"> Identitas</label>
 
 <div id="identitasBox" style="display:none;">
   <input id="namaInput" placeholder="Nama">
   <input id="jabatanInput" placeholder="Jabatan">
 </div>
 
-<br>
 <button id="btnKirim">Kirim</button>
-
-<small class="note">
-Tips: jika pakai Google Drive, ubah link ke format:
-<br>
-<code>https://drive.google.com/uc?export=view&id=FILE_ID</code>
-</small>
 </div>
 
 </div>
 
-<!-- KANAN -->
+<!-- RIGHT -->
+<div>
+
+<div class="card">
+<h3>Dashboard</h3>
+
+<div class="kpi">
+  <div class="box"><h2 id="total">0</h2>Total</div>
+  <div class="box"><h2 id="menunggu">0</h2>Menunggu</div>
+  <div class="box"><h2 id="proses">0</h2>Proses</div>
+  <div class="box"><h2 id="selesai">0</h2>Selesai</div>
+</div>
+
+<canvas id="chart"></canvas>
+
+<select id="filterStatus">
+<option value="">Semua</option>
+<option>Menunggu HR</option>
+<option>HR Approved</option>
+<option>Manager Approved</option>
+<option>Selesai</option>
+</select>
+
+</div>
+
 <div class="card">
 <h3>Data Laporan</h3>
 
 <table>
 <thead>
 <tr>
-  <th>Judul</th>
-  <th>Nama</th>
-  <th>Jabatan</th>
-  <th>Status</th>
-  <th>Bukti</th>
-  <th>Aksi</th>
+<th>Judul</th>
+<th>Nama</th>
+<th>Jabatan</th>
+<th>Status</th>
+<th>Bukti</th>
+<th>Aksi</th>
 </tr>
 </thead>
+
 <tbody id="data"></tbody>
 </table>
+
+</div>
 
 </div>
 
@@ -201,10 +195,11 @@ Tips: jika pakai Google Drive, ubah link ke format:
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getFirestore, collection, addDoc, getDocs, query, where,
-  updateDoc, doc
+import {
+  getFirestore, collection, addDoc, getDocs,
+  query, where, updateDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "ISI_API_KEY_KAMU",
 authDomain: "ISI_PROJECT.firebaseapp.com",
@@ -215,48 +210,44 @@ projectId: "ISI_PROJECT"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let user = null;
+let user=null;
+let chart=null;
 
-// TOGGLE IDENTITAS
+/* TOGGLE */
 document.querySelectorAll('input[name="mode"]').forEach(r=>{
-  r.addEventListener("change",()=>{
-    document.getElementById("identitasBox").style.display =
+  r.onchange=()=>{
+    identitasBox.style.display =
       document.querySelector('input[name="mode"]:checked').value==="identitas"
-      ? "block":"none";
-  });
+      ?"block":"none";
+  }
 });
 
-// LOGIN
-document.getElementById("btnLogin").onclick = async ()=>{
-  let nik = document.getElementById("nik").value.trim();
+/* LOGIN */
+btnLogin.onclick=async()=>{
+  let nik=nik.value.trim();
 
-  const q = query(collection(db,"karyawan"), where("nik","==",nik));
-  const snap = await getDocs(q);
+  const q=query(collection(db,"karyawan"), where("nik","==",nik));
+  const snap=await getDocs(q);
 
-  if(snap.empty){
-    alert("NIK tidak ditemukan");
-    return;
-  }
+  if(snap.empty) return alert("NIK tidak ditemukan");
 
-  snap.forEach(d=> user=d.data());
+  snap.forEach(d=>user=d.data());
 
-  document.getElementById("userInfo").innerText =
-    user.nama + " (" + user.role + ")";
-
+  userInfo.innerText=user.nama+" ("+user.role+")";
   load();
 };
 
-// KIRIM
-document.getElementById("btnKirim").onclick = async ()=>{
+/* KIRIM */
+btnKirim.onclick=async()=>{
   if(!user) return alert("Login dulu");
 
-  let judul = document.getElementById("judul").value.trim();
-  let bukti = document.getElementById("buktiLink").value.trim();
-  let mode = document.querySelector('input[name="mode"]:checked').value;
+  let judul=judul.value.trim();
+  let bukti=buktiLink.value.trim();
+  let mode=document.querySelector('input[name="mode"]:checked').value;
 
-  if(!judul) return alert("Judul wajib diisi");
+  if(!judul) return alert("Judul wajib");
 
-  let data = {
+  let data={
     judul,
     bukti,
     status:"Menunggu HR"
@@ -267,69 +258,92 @@ document.getElementById("btnKirim").onclick = async ()=>{
     data.jabatan="-";
     data.nik="-";
     data.departemen="-";
-  } else {
-    data.nama = document.getElementById("namaInput").value || user.nama;
-    data.jabatan = document.getElementById("jabatanInput").value || user.jabatan;
-    data.nik = user.nik;
-    data.departemen = user.departemen;
+  }else{
+    data.nama=namaInput.value||user.nama;
+    data.jabatan=jabatanInput.value||user.jabatan;
+    data.nik=user.nik;
+    data.departemen=user.departemen;
   }
 
-  await addDoc(collection(db,"laporan"), data);
-  alert("Laporan terkirim");
+  await addDoc(collection(db,"laporan"),data);
+  alert("Terkirim");
   load();
 };
 
-// STATUS CLASS
-function statusClass(s){
-  if(s==="Menunggu HR") return "status-menunggu";
-  if(s==="HR Approved") return "status-hr";
-  if(s==="Manager Approved") return "status-manager";
-  if(s==="Selesai") return "status-selesai";
-  return "";
-}
-
-// LOAD
+/* LOAD */
 async function load(){
-  const snap = await getDocs(collection(db,"laporan"));
+  const snap=await getDocs(collection(db,"laporan"));
+
   let html="";
+  let total=0,menunggu=0,proses=0,selesai=0;
+  let filter=filterStatus.value;
 
   snap.forEach(d=>{
     let x=d.data();
 
     if(user.role==="karyawan" && x.nik!==user.nik) return;
     if(user.role==="manager" && x.departemen!==user.departemen) return;
+    if(filter && x.status!==filter) return;
+
+    total++;
+    if(x.status==="Menunggu HR") menunggu++;
+    if(x.status!=="Menunggu HR" && x.status!=="Selesai") proses++;
+    if(x.status==="Selesai") selesai++;
+
+    let warna="";
+    if(x.status==="Menunggu HR") warna="menunggu";
+    if(x.status==="HR Approved") warna="hr";
+    if(x.status==="Manager Approved") warna="manager";
+    if(x.status==="Selesai") warna="selesai";
 
     html+=`
     <tr>
       <td>${x.judul}</td>
       <td>${x.nama}</td>
       <td>${x.jabatan}</td>
-      <td class="${statusClass(x.status)}">${x.status}</td>
-      <td>${x.bukti ? `<img src="${x.bukti}" width="70">` : "-"}</td>
+      <td class="${warna}">${x.status}</td>
+      <td>${x.bukti?`<img src="${x.bukti}" width="70">`:"-"}</td>
       <td>
-        ${user.role==="hr" ? `<button onclick="approveHR('${d.id}')">HR</button>` : ""}
-        ${user.role==="manager" ? `<button onclick="approveManager('${d.id}')">Manager</button>` : ""}
-        ${(user.role==="hr"||user.role==="manager") ? `<button onclick="selesai('${d.id}')">Selesai</button>` : ""}
+        ${user.role==="hr"?`<button onclick="approveHR('${d.id}')">HR</button>`:""}
+        ${user.role==="manager"?`<button onclick="approveManager('${d.id}')">Manager</button>`:""}
+        ${(user.role==="hr"||user.role==="manager")?`<button onclick="selesai('${d.id}')">✔</button>`:""}
       </td>
-    </tr>
-    `;
+    </tr>`;
   });
 
-  document.getElementById("data").innerHTML=html;
+  data.innerHTML=html;
+
+  totalEl.innerText=total;
+  menungguEl.innerText=menunggu;
+  prosesEl.innerText=proses;
+  selesaiEl.innerText=selesai;
+
+  if(chart) chart.destroy();
+
+  chart=new Chart(chartCanvas,{
+    type:"bar",
+    data:{
+      labels:["Total","Menunggu","Proses","Selesai"],
+      datasets:[{data:[total,menunggu,proses,selesai]}]
+    }
+  });
 }
 
-// ACTION
-window.approveHR = async id=>{
+/* FILTER */
+filterStatus.onchange=load;
+
+/* ACTION */
+window.approveHR=async id=>{
   await updateDoc(doc(db,"laporan",id),{status:"HR Approved"});
   load();
 };
 
-window.approveManager = async id=>{
+window.approveManager=async id=>{
   await updateDoc(doc(db,"laporan",id),{status:"Manager Approved"});
   load();
 };
 
-window.selesai = async id=>{
+window.selesai=async id=>{
   await updateDoc(doc(db,"laporan",id),{status:"Selesai"});
   load();
 };
