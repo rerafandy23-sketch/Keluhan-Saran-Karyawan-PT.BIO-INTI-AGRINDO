@@ -29,8 +29,18 @@ input{padding:8px;width:100%;margin:5px 0}
 </div>
 
 <table border="1">
+
+<thead>
+<tr>
+  <th>Judul</th>
+  <th>Status</th>
+  <th>Bukti</th>
+</tr>
+</thead>
+
 <tbody id="data"></tbody>
-</table>
+
+</table
 
 <script type="module">
 
@@ -102,20 +112,25 @@ snap.forEach(d=>{
 
   // HR tidak difilter
   html+=`
-  <tr>
-    <td>${no++}</td>
-    <td>${x.judul}</td>
-    <td>${x.status}</td>
-  </tr>
-  `;
+<tr>
+  <td>${x.judul}</td>
+  <td>${x.status}</td>
+  <td>
+    ${x.bukti ? `<a href="${x.bukti}" target="_blank">Lihat</a>` : "-"}
+  </td>
+</tr>
+`;
 });
-  await addDoc(collection(db,"laporan"),{
-    nik: user.nik,
-    nama: user.nama,
-    departemen: user.departemen,
-    judul: judulInput,
-    status: "Menunggu HR"
-  });
+let buktiLink = document.getElementById("buktiLink").value;
+
+await addDoc(collection(db,"laporan"),{
+  nik: anonim ? "-" : user.nik,
+  nama: anonim ? "Anonim" : user.nama,
+  departemen: anonim ? "-" : user.departemen,
+  judul: judulInput,
+  bukti: buktiLink,
+  status: "Menunggu HR"
+});
 
   alert("Laporan terkirim");
   load();
@@ -162,3 +177,4 @@ window.selesai = async function(id){
 }
 
 </script>
+<input id="buktiLink" placeholder="Link bukti (Google Drive)">
