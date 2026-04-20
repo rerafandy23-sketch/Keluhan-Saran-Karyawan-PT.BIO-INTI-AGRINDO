@@ -87,7 +87,19 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
   alert("Judul tidak boleh kosong");
   return;
 }
+let no = 1;
 
+snap.forEach(d=>{
+  let x=d.data();
+
+  html+=`
+  <tr>
+    <td>${no++}</td>
+    <td>${x.judul}</td>
+    <td>${x.status}</td>
+  </tr>
+  `;
+});
   await addDoc(collection(db,"laporan"),{
     nik: user.nik,
     nama: user.nama,
