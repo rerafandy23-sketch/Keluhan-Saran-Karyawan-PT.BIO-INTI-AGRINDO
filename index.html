@@ -3,76 +3,105 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Sistem Keluhan Karyawan</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root{
-  --primary:#1b5e20;
-  --secondary:#2e7d32;
-  --bg:#eef2f7;
+  --primary:#0d47a1;
+  --secondary:#1565c0;
+  --dark:#0a192f;
+  --bg:#0f172a;
+  --card:#ffffff;
 }
 
+/* RESET */
+*{box-sizing:border-box}
+
+/* BODY */
 body{
   margin:0;
-  font-family:Arial;
+  font-family:'Segoe UI',sans-serif;
   background:var(--bg);
 }
 
-/* HEADER */
-header{
-  background:var(--primary);
-  color:white;
-  padding:12px 20px;
+/* LAYOUT */
+.wrapper{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
+  height:100vh;
 }
 
-.brand{
+/* SIDEBAR */
+.sidebar{
+  width:230px;
+  background:var(--dark);
+  color:white;
+  padding:20px;
+}
+
+.logo{
   display:flex;
   align-items:center;
   gap:10px;
+  margin-bottom:30px;
 }
 
-.logo{height:40px}
+.logo img{height:40px}
 
-/* LAYOUT */
-.container{
-  display:grid;
-  grid-template-columns:300px 1fr;
-  gap:20px;
+.menu div{
+  padding:12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.menu div:hover{
+  background:rgba(255,255,255,0.1);
+}
+
+/* MAIN */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+/* TOPBAR */
+.topbar{
+  background:#0b2447;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+}
+
+/* CONTENT */
+.content{
   padding:20px;
+  overflow:auto;
 }
 
 /* CARD */
 .card{
-  background:white;
+  background:var(--card);
   padding:15px;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  margin-bottom:15px;
+  transition:0.3s;
 }
 
-/* INPUT */
-input,select{
-  width:100%;
-  padding:8px;
-  margin:5px 0;
+.card:hover{
+  transform:translateY(-3px);
 }
 
-/* BUTTON */
-button{
-  width:100%;
-  padding:10px;
-  background:var(--secondary);
-  color:white;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:20px;
 }
-
-button:hover{background:var(--primary)}
 
 /* KPI */
 .kpi{
@@ -81,46 +110,117 @@ button:hover{background:var(--primary)}
   gap:10px;
 }
 
-.box{
-  background:#f5f5f5;
-  padding:10px;
+.kpi .box{
+  background:#f1f5f9;
+  padding:15px;
+  border-radius:10px;
   text-align:center;
-  border-radius:8px;
 }
 
-.box h2{margin:0;color:var(--primary)}
+.kpi h2{
+  margin:0;
+  color:var(--primary);
+}
+
+/* INPUT */
+input,select{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* BUTTON */
+button{
+  padding:10px;
+  border:none;
+  border-radius:6px;
+  background:var(--secondary);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(21,101,192,0.5);
+  transition:0.3s;
+}
+
+button:hover{
+  background:var(--primary);
+  box-shadow:0 0 15px rgba(13,71,161,0.8);
+}
 
 /* TABLE */
-table{width:100%;border-collapse:collapse}
-th{background:var(--secondary);color:white}
-th,td{padding:8px;border:1px solid #ddd;text-align:center}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:var(--secondary);
+  color:white;
+}
+
+th,td{
+  padding:10px;
+  border:1px solid #ddd;
+  text-align:center;
+}
+
+tr:hover{
+  background:#f1f5f9;
+}
 
 /* STATUS */
-.menunggu{color:orange}
-.hr{color:blue}
-.manager{color:purple}
-.selesai{color:green}
+.menunggu{color:#f59e0b;font-weight:bold}
+.hr{color:#2563eb;font-weight:bold}
+.manager{color:#7c3aed;font-weight:bold}
+.selesai{color:#16a34a;font-weight:bold}
+
+/* IMAGE */
+img{
+  border-radius:6px;
+}
 </style>
 </head>
 
 <body>
 
-<header>
-  <div class="brand">
-    <img src="logo.png" class="logo">
-    <b>PT. Bio Inti Agrindo</b>
+<div class="wrapper">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="logo">
+    <img src="logo.png">
+    <b>PT BIA</b>
   </div>
+
+  <div class="menu">
+    <div>Dashboard</div>
+    <div>Laporan</div>
+    <div>Logout</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <b>Sistem Keluhan Karyawan</b>
   <div id="userInfo">Belum login</div>
-</header>
+</div>
 
-<div class="container">
+<!-- CONTENT -->
+<div class="content">
 
-<!-- LEFT -->
+<div class="grid">
+
+<!-- FORM -->
 <div>
 
 <div class="card">
 <h3>Login</h3>
-<input id="nik" placeholder="Masukkan NIK">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
 <button id="btnLogin">Login</button>
 </div>
 
@@ -139,21 +239,22 @@ th,td{padding:8px;border:1px solid #ddd;text-align:center}
 </div>
 
 <button id="btnKirim">Kirim</button>
-</div>
 
 </div>
 
-<!-- RIGHT -->
+</div>
+
+<!-- DATA -->
 <div>
 
 <div class="card">
 <h3>Dashboard</h3>
 
 <div class="kpi">
-  <div class="box"><h2 id="total">0</h2>Total</div>
-  <div class="box"><h2 id="menunggu">0</h2>Menunggu</div>
-  <div class="box"><h2 id="proses">0</h2>Proses</div>
-  <div class="box"><h2 id="selesai">0</h2>Selesai</div>
+<div class="box"><h2 id="total">0</h2>Total</div>
+<div class="box"><h2 id="menunggu">0</h2>Menunggu</div>
+<div class="box"><h2 id="proses">0</h2>Proses</div>
+<div class="box"><h2 id="selesai">0</h2>Selesai</div>
 </div>
 
 <canvas id="chart"></canvas>
@@ -192,6 +293,12 @@ th,td{padding:8px;border:1px solid #ddd;text-align:center}
 
 </div>
 
+</div>
+
+</div>
+
+</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -201,11 +308,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "ISI_API_KEY_KAMU",
-authDomain: "ISI_PROJECT.firebaseapp.com",
-projectId: "ISI_PROJECT"
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_PROJECT.firebaseapp.com",
+  projectId: "ISI_PROJECT"
 };
-
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -213,7 +319,7 @@ const db = getFirestore(app);
 let user=null;
 let chart=null;
 
-/* TOGGLE */
+// TOGGLE IDENTITAS
 document.querySelectorAll('input[name="mode"]').forEach(r=>{
   r.onchange=()=>{
     identitasBox.style.display =
@@ -222,14 +328,15 @@ document.querySelectorAll('input[name="mode"]').forEach(r=>{
   }
 });
 
-/* LOGIN */
+// LOGIN
 btnLogin.onclick=async()=>{
-  let nik=nik.value.trim();
+  let email=document.getElementById("email").value;
+  let password=document.getElementById("password").value;
 
-  const q=query(collection(db,"karyawan"), where("nik","==",nik));
+  const q=query(collection(db,"karyawan"), where("email","==",email));
   const snap=await getDocs(q);
 
-  if(snap.empty) return alert("NIK tidak ditemukan");
+  if(snap.empty) return alert("User tidak ditemukan");
 
   snap.forEach(d=>user=d.data());
 
@@ -237,7 +344,7 @@ btnLogin.onclick=async()=>{
   load();
 };
 
-/* KIRIM */
+// KIRIM
 btnKirim.onclick=async()=>{
   if(!user) return alert("Login dulu");
 
@@ -247,11 +354,7 @@ btnKirim.onclick=async()=>{
 
   if(!judul) return alert("Judul wajib");
 
-  let data={
-    judul,
-    bukti,
-    status:"Menunggu HR"
-  };
+  let data={judul,bukti,status:"Menunggu HR"};
 
   if(mode==="anonim"){
     data.nama="Anonim";
@@ -270,7 +373,7 @@ btnKirim.onclick=async()=>{
   load();
 };
 
-/* LOAD */
+// LOAD DATA
 async function load(){
   const snap=await getDocs(collection(db,"laporan"));
 
@@ -297,30 +400,30 @@ async function load(){
     if(x.status==="Selesai") warna="selesai";
 
     html+=`
-    <tr>
-      <td>${x.judul}</td>
-      <td>${x.nama}</td>
-      <td>${x.jabatan}</td>
-      <td class="${warna}">${x.status}</td>
-      <td>${x.bukti?`<img src="${x.bukti}" width="70">`:"-"}</td>
-      <td>
-        ${user.role==="hr"?`<button onclick="approveHR('${d.id}')">HR</button>`:""}
-        ${user.role==="manager"?`<button onclick="approveManager('${d.id}')">Manager</button>`:""}
-        ${(user.role==="hr"||user.role==="manager")?`<button onclick="selesai('${d.id}')">✔</button>`:""}
-      </td>
-    </tr>`;
+<tr>
+<td>${x.judul}</td>
+<td>${x.nama}</td>
+<td>${x.jabatan}</td>
+<td class="${warna}">${x.status}</td>
+<td>${x.bukti?`<img src="${x.bukti}" width="70">`:"-"}</td>
+<td>
+${user.role==="hr"?`<button onclick="approveHR('${d.id}')">HR</button>`:""}
+${user.role==="manager"?`<button onclick="approveManager('${d.id}')">Manager</button>`:""}
+${(user.role==="hr"||user.role==="manager")?`<button onclick="selesai('${d.id}')">✔</button>`:""}
+</td>
+</tr>`;
   });
 
   data.innerHTML=html;
 
-  totalEl.innerText=total;
-  menungguEl.innerText=menunggu;
-  prosesEl.innerText=proses;
-  selesaiEl.innerText=selesai;
+  total.innerText=total;
+  menunggu.innerText=menunggu;
+  proses.innerText=proses;
+  selesai.innerText=selesai;
 
   if(chart) chart.destroy();
 
-  chart=new Chart(chartCanvas,{
+  chart=new Chart(document.getElementById("chart"),{
     type:"bar",
     data:{
       labels:["Total","Menunggu","Proses","Selesai"],
@@ -329,10 +432,9 @@ async function load(){
   });
 }
 
-/* FILTER */
 filterStatus.onchange=load;
 
-/* ACTION */
+// ACTION
 window.approveHR=async id=>{
   await updateDoc(doc(db,"laporan",id),{status:"HR Approved"});
   load();
