@@ -11,6 +11,8 @@ body{font-family:Arial;background:#eef2f7;padding:20px}
 .card{background:white;padding:15px;margin-bottom:15px;border-radius:10px}
 button{background:green;color:white;padding:8px;border:none}
 input{padding:8px;width:100%;margin:5px 0}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ccc;padding:8px;text-align:left}
 </style>
 </head>
 
@@ -25,22 +27,21 @@ input{padding:8px;width:100%;margin:5px 0}
 <div class="card">
 <h3>Kirim Laporan</h3>
 <input id="judul" placeholder="Judul">
+<input id="buktiLink" placeholder="Link bukti (Google Drive)">
 <button id="btnKirim">Kirim</button>
 </div>
 
-<table border="1">
-
+<table>
 <thead>
 <tr>
   <th>Judul</th>
   <th>Status</th>
   <th>Bukti</th>
+  <th>Aksi</th>
 </tr>
 </thead>
-
 <tbody id="data"></tbody>
-
-</table
+</table>
 
 <script type="module">
 
@@ -76,13 +77,13 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
 
   snap.forEach(d=>{
     user = d.data();
-    alert("Login berhasil: " + user.nama);
+    alert("Login berhasil: " + user.nama + " (" + user.role + ")");
   });
 
   load();
 });
-console.log("ROLE USER:", user.role);
-// KIRIM
+
+// KIRIM LAPORAN
 document.getElementById("btnKirim").addEventListener("click", async () => {
 
   if(!user){
@@ -90,53 +91,28 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
     return;
   }
 
- let judulInput = document.getElementById("judul")
-.value.trim()
-.replace(/"/g,'');
+  let judulInput = document.getElementById("judul").value.trim();
+  let buktiLink = document.getElementById("buktiLink").value;
+
   if(!judulInput){
-  alert("Judul tidak boleh kosong");
-  return;
-}
-let no = 1;
-
-snap.forEach(d=>{
-  let x=d.data();
-// 🔐 FILTER ROLE
-  if(user.role === "karyawan"){
-    if(x.nik !== user.nik) return;
+    alert("Judul tidak boleh kosong");
+    return;
   }
 
-  if(user.role === "manager"){
-    if(x.departemen !== user.departemen) return;
-  }
-
-  // HR tidak difilter
-  html+=`
-<tr>
-  <td>${x.judul}</td>
-  <td>${x.status}</td>
-  <td>
-    ${x.bukti ? `<a href="${x.bukti}" target="_blank">Lihat</a>` : "-"}
-  </td>
-</tr>
-`;
-});
-let buktiLink = document.getElementById("buktiLink").value;
-
-await addDoc(collection(db,"laporan"),{
-  nik: anonim ? "-" : user.nik,
-  nama: anonim ? "Anonim" : user.nama,
-  departemen: anonim ? "-" : user.departemen,
-  judul: judulInput,
-  bukti: buktiLink,
-  status: "Menunggu HR"
-});
+  await addDoc(collection(db,"laporan"),{
+    nik: user.nik,
+    nama: user.nama,
+    departemen: user.departemen,
+    judul: judulInput,
+    bukti: buktiLink,
+    status: "Menunggu HR"
+  });
 
   alert("Laporan terkirim");
   load();
 });
 
-// LOAD DATA
+// LOAD DATA + FILTER ROLE
 async function load(){
   const snap = await getDocs(collection(db,"laporan"));
   let html="";
@@ -144,10 +120,18 @@ async function load(){
   snap.forEach(d=>{
     let x=d.data();
 
+    // 🔐 FILTER ROLE
+    if(user.role === "karyawan" && x.nik !== user.nik) return;
+    if(user.role === "manager" && x.departemen !== user.departemen) return;
+    // HR lihat semua
+
     html+=`
     <tr>
       <td>${x.judul}</td>
       <td>${x.status}</td>
+      <td>
+        ${x.bukti ? `<a href="${x.bukti}" target="_blank">Lihat</a>` : "-"}
+      </td>
       <td>
         <button onclick="approveHR('${d.id}')">HR</button>
         <button onclick="approveManager('${d.id}')">Manager</button>
@@ -177,4 +161,6 @@ window.selesai = async function(id){
 }
 
 </script>
-<input id="buktiLink" placeholder="Link bukti (Google Drive)">
+
+</body>
+</html>
