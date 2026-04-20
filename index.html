@@ -2,34 +2,104 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Keluhan Karyawan</title>
+<title>Sistem Keluhan Karyawan</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body{font-family:Arial;background:#eef2f7;padding:20px}
-.card{background:white;padding:15px;margin-bottom:15px;border-radius:10px}
-button{background:green;color:white;padding:8px;border:none}
-input{padding:8px;width:100%;margin:5px 0}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{border:1px solid #ccc;padding:8px;text-align:left}
+body{
+  font-family:Arial;
+  background:#eef2f7;
+  margin:0;
+}
+
+header{
+  background:#1b5e20;
+  color:white;
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+}
+
+.container{
+  padding:20px;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+input{
+  padding:8px;
+  width:100%;
+  margin:5px 0;
+}
+
+button{
+  background:#2e7d32;
+  color:white;
+  padding:8px;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#1b5e20;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  border:1px solid #ddd;
+  padding:8px;
+  text-align:center;
+}
+
+img{
+  border-radius:5px;
+}
 </style>
 </head>
 
 <body>
 
+<header>Sistem Keluhan Karyawan</header>
+
+<div class="container">
+
+<!-- LOGIN -->
 <div class="card">
 <h3>Login</h3>
 <input id="nik" placeholder="Masukkan NIK">
 <button id="btnLogin">Login</button>
 </div>
 
+<!-- FORM -->
 <div class="card">
 <h3>Kirim Laporan</h3>
-<input id="judul" placeholder="Judul">
-<input id="buktiLink" placeholder="Link bukti (Google Drive)">
+
+<input id="judul" placeholder="Judul laporan">
+<input id="buktiLink" placeholder="Link bukti (Google Drive / gambar)">
+
+<label>
+  <input type="checkbox" id="anonim"> Kirim sebagai anonim
+</label>
+
+<br><br>
 <button id="btnKirim">Kirim</button>
 </div>
+
+<!-- DATA -->
+<div class="card">
+<h3>Data Laporan</h3>
 
 <table>
 <thead>
@@ -43,6 +113,10 @@ th,td{border:1px solid #ccc;padding:8px;text-align:left}
 <tbody id="data"></tbody>
 </table>
 
+</div>
+
+</div>
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -52,10 +126,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
+   apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
   authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
   projectId: "keluahan-karyawan--ptbia"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -92,7 +167,8 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
   }
 
   let judulInput = document.getElementById("judul").value.trim();
-  let buktiLink = document.getElementById("buktiLink").value;
+  let buktiLink = document.getElementById("buktiLink").value.trim();
+  let anonim = document.getElementById("anonim").checked;
 
   if(!judulInput){
     alert("Judul tidak boleh kosong");
@@ -100,9 +176,9 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
   }
 
   await addDoc(collection(db,"laporan"),{
-    nik: user.nik,
-    nama: user.nama,
-    departemen: user.departemen,
+    nik: anonim ? "-" : user.nik,
+    nama: anonim ? "Anonim" : user.nama,
+    departemen: anonim ? "-" : user.departemen,
     judul: judulInput,
     bukti: buktiLink,
     status: "Menunggu HR"
@@ -112,7 +188,16 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
   load();
 });
 
-// LOAD DATA + FILTER ROLE
+// WARNA STATUS
+function warnaStatus(status){
+  if(status==="Menunggu HR") return "orange";
+  if(status==="HR Approved") return "blue";
+  if(status==="Manager Approved") return "purple";
+  if(status==="Selesai") return "green";
+  return "black";
+}
+
+// LOAD DATA
 async function load(){
   const snap = await getDocs(collection(db,"laporan"));
   let html="";
@@ -120,22 +205,30 @@ async function load(){
   snap.forEach(d=>{
     let x=d.data();
 
-    // 🔐 FILTER ROLE
-    if(user.role === "karyawan" && x.nik !== user.nik) return;
-    if(user.role === "manager" && x.departemen !== user.departemen) return;
-    // HR lihat semua
+    // FILTER ROLE
+    if(user.role==="karyawan" && x.nik!==user.nik) return;
+    if(user.role==="manager" && x.departemen!==user.departemen) return;
 
     html+=`
     <tr>
       <td>${x.judul}</td>
-      <td>${x.status}</td>
-      <td>
-        ${x.bukti ? `<a href="${x.bukti}" target="_blank">Lihat</a>` : "-"}
+
+      <td style="color:${warnaStatus(x.status)}">
+        ${x.status}
       </td>
+
       <td>
-        <button onclick="approveHR('${d.id}')">HR</button>
-        <button onclick="approveManager('${d.id}')">Manager</button>
-        <button onclick="selesai('${d.id}')">Selesai</button>
+        ${
+          x.bukti 
+          ? `<img src="${x.bukti}" width="80">` 
+          : "-"
+        }
+      </td>
+
+      <td>
+        ${user.role==="hr" ? `<button onclick="approveHR('${d.id}')">HR</button>` : ""}
+        ${user.role==="manager" ? `<button onclick="approveManager('${d.id}')">Manager</button>` : ""}
+        ${(user.role==="hr" || user.role==="manager") ? `<button onclick="selesai('${d.id}')">Selesai</button>` : ""}
       </td>
     </tr>
     `;
