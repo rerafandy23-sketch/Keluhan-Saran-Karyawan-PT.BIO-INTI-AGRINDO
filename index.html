@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Sistem Keluhan Karyawan</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -16,6 +17,10 @@
   --card:#ffffff;
 }
 
+/* RESET */
+*{box-sizing:border-box}
+
+/* BODY */
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
@@ -23,7 +28,10 @@ body{
 }
 
 /* LAYOUT */
-.wrapper{display:flex;height:100vh}
+.wrapper{
+  display:flex;
+  height:100vh;
+}
 
 /* SIDEBAR */
 .sidebar{
@@ -33,11 +41,31 @@ body{
   padding:20px;
 }
 
-.logo{display:flex;gap:10px;margin-bottom:20px}
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:30px;
+}
+
 .logo img{height:40px}
 
+.menu div{
+  padding:12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.menu div:hover{
+  background:rgba(255,255,255,0.1);
+}
+
 /* MAIN */
-.main{flex:1;display:flex;flex-direction:column}
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
 
 /* TOPBAR */
 .topbar{
@@ -49,7 +77,10 @@ body{
 }
 
 /* CONTENT */
-.content{padding:20px;overflow:auto}
+.content{
+  padding:20px;
+  overflow:auto;
+}
 
 /* CARD */
 .card{
@@ -58,10 +89,41 @@ body{
   border-radius:12px;
   box-shadow:0 8px 20px rgba(0,0,0,0.2);
   margin-bottom:15px;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:20px;
+}
+
+/* KPI */
+.kpi{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.kpi .box{
+  background:#f1f5f9;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.kpi h2{
+  margin:0;
+  color:var(--primary);
 }
 
 /* INPUT */
-input{
+input,select{
   width:100%;
   padding:10px;
   margin:6px 0;
@@ -78,23 +140,45 @@ button{
   color:white;
   cursor:pointer;
   box-shadow:0 0 10px rgba(21,101,192,0.5);
+  transition:0.3s;
 }
 
 button:hover{
   background:var(--primary);
+  box-shadow:0 0 15px rgba(13,71,161,0.8);
 }
 
 /* TABLE */
-table{width:100%;border-collapse:collapse}
-th{background:var(--secondary);color:white}
-th,td{padding:10px;border:1px solid #ddd;text-align:center}
-tr:hover{background:#f1f5f9}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  background:var(--secondary);
+  color:white;
+}
+
+th,td{
+  padding:10px;
+  border:1px solid #ddd;
+  text-align:center;
+}
+
+tr:hover{
+  background:#f1f5f9;
+}
 
 /* STATUS */
-.menunggu{color:orange}
-.hr{color:blue}
-.manager{color:purple}
-.selesai{color:green}
+.menunggu{color:#f59e0b;font-weight:bold}
+.hr{color:#2563eb;font-weight:bold}
+.manager{color:#7c3aed;font-weight:bold}
+.selesai{color:#16a34a;font-weight:bold}
+
+/* IMAGE */
+img{
+  border-radius:6px;
+}
 </style>
 </head>
 
@@ -107,6 +191,12 @@ tr:hover{background:#f1f5f9}
   <div class="logo">
     <img src="logo.png">
     <b>PT BIA</b>
+  </div>
+
+  <div class="menu">
+    <div>Dashboard</div>
+    <div>Laporan</div>
+    <div>Logout</div>
   </div>
 </div>
 
@@ -122,13 +212,60 @@ tr:hover{background:#f1f5f9}
 <!-- CONTENT -->
 <div class="content">
 
+<div class="grid">
+
+<!-- FORM -->
+<div>
+
 <div class="card">
 <h3>Login</h3>
-
-
-<input id="nik" placeholder="Masukkan NIK">
-<input id="password" type="password" placeholder="Tanggal Lahir (DDMMYYYY)">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
 <button id="btnLogin">Login</button>
+</div>
+
+<div class="card">
+<h3>Kirim Laporan</h3>
+
+<input id="judul" placeholder="Judul">
+<input id="buktiLink" placeholder="Link bukti">
+
+<label><input type="radio" name="mode" value="anonim" checked> Anonim</label>
+<label><input type="radio" name="mode" value="identitas"> Identitas</label>
+
+<div id="identitasBox" style="display:none;">
+  <input id="namaInput" placeholder="Nama">
+  <input id="jabatanInput" placeholder="Jabatan">
+</div>
+
+<button id="btnKirim">Kirim</button>
+
+</div>
+
+</div>
+
+<!-- DATA -->
+<div>
+
+<div class="card">
+<h3>Dashboard</h3>
+
+<div class="kpi">
+<div class="box"><h2 id="total">0</h2>Total</div>
+<div class="box"><h2 id="menunggu">0</h2>Menunggu</div>
+<div class="box"><h2 id="proses">0</h2>Proses</div>
+<div class="box"><h2 id="selesai">0</h2>Selesai</div>
+</div>
+
+<canvas id="chart"></canvas>
+
+<select id="filterStatus">
+<option value="">Semua</option>
+<option>Menunggu HR</option>
+<option>HR Approved</option>
+<option>Manager Approved</option>
+<option>Selesai</option>
+</select>
 
 </div>
 
@@ -139,26 +276,36 @@ tr:hover{background:#f1f5f9}
 <thead>
 <tr>
 <th>Judul</th>
+<th>Nama</th>
+<th>Jabatan</th>
 <th>Status</th>
+<th>Bukti</th>
+<th>Aksi</th>
 </tr>
 </thead>
+
 <tbody id="data"></tbody>
 </table>
 
 </div>
 
 </div>
+
 </div>
+
+</div>
+
+</div>
+
 </div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
-  getFirestore, collection, getDocs,
-  query, where
+  getFirestore, collection, addDoc, getDocs,
+  query, where, updateDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
 
 const firebaseConfig = {
   apiKey: "ISI_API_KEY",
@@ -170,72 +317,138 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let user=null;
+let chart=null;
 
-/* 🔥 LOGIN BARU (NIK + TGL LAHIR) */
-document.getElementById("btnLogin").onclick = async () => {
-
-  let nikInput = document.getElementById("nik").value.trim();
-  let passInput = document.getElementById("password").value.trim();
-
-  if(passInput.length !== 8){
-    alert("Format password DDMMYYYY");
-    return;
+// TOGGLE IDENTITAS
+document.querySelectorAll('input[name="mode"]').forEach(r=>{
+  r.onchange=()=>{
+    identitasBox.style.display =
+      document.querySelector('input[name="mode"]:checked').value==="identitas"
+      ?"block":"none";
   }
+});
 
-  const q = query(collection(db,"karyawan"), where("nik","==",nikInput));
-  const snap = await getDocs(q);
+// LOGIN
+btnLogin.onclick=async()=>{
+  let email=document.getElementById("email").value;
+  let password=document.getElementById("password").value;
 
-  if(snap.empty){
-    alert("NIK tidak ditemukan");
-    return;
-  }
+  const q=query(collection(db,"karyawan"), where("email","==",email));
+  const snap=await getDocs(q);
 
-  let found = false;
+  if(snap.empty) return alert("User tidak ditemukan");
 
-  snap.forEach(d=>{
-    let data = d.data();
+  snap.forEach(d=>user=d.data());
 
-    if(data.tgl_lahir === passInput){
-      user = data;
-      found = true;
-    }
-  });
-
-  if(!found){
-    alert("Password salah (tanggal lahir tidak cocok)");
-    return;
-  }
-
-  document.getElementById("userInfo").innerText =
-    user.nama + " (" + user.role + ")";
-
-  alert("Login berhasil");
+  userInfo.innerText=user.nama+" ("+user.role+")";
   load();
 };
 
-/* 🔵 FUNCTION LAMA TETAP */
+// KIRIM
+btnKirim.onclick=async()=>{
+  if(!user) return alert("Login dulu");
+
+  let judul=judul.value.trim();
+  let bukti=buktiLink.value.trim();
+  let mode=document.querySelector('input[name="mode"]:checked').value;
+
+  if(!judul) return alert("Judul wajib");
+
+  let data={judul,bukti,status:"Menunggu HR"};
+
+  if(mode==="anonim"){
+    data.nama="Anonim";
+    data.jabatan="-";
+    data.nik="-";
+    data.departemen="-";
+  }else{
+    data.nama=namaInput.value||user.nama;
+    data.jabatan=jabatanInput.value||user.jabatan;
+    data.nik=user.nik;
+    data.departemen=user.departemen;
+  }
+
+  await addDoc(collection(db,"laporan"),data);
+  alert("Terkirim");
+  load();
+};
+
+// LOAD DATA
 async function load(){
-  const snap = await getDocs(collection(db,"laporan"));
+  const snap=await getDocs(collection(db,"laporan"));
+
   let html="";
+  let total=0,menunggu=0,proses=0,selesai=0;
+  let filter=filterStatus.value;
 
   snap.forEach(d=>{
     let x=d.data();
 
     if(user.role==="karyawan" && x.nik!==user.nik) return;
     if(user.role==="manager" && x.departemen!==user.departemen) return;
+    if(filter && x.status!==filter) return;
+
+    total++;
+    if(x.status==="Menunggu HR") menunggu++;
+    if(x.status!=="Menunggu HR" && x.status!=="Selesai") proses++;
+    if(x.status==="Selesai") selesai++;
+
+    let warna="";
+    if(x.status==="Menunggu HR") warna="menunggu";
+    if(x.status==="HR Approved") warna="hr";
+    if(x.status==="Manager Approved") warna="manager";
+    if(x.status==="Selesai") warna="selesai";
 
     html+=`
-    <tr>
-      <td>${x.judul}</td>
-      <td class="${x.status==='Selesai'?'selesai':'menunggu'}">
-        ${x.status}
-      </td>
-    </tr>
-    `;
+<tr>
+<td>${x.judul}</td>
+<td>${x.nama}</td>
+<td>${x.jabatan}</td>
+<td class="${warna}">${x.status}</td>
+<td>${x.bukti?`<img src="${x.bukti}" width="70">`:"-"}</td>
+<td>
+${user.role==="hr"?`<button onclick="approveHR('${d.id}')">HR</button>`:""}
+${user.role==="manager"?`<button onclick="approveManager('${d.id}')">Manager</button>`:""}
+${(user.role==="hr"||user.role==="manager")?`<button onclick="selesai('${d.id}')">✔</button>`:""}
+</td>
+</tr>`;
   });
 
-  document.getElementById("data").innerHTML=html;
+  data.innerHTML=html;
+
+  total.innerText=total;
+  menunggu.innerText=menunggu;
+  proses.innerText=proses;
+  selesai.innerText=selesai;
+
+  if(chart) chart.destroy();
+
+  chart=new Chart(document.getElementById("chart"),{
+    type:"bar",
+    data:{
+      labels:["Total","Menunggu","Proses","Selesai"],
+      datasets:[{data:[total,menunggu,proses,selesai]}]
+    }
+  });
 }
+
+filterStatus.onchange=load;
+
+// ACTION
+window.approveHR=async id=>{
+  await updateDoc(doc(db,"laporan",id),{status:"HR Approved"});
+  load();
+};
+
+window.approveManager=async id=>{
+  await updateDoc(doc(db,"laporan",id),{status:"Manager Approved"});
+  load();
+};
+
+window.selesai=async id=>{
+  await updateDoc(doc(db,"laporan",id),{status:"Selesai"});
+  load();
+};
 
 </script>
 
