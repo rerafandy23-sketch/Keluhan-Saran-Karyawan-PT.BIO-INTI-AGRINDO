@@ -126,7 +126,7 @@ const db = getDatabase(app);
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
-  const nik = document.getElementById("nik").value.trim();
+  const nikInput = document.getElementById("nik").value.trim();
   const dobInput = document.getElementById("dob").value;
 
   const error = document.getElementById("error");
@@ -135,27 +135,35 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   error.textContent = "";
   success.textContent = "";
 
-  // ubah dari YYYY-MM-DD → DD/MM/YYYY
+  // ubah format YYYY-MM-DD → DD/MM/YYYY
   const parts = dobInput.split("-");
   const dobFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
   try {
-    const snapshot = await get(ref(db, "karyawan/" + nik));
+    const snapshot = await get(ref(db, "karyawan"));
 
     if (!snapshot.exists()) {
-      error.textContent = "NIK tidak ditemukan";
+      error.textContent = "Data karyawan tidak ditemukan";
       return;
     }
 
-    const user = snapshot.val();
+    const allData = snapshot.val();
+    let foundUser = null;
 
-    if (!user.tgl_lahir) {
-      error.textContent = "Tanggal lahir tidak ada di database";
-      return;
+    for (const key in allData) {
+      const user = allData[key];
+
+      if (
+        user.nik === nikInput &&
+        user.tgl_lahir === dobFormatted
+      ) {
+        foundUser = user;
+        break;
+      }
     }
 
-    if (user.tgl_lahir === dobFormatted) {
-      localStorage.setItem("user", JSON.stringify(user));
+    if (foundUser) {
+      localStorage.setItem("user", JSON.stringify(foundUser));
 
       success.textContent = "Login berhasil...";
 
@@ -164,12 +172,12 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
       }, 1000);
 
     } else {
-      error.textContent = "Tanggal lahir salah";
+      error.textContent = "NIK atau Tanggal Lahir salah";
     }
 
   } catch (err) {
     console.log(err);
-    error.textContent = "Gagal koneksi Firebase";
+    error.textContent = "Gagal koneksi ke Firebase";
   }
 });
 
