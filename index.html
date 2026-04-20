@@ -2,107 +2,178 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistem Keluhan Karyawan</title>
 
 <style>
+:root{
+  --primary:#1b5e20;
+  --secondary:#2e7d32;
+  --bg:#eef2f7;
+  --card:#ffffff;
+  --text:#333;
+}
+
 body{
-  font-family:Arial;
-  background:#eef2f7;
   margin:0;
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
 
+/* HEADER */
 header{
-  background:#1b5e20;
+  background:var(--primary);
   color:white;
-  padding:15px;
-  text-align:center;
-  font-size:20px;
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 }
 
-.container{padding:20px;}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
+.brand img{
+  height:40px;
+}
+
+.brand span{
+  font-weight:bold;
+  font-size:18px;
+}
+
+/* LAYOUT */
+.container{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:20px;
+  padding:20px;
+}
+
+/* CARD */
 .card{
-  background:white;
+  background:var(--card);
   padding:15px;
-  margin-bottom:15px;
   border-radius:10px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
 
+h3{
+  margin-top:0;
+}
+
+/* INPUT */
 input{
-  padding:8px;
   width:100%;
+  padding:8px;
   margin:5px 0;
+  border:1px solid #ccc;
+  border-radius:5px;
 }
 
+/* BUTTON */
 button{
-  background:#2e7d32;
+  width:100%;
+  padding:10px;
+  background:var(--secondary);
   color:white;
-  padding:8px;
   border:none;
   border-radius:5px;
   cursor:pointer;
 }
 
-button:hover{background:#1b5e20;}
+button:hover{
+  background:var(--primary);
+}
 
+/* TABLE */
 table{
   width:100%;
   border-collapse:collapse;
 }
 
+th{
+  background:var(--secondary);
+  color:white;
+}
+
 th,td{
-  border:1px solid #ddd;
   padding:8px;
+  border:1px solid #ddd;
   text-align:center;
 }
 
 img{
   border-radius:5px;
 }
+
+/* STATUS COLOR */
+.status-menunggu{color:orange;}
+.status-hr{color:blue;}
+.status-manager{color:purple;}
+.status-selesai{color:green;}
+
+small.note{color:#666}
 </style>
 </head>
 
 <body>
 
-<header>Sistem Keluhan Karyawan</header>
+<header>
+  <div class="brand">
+    <img src="logo.png" alt="Logo">
+    <span>PT. Bio Inti Agrindo</span>
+  </div>
+  <div id="userInfo">Belum login</div>
+</header>
 
 <div class="container">
 
-<!-- LOGIN -->
+<!-- KIRI -->
+<div>
+
 <div class="card">
 <h3>Login</h3>
 <input id="nik" placeholder="Masukkan NIK">
 <button id="btnLogin">Login</button>
+<small class="note">Login untuk melihat & mengirim laporan</small>
 </div>
 
-<!-- FORM -->
 <div class="card">
 <h3>Kirim Laporan</h3>
 
 <input id="judul" placeholder="Judul laporan">
 <input id="buktiLink" placeholder="Link bukti (Google Drive / gambar)">
 
-<!-- PILIHAN -->
 <label>
-  <input type="radio" name="mode" value="anonim" checked> Kirim sebagai Anonim
+  <input type="radio" name="mode" value="anonim" checked> Anonim
+</label>
+<label>
+  <input type="radio" name="mode" value="identitas"> Identitas
 </label>
 
-<label>
-  <input type="radio" name="mode" value="identitas"> Tampilkan Identitas
-</label>
-
-<!-- IDENTITAS -->
 <div id="identitasBox" style="display:none;">
-  <input id="namaInput" placeholder="Nama (opsional)">
-  <input id="jabatanInput" placeholder="Jabatan (opsional)">
+  <input id="namaInput" placeholder="Nama">
+  <input id="jabatanInput" placeholder="Jabatan">
 </div>
 
 <br>
 <button id="btnKirim">Kirim</button>
+
+<small class="note">
+Tips: jika pakai Google Drive, ubah link ke format:
+<br>
+<code>https://drive.google.com/uc?export=view&id=FILE_ID</code>
+</small>
 </div>
 
-<!-- DATA -->
+</div>
+
+<!-- KANAN -->
 <div class="card">
 <h3>Data Laporan</h3>
 
@@ -131,12 +202,12 @@ import {
   getFirestore, collection, addDoc, getDocs, query, where,
   updateDoc, doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
 const firebaseConfig = {
   apiKey: "ISI_API_KEY_KAMU",
 authDomain: "ISI_PROJECT.firebaseapp.com",
 projectId: "ISI_PROJECT"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -144,18 +215,16 @@ const db = getFirestore(app);
 let user = null;
 
 // TOGGLE IDENTITAS
-document.querySelectorAll('input[name="mode"]').forEach(radio=>{
-  radio.addEventListener("change", ()=>{
-    let mode = document.querySelector('input[name="mode"]:checked').value;
-
+document.querySelectorAll('input[name="mode"]').forEach(r=>{
+  r.addEventListener("change",()=>{
     document.getElementById("identitasBox").style.display =
-      mode==="identitas" ? "block" : "none";
+      document.querySelector('input[name="mode"]:checked').value==="identitas"
+      ? "block":"none";
   });
 });
 
 // LOGIN
-document.getElementById("btnLogin").addEventListener("click", async () => {
-
+document.getElementById("btnLogin").onclick = async ()=>{
   let nik = document.getElementById("nik").value.trim();
 
   const q = query(collection(db,"karyawan"), where("nik","==",nik));
@@ -166,42 +235,35 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
     return;
   }
 
-  snap.forEach(d=>{
-    user = d.data();
-    alert("Login: " + user.nama + " (" + user.role + ")");
-  });
+  snap.forEach(d=> user=d.data());
+
+  document.getElementById("userInfo").innerText =
+    user.nama + " (" + user.role + ")";
 
   load();
-});
+};
 
 // KIRIM
-document.getElementById("btnKirim").addEventListener("click", async () => {
+document.getElementById("btnKirim").onclick = async ()=>{
+  if(!user) return alert("Login dulu");
 
-  if(!user){
-    alert("Login dulu");
-    return;
-  }
-
-  let judulInput = document.getElementById("judul").value.trim();
-  let buktiLink = document.getElementById("buktiLink").value.trim();
+  let judul = document.getElementById("judul").value.trim();
+  let bukti = document.getElementById("buktiLink").value.trim();
   let mode = document.querySelector('input[name="mode"]:checked').value;
 
-  if(!judulInput){
-    alert("Judul wajib diisi");
-    return;
-  }
+  if(!judul) return alert("Judul wajib diisi");
 
   let data = {
-    judul: judulInput,
-    bukti: buktiLink,
-    status: "Menunggu HR"
+    judul,
+    bukti,
+    status:"Menunggu HR"
   };
 
   if(mode==="anonim"){
-    data.nama = "Anonim";
-    data.jabatan = "-";
-    data.nik = "-";
-    data.departemen = "-";
+    data.nama="Anonim";
+    data.jabatan="-";
+    data.nik="-";
+    data.departemen="-";
   } else {
     data.nama = document.getElementById("namaInput").value || user.nama;
     data.jabatan = document.getElementById("jabatanInput").value || user.jabatan;
@@ -210,21 +272,20 @@ document.getElementById("btnKirim").addEventListener("click", async () => {
   }
 
   await addDoc(collection(db,"laporan"), data);
-
   alert("Laporan terkirim");
   load();
-});
+};
 
-// WARNA STATUS
-function warna(status){
-  if(status==="Menunggu HR") return "orange";
-  if(status==="HR Approved") return "blue";
-  if(status==="Manager Approved") return "purple";
-  if(status==="Selesai") return "green";
-  return "black";
+// STATUS CLASS
+function statusClass(s){
+  if(s==="Menunggu HR") return "status-menunggu";
+  if(s==="HR Approved") return "status-hr";
+  if(s==="Manager Approved") return "status-manager";
+  if(s==="Selesai") return "status-selesai";
+  return "";
 }
 
-// LOAD DATA
+// LOAD
 async function load(){
   const snap = await getDocs(collection(db,"laporan"));
   let html="";
@@ -240,12 +301,12 @@ async function load(){
       <td>${x.judul}</td>
       <td>${x.nama}</td>
       <td>${x.jabatan}</td>
-      <td style="color:${warna(x.status)}">${x.status}</td>
-      <td>${x.bukti ? `<img src="${x.bukti}" width="80">` : "-"}</td>
+      <td class="${statusClass(x.status)}">${x.status}</td>
+      <td>${x.bukti ? `<img src="${x.bukti}" width="70">` : "-"}</td>
       <td>
         ${user.role==="hr" ? `<button onclick="approveHR('${d.id}')">HR</button>` : ""}
         ${user.role==="manager" ? `<button onclick="approveManager('${d.id}')">Manager</button>` : ""}
-        ${(user.role==="hr" || user.role==="manager") ? `<button onclick="selesai('${d.id}')">Selesai</button>` : ""}
+        ${(user.role==="hr"||user.role==="manager") ? `<button onclick="selesai('${d.id}')">Selesai</button>` : ""}
       </td>
     </tr>
     `;
@@ -254,21 +315,21 @@ async function load(){
   document.getElementById("data").innerHTML=html;
 }
 
-// APPROVAL
-window.approveHR = async function(id){
+// ACTION
+window.approveHR = async id=>{
   await updateDoc(doc(db,"laporan",id),{status:"HR Approved"});
   load();
-}
+};
 
-window.approveManager = async function(id){
+window.approveManager = async id=>{
   await updateDoc(doc(db,"laporan",id),{status:"Manager Approved"});
   load();
-}
+};
 
-window.selesai = async function(id){
+window.selesai = async id=>{
   await updateDoc(doc(db,"laporan",id),{status:"Selesai"});
   load();
-}
+};
 
 </script>
 
