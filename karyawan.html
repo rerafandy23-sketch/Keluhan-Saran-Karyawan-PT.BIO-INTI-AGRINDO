@@ -117,11 +117,12 @@
           <th>Jabatan</th>
           <th>Departemen</th>
           <th>Role</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody id="tabelKaryawan">
         <tr>
-          <td colspan="5">Memuat data...</td>
+          <td colspan="6">Memuat data...</td>
         </tr>
       </tbody>
     </table>
@@ -135,7 +136,8 @@ import {
   getFirestore,
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -207,6 +209,7 @@ async function tampilkanKaryawan() {
 
     snapshot.forEach((docSnap) => {
       const item = docSnap.data();
+      const docId = docSnap.id;
 
       tbody.innerHTML += `
         <tr>
@@ -215,6 +218,9 @@ async function tampilkanKaryawan() {
           <td>${item.jabatan || "-"}</td>
           <td>${item.departemen || "-"}</td>
           <td>${item.role || "-"}</td>
+          <td>
+            <button onclick="hapusKaryawan('${docId}')">Hapus</button>
+          </td>
         </tr>
       `;
     });
@@ -225,7 +231,23 @@ async function tampilkanKaryawan() {
   }
 }
 
+async function hapusKaryawan(docId) {
+  const konfirmasi = confirm("Yakin ingin menghapus karyawan non aktif ini?");
+
+  if (!konfirmasi) return;
+
+  try {
+    await deleteDoc(doc(db, "karyawan", docId));
+    alert("Data karyawan berhasil dihapus");
+    tampilkanKaryawan();
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menghapus data karyawan");
+  }
+}
+
 window.simpanKaryawan = simpanKaryawan;
+window.hapusKaryawan = hapusKaryawan;
 
 tampilkanKaryawan();
 </script>
