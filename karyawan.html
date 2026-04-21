@@ -324,5 +324,26 @@ window.hapusKaryawan = hapusKaryawan;
 tampilkanKaryawan();
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+function exportExcelKaryawan() {
+  const table = document.querySelector("table");
+
+  if (!table) {
+    alert("Tabel karyawan tidak ditemukan");
+    return;
+  }
+
+  const workbook = XLSX.utils.table_to_book(table, {
+    sheet: "Data Karyawan"
+  });
+
+  XLSX.writeFile(workbook, "data-karyawan.xlsx");
+}
+
+window.exportExcelKaryawan = exportExcelKaryawan;
+</script>
+
 </body>
 </html>
