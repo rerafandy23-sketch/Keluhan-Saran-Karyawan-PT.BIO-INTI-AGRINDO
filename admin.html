@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Panel HRD</title>
+
   <style>
     * {
       margin: 0;
@@ -96,131 +97,25 @@
       background: #8e0000;
     }
 
-    .badge {
-      font-weight: bold;
+    .top-actions {
+      margin-bottom: 20px;
+      text-align: right;
     }
   </style>
-</head>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script>
-async function exportPDF() {
-  try {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    doc.setFontSize(16);
-    doc.text("Laporan Keluhan Karyawan - HRD", 14, 20);
-
-    doc.setFontSize(11);
-    let y = 35;
-
-    const laporan = JSON.parse(localStorage.getItem("laporan")) || [];
-
-    if (laporan.length === 0) {
-      alert("Belum ada data laporan");
-      return;
-    }
-
-    laporan.forEach((item, index) => {
-      const text = [
-        `${index + 1}. ${item.judul || "-"}`,
-        `Tanggal : ${item.tanggal || "-"}`,
-        `Jenis   : ${item.jenis || "-"}`,
-        `Status  : ${item.status || "-"}`,
-        `Respon  : ${item.respon || "-"}`,
-        `------------------------------`
-      ];
-
-      text.forEach(line => {
-        if (y > 270) {
-          doc.addPage();
-          y = 20;
-        }
-
-        doc.text(line, 14, y);
-        y += 8;
-      });
-    });
-
-    doc.save("laporan-hrd.pdf");
-
-  } catch (error) {
-    console.log(error);
-    alert("Gagal export PDF");
-  }
-}
-
-window.exportPDF = exportPDF;
-</script>
+</head>
 <body>
-<!-- Library jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<!-- Tombol Export PDF -->
-<div style="margin:20px 0; text-align:right;">
-  <button onclick="exportPDF()">Export PDF Laporan</button>
-</div>
-
-<script>
-async function exportPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  doc.setFontSize(16);
-  doc.text("Laporan Keluhan Karyawan - HRD", 14, 20);
-
-  doc.setFontSize(11);
-
-  let y = 35;
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "laporan"));
-
-    if (querySnapshot.empty) {
-      alert("Belum ada data laporan untuk di-export");
-      return;
-    }
-
-    querySnapshot.forEach((docSnap, index) => {
-      const item = docSnap.data();
-
-      const text = [
-        `${index + 1}. ${item.judul || "-"}`,
-        `Tanggal : ${item.tanggal || "-"}`,
-        `Jenis   : ${item.jenis || "-"}`,
-        `Status  : ${item.status || "-"}`,
-        `Respon  : ${item.respon || "-"}`,
-        `----------------------------------------`
-      ];
-
-      text.forEach(line => {
-        if (y > 270) {
-          doc.addPage();
-          y = 20;
-        }
-
-        doc.text(line, 14, y);
-        y += 8;
-      });
-    });
-
-    doc.save("laporan-hrd.pdf");
-
-  } catch (error) {
-    console.log(error);
-    alert("Gagal export PDF");
-  }
-}
-
-window.exportPDF = exportPDF;
-</script>
 
 <header>
   <h1>Admin Panel HRD - Keluhan Karyawan</h1>
 </header>
 
 <div class="container">
+
+  <div class="top-actions">
+    <button onclick="exportPDF()">Export PDF Laporan</button>
+  </div>
 
   <div class="card">
     <button class="logout" onclick="logout()">Logout</button>
@@ -247,11 +142,8 @@ window.exportPDF = exportPDF;
 
 </div>
 
-<script>
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import {
   getFirestore,
   collection,
@@ -290,10 +182,9 @@ async function tampilkanAdminPanel() {
 
       tbody.innerHTML += `
         <tr>
-          <td>${item.tanggal}</td>
-          <td>${item.jenis}</td>
-          <td>${item.judul}</td>
-
+          <td>${item.tanggal || "-"}</td>
+          <td>${item.jenis || "-"}</td>
+          <td>${item.judul || "-"}</td>
           <td>
             <select onchange="updateStatus('${docId}', this.value)">
               <option value="Menunggu Review" ${item.status === "Menunggu Review" ? "selected" : ""}>Menunggu Review</option>
@@ -302,11 +193,9 @@ async function tampilkanAdminPanel() {
               <option value="Ditolak" ${item.status === "Ditolak" ? "selected" : ""}>Ditolak</option>
             </select>
           </td>
-
           <td>
             <textarea id="respon-${docId}" placeholder="Tulis respon HRD...">${item.respon || ""}</textarea>
           </td>
-
           <td>
             <button onclick="simpanRespon('${docId}')">Simpan</button>
           </td>
@@ -316,7 +205,7 @@ async function tampilkanAdminPanel() {
 
   } catch (error) {
     console.log(error);
-    tbody.innerHTML = '<tr><td colspan="6">Gagal memuat data</td></tr>';
+    document.getElementById("adminTable").innerHTML = '<tr><td colspan="6">Gagal memuat data</td></tr>';
   }
 }
 
@@ -325,9 +214,7 @@ async function updateStatus(docId, value) {
     await updateDoc(doc(db, "laporan", docId), {
       status: value
     });
-
     alert("Status berhasil diperbarui");
-
   } catch (error) {
     console.log(error);
     alert("Gagal update status");
@@ -341,12 +228,56 @@ async function simpanRespon(docId) {
     await updateDoc(doc(db, "laporan", docId), {
       respon: respon
     });
-
     alert("Respon HRD berhasil disimpan");
-
   } catch (error) {
     console.log(error);
     alert("Gagal menyimpan respon");
+  }
+}
+
+async function exportPDF() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(16);
+    pdf.text("Laporan Keluhan Karyawan - HRD", 14, 20);
+
+    let y = 35;
+    const querySnapshot = await getDocs(collection(db, "laporan"));
+
+    if (querySnapshot.empty) {
+      alert("Belum ada data laporan untuk di-export");
+      return;
+    }
+
+    querySnapshot.forEach((docSnap, index) => {
+      const item = docSnap.data();
+
+      const lines = [
+        `${index + 1}. ${item.judul || "-"}`,
+        `Tanggal : ${item.tanggal || "-"}`,
+        `Jenis   : ${item.jenis || "-"}`,
+        `Status  : ${item.status || "-"}`,
+        `Respon  : ${item.respon || "-"}`,
+        `--------------------------------`
+      ];
+
+      lines.forEach((line) => {
+        if (y > 270) {
+          pdf.addPage();
+          y = 20;
+        }
+        pdf.text(line, 14, y);
+        y += 8;
+      });
+    });
+
+    pdf.save("laporan-hrd.pdf");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal export PDF");
   }
 }
 
@@ -357,8 +288,11 @@ function logout() {
 
 window.updateStatus = updateStatus;
 window.simpanRespon = simpanRespon;
+window.exportPDF = exportPDF;
 window.logout = logout;
 
 tampilkanAdminPanel();
-
 </script>
+
+</body>
+</html>
