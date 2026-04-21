@@ -306,7 +306,37 @@ function logout() {
   localStorage.removeItem("user");
   window.location.href = "login.html";
 }
+async function updateApprovalManager(docId, value) {
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      approval_manager: value
+    });
 
+    alert("Approval Manager berhasil diperbarui");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal update approval manager");
+  }
+}
+
+async function simpanManagerRespon(docId) {
+  const respon = document.getElementById(`manager-${docId}`).value;
+
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      manager_respon: respon
+    });
+
+    alert("Catatan Manager berhasil disimpan");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menyimpan catatan manager");
+  }
+}
+  window.updateApprovalManager = updateApprovalManager;
+window.simpanManagerRespon = simpanManagerRespon;
 window.updateStatus = updateStatus;
 window.simpanRespon = simpanRespon;
 window.exportPDF = exportPDF;
