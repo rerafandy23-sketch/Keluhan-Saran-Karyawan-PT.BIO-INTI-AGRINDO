@@ -236,7 +236,16 @@ async function kirimLaporan() {
   manager_respon: "",
   tanggal: new Date().toLocaleDateString("id-ID")
 });
+await kirimWhatsApp(
+  "6282250102215",
+  `Laporan baru masuk
 
+Nama: ${user.nama}
+Departemen: ${user.departemen}
+Jenis: ${jenis}
+Judul: ${judul}
+Status: Menunggu Review`
+);
     alert("Laporan berhasil dikirim ke Firestore");
 
     document.getElementById("judul").value = "";
