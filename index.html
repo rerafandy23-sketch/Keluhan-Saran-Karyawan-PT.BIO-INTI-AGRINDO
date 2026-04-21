@@ -294,6 +294,27 @@ function handleLogout() {
 
   window.location.replace("login.html");
 }
+async function kirimWhatsApp(target, pesan) {
+  try {
+    await fetch("https://api.fonnte.com/send", {
+      method: "POST",
+      headers: {
+        "Authorization": "XQXaZkNQ3ZrUQ3RZsxTn"
+      },
+      body: new URLSearchParams({
+        target: target,
+        message: pesan,
+        countryCode: "62"
+      })
+    });
+
+    console.log("WhatsApp berhasil dikirim");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal mengirim WhatsApp");
+  }
+}
 window.handleLogout = handleLogout;
 window.kirimLaporan = kirimLaporan;
 
