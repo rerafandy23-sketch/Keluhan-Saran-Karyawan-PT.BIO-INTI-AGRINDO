@@ -143,14 +143,15 @@
     <h2>Riwayat Laporan</h2>
 
     <table>
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Jenis</th>
-          <th>Judul</th>
-          <th>Status</th>
-        </tr>
-      </thead>
+   <thead>
+<tr>
+  <th>Tanggal</th>
+  <th>Jenis</th>
+  <th>Judul</th>
+  <th>Status</th>
+  <th>Respon HRD</th>
+</tr>
+</thead>
       <tbody id="tabelLaporan">
         <tr>
           <td colspan="4">Belum ada laporan</td>
@@ -217,13 +218,14 @@
 
     laporan.forEach(item => {
       tbody.innerHTML += `
-        <tr>
-          <td>${item.tanggal}</td>
-          <td>${item.jenis}</td>
-          <td>${item.judul}</td>
-          <td class="status">${item.status}</td>
-        </tr>
-      `;
+<tr>
+  <td>${item.tanggal}</td>
+  <td>${item.jenis}</td>
+  <td>${item.judul}</td>
+  <td class="status">${item.status}</td>
+  <td>${item.respon || "-"}</td>
+</tr>
+`;
     });
   }
 
