@@ -116,7 +116,9 @@
 <div class="container">
 
   <div class="card user-info">
-    <button class="logout" onclick="logout()">Logout</button>
+<button class="logout" onclick="handleLogout()">
+  Logout
+</button>
     <h2>Data Karyawan</h2>
     <p><strong>Nama:</strong> <span id="nama">-</span></p>
     <p><strong>NIK:</strong> <span id="nik">-</span></p>
@@ -285,11 +287,15 @@ async function tampilkanLaporan() {
   }
 }
 
-function logout() {
-  localStorage.removeItem("user");
-  window.location.href = "login.html";
-}
+function handleLogout() {
+  localStorage.clear();
+  sessionStorage.clear();
 
+  alert("Logout berhasil");
+
+  window.location.replace("login.html");
+}
+window.handleLogout = handleLogout;
 window.kirimLaporan = kirimLaporan;
 window.logout = logout;
 
