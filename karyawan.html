@@ -109,7 +109,11 @@
 
   <div class="card">
     <h2>Daftar Karyawan</h2>
-
+<div style="margin-bottom: 15px; text-align: right;">
+  <button onclick="exportExcelKaryawan()">
+    Export Excel Data Karyawan
+  </button>
+</div>
     <input type="text" id="searchKaryawan" placeholder="Cari Nama / NIK..." onkeyup="tampilkanKaryawan()" />
 
     <select id="filterStatus" onchange="tampilkanKaryawan()">
