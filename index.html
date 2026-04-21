@@ -167,91 +167,128 @@
 
 </div>
 
-<script>
-  const user = JSON.parse(localStorage.getItem("user"));
+<script type="module">
 
-  if (!user) {
-    window.location.href = "login.html";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
+  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
+  projectId: "keluahan-karyawan--ptbia",
+  storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
+  messagingSenderId: "855781665617",
+  appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (!user) {
+  window.location.href = "login.html";
+}
+
+document.getElementById("nama").textContent = user.nama || "-";
+document.getElementById("nik").textContent = user.nik || "-";
+document.getElementById("jabatan").textContent = user.jabatan || "-";
+document.getElementById("departemen").textContent = user.departemen || "-";
+document.getElementById("role").textContent = user.role || "-";
+
+async function kirimLaporan() {
+  const jenis = document.getElementById("jenis").value;
+  const judul = document.getElementById("judul").value;
+  const isi = document.getElementById("isi").value;
+  const lampiranFile = document.getElementById("lampiran").files[0];
+
+  if (!judul || !isi) {
+    alert("Mohon lengkapi data laporan");
+    return;
   }
 
-  document.getElementById("nama").textContent = user.nama || "-";
-  document.getElementById("nik").textContent = user.nik || "-";
-  document.getElementById("jabatan").textContent = user.jabatan || "-";
-  document.getElementById("departemen").textContent = user.departemen || "-";
-  document.getElementById("role").textContent = user.role || "-";
+  let namaLampiran = "-";
 
-  function kirimLaporan() {
-    const jenis = document.getElementById("jenis").value;
-    const judul = document.getElementById("judul").value;
-    const isi = document.getElementById("isi").value;
-    const lampiranFile = document.getElementById("lampiran").files[0];
+  if (lampiranFile) {
+    namaLampiran = lampiranFile.name;
+  }
 
-    if (!judul || !isi) {
-      alert("Mohon lengkapi data laporan");
-      return;
-    }
-
-    let namaLampiran = "-";
-
-    if (lampiranFile) {
-      namaLampiran = lampiranFile.name;
-    }
-
-    const laporanBaru = {
-      tanggal: new Date().toLocaleDateString("id-ID"),
+  try {
+    await addDoc(collection(db, "laporan"), {
+      nama: user.nama || "-",
+      nik: user.nik || "-",
       jenis,
       judul,
       isi,
       lampiran: namaLampiran,
       status: "Menunggu Review",
-      respon: ""
-    };
+      respon: "",
+      tanggal: new Date().toLocaleDateString("id-ID")
+    });
 
-    let laporan = JSON.parse(localStorage.getItem("laporan")) || [];
-    laporan.push(laporanBaru);
-    localStorage.setItem("laporan", JSON.stringify(laporan));
-
-    alert("Laporan berhasil dikirim");
+    alert("Laporan berhasil dikirim ke Firestore");
 
     document.getElementById("judul").value = "";
     document.getElementById("isi").value = "";
     document.getElementById("lampiran").value = "";
 
     tampilkanLaporan();
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menyimpan laporan");
   }
+}
 
-  function tampilkanLaporan() {
-    const tbody = document.getElementById("tabelLaporan");
-    const laporan = JSON.parse(localStorage.getItem("laporan")) || [];
+async function tampilkanLaporan() {
+  const tbody = document.getElementById("tabelLaporan");
+  tbody.innerHTML = "";
 
-    if (laporan.length === 0) {
+  try {
+    const querySnapshot = await getDocs(collection(db, "laporan"));
+
+    if (querySnapshot.empty) {
       tbody.innerHTML = '<tr><td colspan="6">Belum ada laporan</td></tr>';
       return;
     }
 
-    tbody.innerHTML = "";
+    querySnapshot.forEach((doc) => {
+      const item = doc.data();
 
-    laporan.forEach(item => {
-      tbody.innerHTML += `
-        <tr>
-          <td>${item.tanggal}</td>
-          <td>${item.jenis}</td>
-          <td>${item.judul}</td>
-          <td>${item.lampiran || "-"}</td>
-          <td class="status">${item.status}</td>
-          <td>${item.respon || "-"}</td>
-        </tr>
-      `;
+      if (item.nik === user.nik) {
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.tanggal}</td>
+            <td>${item.jenis}</td>
+            <td>${item.judul}</td>
+            <td>${item.lampiran || "-"}</td>
+            <td class="status">${item.status}</td>
+            <td>${item.respon || "-"}</td>
+          </tr>
+        `;
+      }
     });
-  }
 
-  function logout() {
-    localStorage.removeItem("user");
-    window.location.href = "login.html";
+  } catch (error) {
+    console.log(error);
+    tbody.innerHTML = '<tr><td colspan="6">Gagal memuat data</td></tr>';
   }
+}
 
-  tampilkanLaporan();
+function logout() {
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+
+window.kirimLaporan = kirimLaporan;
+window.logout = logout;
+
+tampilkanLaporan();
+
 </script>
-
-</body>
-</html>
