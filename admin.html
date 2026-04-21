@@ -156,7 +156,27 @@ import {
   updateDoc,
   doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+async function kirimWhatsApp(target, pesan) {
+  try {
+    await fetch("https://api.fonnte.com/send", {
+      method: "POST",
+      headers: {
+        "Authorization": "XQXaZkNQ3ZrUQ3RZsxTn"
+      },
+      body: new URLSearchParams({
+        target: target,
+        message: pesan,
+        countryCode: "62"
+      })
+    });
 
+    console.log("WhatsApp berhasil dikirim");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal mengirim WhatsApp");
+  }
+}
 const firebaseConfig = {
   apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
   authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
