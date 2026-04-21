@@ -329,7 +329,12 @@ async function exportPDF() {
 
 function handleLogout() {
   localStorage.removeItem("user");
-  window.location.href = "login.html";
+  localStorage.removeItem("admin");
+  sessionStorage.clear();
+
+  alert("Logout berhasil");
+
+  window.location.replace("login.html");
 }
 
 window.updateStatus = updateStatus;
