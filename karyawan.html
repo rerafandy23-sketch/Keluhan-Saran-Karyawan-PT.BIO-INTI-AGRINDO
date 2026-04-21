@@ -110,6 +110,14 @@
   <div class="card">
     <h2>Daftar Karyawan</h2>
 
+    <input type="text" id="searchKaryawan" placeholder="Cari Nama / NIK..." onkeyup="tampilkanKaryawan()" />
+
+    <select id="filterStatus" onchange="tampilkanKaryawan()">
+      <option value="">Semua Status</option>
+      <option value="Aktif">Aktif</option>
+      <option value="Non Aktif">Non Aktif</option>
+    </select>
+
     <table>
       <thead>
         <tr>
@@ -217,6 +225,8 @@ async function simpanKaryawan() {
 
 async function tampilkanKaryawan() {
   const tbody = document.getElementById("tabelKaryawan");
+  const keyword = document.getElementById("searchKaryawan").value.toLowerCase();
+  const filterStatus = document.getElementById("filterStatus").value;
   tbody.innerHTML = "";
 
   try {
@@ -231,7 +241,15 @@ async function tampilkanKaryawan() {
       const item = docSnap.data();
       const docId = docSnap.id;
 
-      tbody.innerHTML += `
+      const nama = (item.nama || "").toLowerCase();
+      const nik = (item.nik || "").toLowerCase();
+      const status = item.status_aktif || "Aktif";
+
+      if (
+        (nama.includes(keyword) || nik.includes(keyword)) &&
+        (filterStatus === "" || status === filterStatus)
+      ) {
+        tbody.innerHTML += `
         <tr>
           <td>${item.nama || "-"}</td>
           <td>${item.nik || "-"}</td>
@@ -248,6 +266,7 @@ async function tampilkanKaryawan() {
           </td>
         </tr>
       `;
+      }
     });
 
   } catch (error) {
