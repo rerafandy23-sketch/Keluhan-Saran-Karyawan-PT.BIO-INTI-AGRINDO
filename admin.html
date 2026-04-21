@@ -179,11 +179,13 @@ header {
           <th>Tanggal</th>
           <th>Jenis</th>
           <th>Judul</th>
-          <th>Status HRD</th>
-          <th>Approval Manager</th>
-          <th>Respon HRD</th>
-          <th>Catatan Manager</th>
-          <th>Aksi</th>
+        <th>Status HRD</th>
+<th>Approval Manager</th>
+<th>Approval Direktur</th>
+<th>Respon HRD</th>
+<th>Catatan Manager</th>
+<th>Catatan Direktur</th>
+<th>Aksi</th>
         </tr>
       </thead>
       <tbody id="adminTable">
@@ -276,7 +278,19 @@ async function tampilkanAdminPanel() {
               <option value="Ditolak" ${item.approval_manager === "Ditolak" ? "selected" : ""}>Ditolak</option>
             </select>
           </td>
-
+<td>
+  <select onchange="updateApprovalDirektur('${docId}', this.value)">
+    <option value="Menunggu Approval" ${item.approval_direktur === "Menunggu Approval" ? "selected" : ""}>
+      Menunggu Approval
+    </option>
+    <option value="Disetujui" ${item.approval_direktur === "Disetujui" ? "selected" : ""}>
+      Disetujui
+    </option>
+    <option value="Ditolak" ${item.approval_direktur === "Ditolak" ? "selected" : ""}>
+      Ditolak
+    </option>
+  </select>
+</td>
           <td>
             <textarea id="respon-${docId}" placeholder="Respon HRD...">${item.respon || ""}</textarea>
           </td>
@@ -284,10 +298,15 @@ async function tampilkanAdminPanel() {
           <td>
             <textarea id="manager-${docId}" placeholder="Catatan Manager...">${item.manager_respon || ""}</textarea>
           </td>
-
+<td>
+  <textarea id="direktur-${docId}" placeholder="Catatan Direktur...">${item.direktur_respon || ""}</textarea>
+</td>
           <td>
             <button onclick="simpanRespon('${docId}')">Simpan HRD</button>
             <button onclick="simpanManagerRespon('${docId}')">Simpan Manager</button>
+            <button onclick="simpanDirekturRespon('${docId}')">
+  Simpan Direktur
+</button>
           </td>
         </tr>
       `;
