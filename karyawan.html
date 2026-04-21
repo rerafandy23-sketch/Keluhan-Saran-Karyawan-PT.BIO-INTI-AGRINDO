@@ -104,6 +104,7 @@
     </select>
 
     <button onclick="simpanKaryawan()">Simpan Data</button>
+    <input type="hidden" id="editId" />
   </div>
 
   <div class="card">
@@ -137,7 +138,9 @@ import {
   collection,
   addDoc,
   getDocs,
-  deleteDoc
+  deleteDoc,
+  updateDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -153,6 +156,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function simpanKaryawan() {
+  const editId = document.getElementById("editId").value;
   const nama = document.getElementById("nama").value;
   const nik = document.getElementById("nik").value.trim();
   const tglInput = document.getElementById("tgl_lahir").value;
@@ -169,14 +173,27 @@ async function simpanKaryawan() {
   const tglFormat = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
   try {
-    await addDoc(collection(db, "karyawan"), {
+    if (editId) {
+      await updateDoc(doc(db, "karyawan", editId), {
+        nama,
+        nik,
+        tgl_lahir: tglFormat,
+        jabatan,
+        departemen,
+        role
+      });
+
+      alert("Data karyawan berhasil diupdate");
+    } else {
+      await addDoc(collection(db, "karyawan"), {
       nama,
       nik,
       tgl_lahir: tglFormat,
       jabatan,
       departemen,
       role
-    });
+      });
+    }
 
     alert("Data karyawan berhasil disimpan");
 
@@ -186,6 +203,7 @@ async function simpanKaryawan() {
     document.getElementById("jabatan").value = "";
     document.getElementById("departemen").value = "";
     document.getElementById("role").value = "staff";
+    document.getElementById("editId").value = "";
 
     tampilkanKaryawan();
 
@@ -219,6 +237,7 @@ async function tampilkanKaryawan() {
           <td>${item.departemen || "-"}</td>
           <td>${item.role || "-"}</td>
           <td>
+            <button onclick="editKaryawan('${docId}', '${item.nama || ""}', '${item.nik || ""}', '${item.jabatan || ""}', '${item.departemen || ""}', '${item.role || "staff"}')">Edit</button>
             <button onclick="hapusKaryawan('${docId}')">Hapus</button>
           </td>
         </tr>
@@ -229,6 +248,16 @@ async function tampilkanKaryawan() {
     console.log(error);
     tbody.innerHTML = '<tr><td colspan="5">Gagal memuat data</td></tr>';
   }
+}
+
+function editKaryawan(docId, nama, nik, jabatan, departemen, role) {
+  document.getElementById("editId").value = docId;
+  document.getElementById("nama").value = nama;
+  document.getElementById("nik").value = nik;
+  document.getElementById("jabatan").value = jabatan;
+  document.getElementById("departemen").value = departemen;
+  document.getElementById("role").value = role;
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 async function hapusKaryawan(docId) {
@@ -247,6 +276,7 @@ async function hapusKaryawan(docId) {
 }
 
 window.simpanKaryawan = simpanKaryawan;
+window.editKaryawan = editKaryawan;
 window.hapusKaryawan = hapusKaryawan;
 
 tampilkanKaryawan();
