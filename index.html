@@ -86,6 +86,7 @@
       padding: 12px;
       text-align: left;
       font-size: 14px;
+      vertical-align: top;
     }
 
     th {
@@ -136,6 +137,9 @@
 
     <textarea id="isi" placeholder="Tuliskan keluhan atau saran Anda..."></textarea>
 
+    <label><strong>Upload Lampiran (Foto / PDF)</strong></label>
+    <input type="file" id="lampiran" accept="image/*,.pdf" />
+
     <button onclick="kirimLaporan()">Kirim Laporan</button>
   </div>
 
@@ -143,18 +147,19 @@
     <h2>Riwayat Laporan</h2>
 
     <table>
-   <thead>
-<tr>
-  <th>Tanggal</th>
-  <th>Jenis</th>
-  <th>Judul</th>
-  <th>Status</th>
-  <th>Respon HRD</th>
-</tr>
-</thead>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Jenis</th>
+          <th>Judul</th>
+          <th>Lampiran</th>
+          <th>Status</th>
+          <th>Respon HRD</th>
+        </tr>
+      </thead>
       <tbody id="tabelLaporan">
         <tr>
-          <td colspan="4">Belum ada laporan</td>
+          <td colspan="6">Belum ada laporan</td>
         </tr>
       </tbody>
     </table>
@@ -179,10 +184,17 @@
     const jenis = document.getElementById("jenis").value;
     const judul = document.getElementById("judul").value;
     const isi = document.getElementById("isi").value;
+    const lampiranFile = document.getElementById("lampiran").files[0];
 
     if (!judul || !isi) {
       alert("Mohon lengkapi data laporan");
       return;
+    }
+
+    let namaLampiran = "-";
+
+    if (lampiranFile) {
+      namaLampiran = lampiranFile.name;
     }
 
     const laporanBaru = {
@@ -190,7 +202,9 @@
       jenis,
       judul,
       isi,
-      status: "Menunggu Review"
+      lampiran: namaLampiran,
+      status: "Menunggu Review",
+      respon: ""
     };
 
     let laporan = JSON.parse(localStorage.getItem("laporan")) || [];
@@ -201,6 +215,7 @@
 
     document.getElementById("judul").value = "";
     document.getElementById("isi").value = "";
+    document.getElementById("lampiran").value = "";
 
     tampilkanLaporan();
   }
@@ -210,7 +225,7 @@
     const laporan = JSON.parse(localStorage.getItem("laporan")) || [];
 
     if (laporan.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="4">Belum ada laporan</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6">Belum ada laporan</td></tr>';
       return;
     }
 
@@ -218,14 +233,15 @@
 
     laporan.forEach(item => {
       tbody.innerHTML += `
-<tr>
-  <td>${item.tanggal}</td>
-  <td>${item.jenis}</td>
-  <td>${item.judul}</td>
-  <td class="status">${item.status}</td>
-  <td>${item.respon || "-"}</td>
-</tr>
-`;
+        <tr>
+          <td>${item.tanggal}</td>
+          <td>${item.jenis}</td>
+          <td>${item.judul}</td>
+          <td>${item.lampiran || "-"}</td>
+          <td class="status">${item.status}</td>
+          <td>${item.respon || "-"}</td>
+        </tr>
+      `;
     });
   }
 
