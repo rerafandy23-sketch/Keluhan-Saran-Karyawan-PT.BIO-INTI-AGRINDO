@@ -190,12 +190,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const user = JSON.parse(localStorage.getItem("user"));
+const savedUser = localStorage.getItem("user");
+const user = savedUser ? JSON.parse(savedUser) : null;
 
 if (!user) {
+  alert("Session login habis, silakan login ulang");
   window.location.href = "login.html";
 }
-
 document.getElementById("nama").textContent = user.nama || "-";
 document.getElementById("nik").textContent = user.nik || "-";
 document.getElementById("jabatan").textContent = user.jabatan || "-";
