@@ -118,6 +118,7 @@
           <th>Jabatan</th>
           <th>Departemen</th>
           <th>Role</th>
+          <th>Status</th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -180,7 +181,8 @@ async function simpanKaryawan() {
         tgl_lahir: tglFormat,
         jabatan,
         departemen,
-        role
+        role,
+      status_aktif: "Aktif"
       });
 
       alert("Data karyawan berhasil diupdate");
@@ -236,8 +238,12 @@ async function tampilkanKaryawan() {
           <td>${item.jabatan || "-"}</td>
           <td>${item.departemen || "-"}</td>
           <td>${item.role || "-"}</td>
+          <td>${item.status_aktif || "Aktif"}</td>
           <td>
             <button onclick="editKaryawan('${docId}', '${item.nama || ""}', '${item.nik || ""}', '${item.jabatan || ""}', '${item.departemen || ""}', '${item.role || "staff"}')">Edit</button>
+            <button onclick="toggleStatus('${docId}', '${item.status_aktif || "Aktif"}')">
+              ${item.status_aktif === "Non Aktif" ? "Aktifkan" : "Nonaktifkan"}
+            </button>
             <button onclick="hapusKaryawan('${docId}')">Hapus</button>
           </td>
         </tr>
@@ -260,6 +266,22 @@ function editKaryawan(docId, nama, nik, jabatan, departemen, role) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+async function toggleStatus(docId, currentStatus) {
+  const statusBaru = currentStatus === "Non Aktif" ? "Aktif" : "Non Aktif";
+
+  try {
+    await updateDoc(doc(db, "karyawan", docId), {
+      status_aktif: statusBaru
+    });
+
+    alert("Status karyawan berhasil diperbarui");
+    tampilkanKaryawan();
+  } catch (error) {
+    console.log(error);
+    alert("Gagal update status karyawan");
+  }
+}
+
 async function hapusKaryawan(docId) {
   const konfirmasi = confirm("Yakin ingin menghapus karyawan non aktif ini?");
 
@@ -277,6 +299,7 @@ async function hapusKaryawan(docId) {
 
 window.simpanKaryawan = simpanKaryawan;
 window.editKaryawan = editKaryawan;
+window.toggleStatus = toggleStatus;
 window.hapusKaryawan = hapusKaryawan;
 
 tampilkanKaryawan();
