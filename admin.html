@@ -121,7 +121,7 @@
   </div>
 
   <div class="card">
-    <button class="logout" onclick="logout()">Logout</button>
+    <button class="logout" onclick="handleLogout()">Logout</button>
     <h2>Monitoring Semua Laporan</h2>
 
     <table>
@@ -327,7 +327,7 @@ async function exportPDF() {
   }
 }
 
-function logout() {
+function handleLogout() {
   localStorage.removeItem("user");
   window.location.href = "login.html";
 }
@@ -337,7 +337,7 @@ window.updateApprovalManager = updateApprovalManager;
 window.simpanRespon = simpanRespon;
 window.simpanManagerRespon = simpanManagerRespon;
 window.exportPDF = exportPDF;
-window.logout = logout;
+window.handleLogout = handleLogout;
 
 tampilkanAdminPanel();
 </script>
