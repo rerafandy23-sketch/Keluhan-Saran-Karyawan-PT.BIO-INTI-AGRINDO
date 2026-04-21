@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Keluhan Karyawan</title>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIACARE HR SYSTEM</title>
+
   <style>
     * {
       margin: 0;
@@ -16,6 +18,43 @@
       background: #f4f6f8;
       color: #333;
     }
+header {
+  background: linear-gradient(135deg, #0E4D2B, #2e7d32);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+.header-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.logo-header {
+  width: 130px;
+  height: auto;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: bold;
+}
+
+.header-text p {
+  margin: 8px 0 4px;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.header-text small {
+  font-size: 14px;
+  opacity: 0.95;
+}
 
     header {
       background: #2e7d32;
@@ -110,7 +149,17 @@
 <body>
 
 <header>
-  <h1>Sistem Keluhan & Saran Karyawan</h1>
+  <div class="header-box">
+
+    <img src="logo.png" alt="BIACARE HR SYSTEM" class="logo-header">
+
+    <div class="header-text">
+      <h1>BIACARE HR SYSTEM</h1>
+      <p>PT. BIO INTI AGRINDO</p>
+      <small>Empowering People, Building a Better Future</small>
+    </div>
+
+  </div>
 </header>
 
 <div class="container">
