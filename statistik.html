@@ -74,12 +74,61 @@
     th {
       background: #f5f7fa;
     }
+header {
+  background: linear-gradient(135deg, #0E4D2B, #2e7d32);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+.header-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.logo-header {
+  width: 130px;
+  height: auto;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: bold;
+}
+
+.header-text p {
+  margin: 8px 0 4px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.header-text small {
+  font-size: 14px;
+  opacity: 0.95;
+}
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Dashboard Statistik HRD</h1>
+<header>
+  <div class="header-box">
+
+    <img src="logo.png" alt="BIACARE HR SYSTEM" class="logo-header">
+
+    <div class="header-text">
+      <h1>BIACARE HR SYSTEM</h1>
+      <p>Dashboard Statistik HRD</p>
+      <small>PT. BIO INTI AGRINDO</small>
+    </div>
+
+  </div>
+</header>
 </header>
 
 <div style="width:92%; max-width:1200px; margin:20px auto; display:flex; justify-content:space-between; gap:10px;">
