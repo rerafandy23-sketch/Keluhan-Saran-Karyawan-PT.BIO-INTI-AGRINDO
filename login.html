@@ -131,17 +131,27 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     });
 
     if (foundUser) {
-      localStorage.setItem("user", JSON.stringify(foundUser));
+  localStorage.setItem("user", JSON.stringify(foundUser));
 
-      success.textContent = "Login berhasil...";
+  success.textContent = "Login berhasil...";
 
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 1000);
+  setTimeout(() => {
 
+    // Auto Redirect berdasarkan role
+    if (
+      foundUser.role &&
+      foundUser.role.toLowerCase() === "hr"
+    ) {
+      window.location.href = "admin.html";
     } else {
-      error.textContent = "NIK atau tanggal lahir salah";
+      window.location.href = "index.html";
     }
+
+  }, 1000);
+
+} else {
+  error.textContent = "NIK atau tanggal lahir salah";
+}
 
   } catch (err) {
     console.log(err);
