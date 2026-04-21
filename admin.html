@@ -135,56 +135,106 @@
 </div>
 
 <script>
-function tampilkanAdminPanel() {
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  updateDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
+  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
+  projectId: "keluahan-karyawan--ptbia",
+  storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
+  messagingSenderId: "855781665617",
+  appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function tampilkanAdminPanel() {
   const tbody = document.getElementById("adminTable");
-  const laporan = JSON.parse(localStorage.getItem("laporan")) || [];
-
-  if (laporan.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6">Belum ada laporan masuk</td></tr>';
-    return;
-  }
-
   tbody.innerHTML = "";
 
-  laporan.forEach((item, index) => {
-    tbody.innerHTML += `
-      <tr>
-        <td>${item.tanggal}</td>
-        <td>${item.jenis}</td>
-        <td>${item.judul}</td>
-        <td>
-          <select onchange="updateStatus(${index}, this.value)">
-            <option value="Menunggu Review" ${item.status === 'Menunggu Review' ? 'selected' : ''}>Menunggu Review</option>
-            <option value="Diproses" ${item.status === 'Diproses' ? 'selected' : ''}>Diproses</option>
-            <option value="Selesai" ${item.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
-            <option value="Ditolak" ${item.status === 'Ditolak' ? 'selected' : ''}>Ditolak</option>
-          </select>
-        </td>
-        <td>
-          <textarea id="respon-${index}" placeholder="Tulis respon HRD...">${item.respon || ''}</textarea>
-        </td>
-        <td>
-          <button onclick="simpanRespon(${index})">Simpan</button>
-        </td>
-      </tr>
-    `;
-  });
+  try {
+    const querySnapshot = await getDocs(collection(db, "laporan"));
+
+    if (querySnapshot.empty) {
+      tbody.innerHTML = '<tr><td colspan="6">Belum ada laporan masuk</td></tr>';
+      return;
+    }
+
+    querySnapshot.forEach((docSnap) => {
+      const item = docSnap.data();
+      const docId = docSnap.id;
+
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.tanggal}</td>
+          <td>${item.jenis}</td>
+          <td>${item.judul}</td>
+
+          <td>
+            <select onchange="updateStatus('${docId}', this.value)">
+              <option value="Menunggu Review" ${item.status === "Menunggu Review" ? "selected" : ""}>Menunggu Review</option>
+              <option value="Diproses" ${item.status === "Diproses" ? "selected" : ""}>Diproses</option>
+              <option value="Selesai" ${item.status === "Selesai" ? "selected" : ""}>Selesai</option>
+              <option value="Ditolak" ${item.status === "Ditolak" ? "selected" : ""}>Ditolak</option>
+            </select>
+          </td>
+
+          <td>
+            <textarea id="respon-${docId}" placeholder="Tulis respon HRD...">${item.respon || ""}</textarea>
+          </td>
+
+          <td>
+            <button onclick="simpanRespon('${docId}')">Simpan</button>
+          </td>
+        </tr>
+      `;
+    });
+
+  } catch (error) {
+    console.log(error);
+    tbody.innerHTML = '<tr><td colspan="6">Gagal memuat data</td></tr>';
+  }
 }
 
-function updateStatus(index, value) {
-  let laporan = JSON.parse(localStorage.getItem("laporan")) || [];
-  laporan[index].status = value;
-  localStorage.setItem("laporan", JSON.stringify(laporan));
+async function updateStatus(docId, value) {
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      status: value
+    });
+
+    alert("Status berhasil diperbarui");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal update status");
+  }
 }
 
-function simpanRespon(index) {
-  let laporan = JSON.parse(localStorage.getItem("laporan")) || [];
-  const respon = document.getElementById(`respon-${index}`).value;
+async function simpanRespon(docId) {
+  const respon = document.getElementById(`respon-${docId}`).value;
 
-  laporan[index].respon = respon;
-  localStorage.setItem("laporan", JSON.stringify(laporan));
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      respon: respon
+    });
 
-  alert("Respon HRD berhasil disimpan");
+    alert("Respon HRD berhasil disimpan");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menyimpan respon");
+  }
 }
 
 function logout() {
@@ -192,8 +242,10 @@ function logout() {
   window.location.href = "login.html";
 }
 
-tampilkanAdminPanel();
-</script>
+window.updateStatus = updateStatus;
+window.simpanRespon = simpanRespon;
+window.logout = logout;
 
-</body>
-</html>
+tampilkanAdminPanel();
+
+</script>
