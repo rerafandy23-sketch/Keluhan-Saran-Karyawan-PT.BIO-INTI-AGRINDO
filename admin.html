@@ -185,6 +185,8 @@ header {
 <th>Respon HRD</th>
 <th>Catatan Manager</th>
 <th>Catatan Direktur</th>
+  <th>Feedback Realisasi</th>
+<th>Bukti Realisasi</th>        
 <th>Aksi</th>
         </tr>
       </thead>
@@ -301,11 +303,20 @@ async function tampilkanAdminPanel() {
 <td>
   <textarea id="direktur-${docId}" placeholder="Catatan Direktur...">${item.direktur_respon || ""}</textarea>
 </td>
+<td>
+  <textarea id="feedback-${docId}" placeholder="Feedback Realisasi...">${item.feedback_realisasi || ""}</textarea>
+</td>
+<td>
+  <textarea id="bukti-${docId}" placeholder="Link / Bukti Realisasi...">${item.bukti_realisasi || ""}</textarea>
+</td>
           <td>
             <button onclick="simpanRespon('${docId}')">Simpan HRD</button>
             <button onclick="simpanManagerRespon('${docId}')">Simpan Manager</button>
             <button onclick="simpanDirekturRespon('${docId}')">
   Simpan Direktur
+</button>
+<button onclick="simpanRealisasi('${docId}')">
+  Simpan Realisasi
 </button>
           </td>
         </tr>
