@@ -102,6 +102,67 @@
   </style>
 </head>
 <body>
+<!-- Library jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Tombol Export PDF -->
+<div style="margin:20px 0; text-align:right;">
+  <button onclick="exportPDF()">Export PDF Laporan</button>
+</div>
+
+<script>
+async function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(16);
+  doc.text("Laporan Keluhan Karyawan - HRD", 14, 20);
+
+  doc.setFontSize(11);
+
+  let y = 35;
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "laporan"));
+
+    if (querySnapshot.empty) {
+      alert("Belum ada data laporan untuk di-export");
+      return;
+    }
+
+    querySnapshot.forEach((docSnap, index) => {
+      const item = docSnap.data();
+
+      const text = [
+        `${index + 1}. ${item.judul || "-"}`,
+        `Tanggal : ${item.tanggal || "-"}`,
+        `Jenis   : ${item.jenis || "-"}`,
+        `Status  : ${item.status || "-"}`,
+        `Respon  : ${item.respon || "-"}`,
+        `----------------------------------------`
+      ];
+
+      text.forEach(line => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+
+        doc.text(line, 14, y);
+        y += 8;
+      });
+    });
+
+    doc.save("laporan-hrd.pdf");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal export PDF");
+  }
+}
+
+window.exportPDF = exportPDF;
+</script>
 
 <header>
   <h1>Admin Panel HRD - Keluhan Karyawan</h1>
