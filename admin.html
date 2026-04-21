@@ -27,7 +27,7 @@
 
     .container {
       width: 92%;
-      max-width: 1200px;
+      max-width: 1300px;
       margin: 30px auto;
     }
 
@@ -82,6 +82,7 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 14px;
+      margin: 4px;
     }
 
     button:hover {
@@ -114,19 +115,10 @@
 <div class="container">
 
   <div class="top-actions">
-   <button onclick="window.location.href='karyawan.html'">
-    Data Master Karyawan
-  </button>
-
-  <button onclick="window.location.href='statistik.html'">
-    Lihat Statistik
-  </button>
-
-  <button onclick="exportPDF()">
-    Export PDF Laporan
-  </button>
-
-</div>
+    <button onclick="window.location.href='karyawan.html'">Data Master Karyawan</button>
+    <button onclick="window.location.href='statistik.html'">Lihat Statistik</button>
+    <button onclick="exportPDF()">Export PDF Laporan</button>
+  </div>
 
   <div class="card">
     <button class="logout" onclick="logout()">Logout</button>
@@ -135,21 +127,19 @@
     <table>
       <thead>
         <tr>
-      <thead>
-  <tr>
-    <th>Tanggal</th>
-    <th>Jenis</th>
-    <th>Judul</th>
-    <th>Status HRD</th>
-    <th>Approval Manager</th>
-    <th>Respon HRD</th>
-    <th>Catatan Manager</th>
-    <th>Aksi</th>
-  </tr>
-</thead>    
+          <th>Tanggal</th>
+          <th>Jenis</th>
+          <th>Judul</th>
+          <th>Status HRD</th>
+          <th>Approval Manager</th>
+          <th>Respon HRD</th>
+          <th>Catatan Manager</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
       <tbody id="adminTable">
         <tr>
-          <td colspan="6">Belum ada laporan masuk</td>
+          <td colspan="8">Memuat data...</td>
         </tr>
       </tbody>
     </table>
@@ -187,7 +177,7 @@ async function tampilkanAdminPanel() {
     const querySnapshot = await getDocs(collection(db, "laporan"));
 
     if (querySnapshot.empty) {
-      tbody.innerHTML = '<tr><td colspan="6">Belum ada laporan masuk</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8">Belum ada laporan masuk</td></tr>';
       return;
     }
 
@@ -200,25 +190,35 @@ async function tampilkanAdminPanel() {
           <td>${item.tanggal || "-"}</td>
           <td>${item.jenis || "-"}</td>
           <td>${item.judul || "-"}</td>
-          <td>
-  <select onchange="updateApprovalManager('${docId}', this.value)">
-    <option value="Menunggu Approval" ${item.approval_manager === "Menunggu Approval" ? "selected" : ""}>
-      Menunggu Approval
-    </option>
-    <option value="Disetujui" ${item.approval_manager === "Disetujui" ? "selected" : ""}>
-      Disetujui
-    </option>
-    <option value="Ditolak" ${item.approval_manager === "Ditolak" ? "selected" : ""}>
-      Ditolak
-    </option>
-  </select>
-</td>
 
-<td>
-  <textarea id="manager-${docId}" placeholder="Catatan Manager...">${item.manager_respon || ""}</textarea>
-</td>
           <td>
-            <button onclick="simpanRespon('${docId}')">Simpan</button>
+            <select onchange="updateStatus('${docId}', this.value)">
+              <option value="Menunggu Review" ${item.status === "Menunggu Review" ? "selected" : ""}>Menunggu Review</option>
+              <option value="Diproses" ${item.status === "Diproses" ? "selected" : ""}>Diproses</option>
+              <option value="Selesai" ${item.status === "Selesai" ? "selected" : ""}>Selesai</option>
+              <option value="Ditolak" ${item.status === "Ditolak" ? "selected" : ""}>Ditolak</option>
+            </select>
+          </td>
+
+          <td>
+            <select onchange="updateApprovalManager('${docId}', this.value)">
+              <option value="Menunggu Approval" ${item.approval_manager === "Menunggu Approval" ? "selected" : ""}>Menunggu Approval</option>
+              <option value="Disetujui" ${item.approval_manager === "Disetujui" ? "selected" : ""}>Disetujui</option>
+              <option value="Ditolak" ${item.approval_manager === "Ditolak" ? "selected" : ""}>Ditolak</option>
+            </select>
+          </td>
+
+          <td>
+            <textarea id="respon-${docId}" placeholder="Respon HRD...">${item.respon || ""}</textarea>
+          </td>
+
+          <td>
+            <textarea id="manager-${docId}" placeholder="Catatan Manager...">${item.manager_respon || ""}</textarea>
+          </td>
+
+          <td>
+            <button onclick="simpanRespon('${docId}')">Simpan HRD</button>
+            <button onclick="simpanManagerRespon('${docId}')">Simpan Manager</button>
           </td>
         </tr>
       `;
@@ -226,7 +226,7 @@ async function tampilkanAdminPanel() {
 
   } catch (error) {
     console.log(error);
-    document.getElementById("adminTable").innerHTML = '<tr><td colspan="6">Gagal memuat data</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8">Gagal memuat data</td></tr>';
   }
 }
 
@@ -235,10 +235,22 @@ async function updateStatus(docId, value) {
     await updateDoc(doc(db, "laporan", docId), {
       status: value
     });
-    alert("Status berhasil diperbarui");
+    alert("Status HRD berhasil diperbarui");
   } catch (error) {
     console.log(error);
-    alert("Gagal update status");
+    alert("Gagal update status HRD");
+  }
+}
+
+async function updateApprovalManager(docId, value) {
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      approval_manager: value
+    });
+    alert("Approval Manager berhasil diperbarui");
+  } catch (error) {
+    console.log(error);
+    alert("Gagal update approval manager");
   }
 }
 
@@ -252,7 +264,21 @@ async function simpanRespon(docId) {
     alert("Respon HRD berhasil disimpan");
   } catch (error) {
     console.log(error);
-    alert("Gagal menyimpan respon");
+    alert("Gagal menyimpan respon HRD");
+  }
+}
+
+async function simpanManagerRespon(docId) {
+  const respon = document.getElementById(`manager-${docId}`).value;
+
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      manager_respon: respon
+    });
+    alert("Catatan Manager berhasil disimpan");
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menyimpan catatan manager");
   }
 }
 
@@ -279,8 +305,8 @@ async function exportPDF() {
         `${index + 1}. ${item.judul || "-"}`,
         `Tanggal : ${item.tanggal || "-"}`,
         `Jenis   : ${item.jenis || "-"}`,
-        `Status  : ${item.status || "-"}`,
-        `Respon  : ${item.respon || "-"}`,
+        `Status HRD : ${item.status || "-"}`,
+        `Approval Manager : ${item.approval_manager || "-"}`,
         `--------------------------------`
       ];
 
@@ -295,7 +321,6 @@ async function exportPDF() {
     });
 
     pdf.save("laporan-hrd.pdf");
-
   } catch (error) {
     console.log(error);
     alert("Gagal export PDF");
@@ -306,39 +331,11 @@ function logout() {
   localStorage.removeItem("user");
   window.location.href = "login.html";
 }
-async function updateApprovalManager(docId, value) {
-  try {
-    await updateDoc(doc(db, "laporan", docId), {
-      approval_manager: value
-    });
 
-    alert("Approval Manager berhasil diperbarui");
-
-  } catch (error) {
-    console.log(error);
-    alert("Gagal update approval manager");
-  }
-}
-
-async function simpanManagerRespon(docId) {
-  const respon = document.getElementById(`manager-${docId}`).value;
-
-  try {
-    await updateDoc(doc(db, "laporan", docId), {
-      manager_respon: respon
-    });
-
-    alert("Catatan Manager berhasil disimpan");
-
-  } catch (error) {
-    console.log(error);
-    alert("Gagal menyimpan catatan manager");
-  }
-}
-  window.updateApprovalManager = updateApprovalManager;
-window.simpanManagerRespon = simpanManagerRespon;
 window.updateStatus = updateStatus;
+window.updateApprovalManager = updateApprovalManager;
 window.simpanRespon = simpanRespon;
+window.simpanManagerRespon = simpanManagerRespon;
 window.exportPDF = exportPDF;
 window.logout = logout;
 
