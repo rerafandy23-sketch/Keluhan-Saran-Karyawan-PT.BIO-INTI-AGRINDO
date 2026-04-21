@@ -224,7 +224,6 @@ async function kirimLaporan() {
 
   try {
     await addDoc(collection(db, "laporan"), {
-   await addDoc(collection(db, "laporan"), {
   nama: user.nama || "-",
   nik: user.nik || "-",
   jenis,
@@ -297,7 +296,7 @@ function handleLogout() {
 }
 window.handleLogout = handleLogout;
 window.kirimLaporan = kirimLaporan;
-window.logout = logout;
+
 
 tampilkanLaporan();
 
