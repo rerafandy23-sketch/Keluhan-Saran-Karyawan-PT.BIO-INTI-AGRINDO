@@ -201,16 +201,22 @@ async function tampilkanAdminPanel() {
           <td>${item.jenis || "-"}</td>
           <td>${item.judul || "-"}</td>
           <td>
-            <select onchange="updateStatus('${docId}', this.value)">
-              <option value="Menunggu Review" ${item.status === "Menunggu Review" ? "selected" : ""}>Menunggu Review</option>
-              <option value="Diproses" ${item.status === "Diproses" ? "selected" : ""}>Diproses</option>
-              <option value="Selesai" ${item.status === "Selesai" ? "selected" : ""}>Selesai</option>
-              <option value="Ditolak" ${item.status === "Ditolak" ? "selected" : ""}>Ditolak</option>
-            </select>
-          </td>
-          <td>
-            <textarea id="respon-${docId}" placeholder="Tulis respon HRD...">${item.respon || ""}</textarea>
-          </td>
+  <select onchange="updateApprovalManager('${docId}', this.value)">
+    <option value="Menunggu Approval" ${item.approval_manager === "Menunggu Approval" ? "selected" : ""}>
+      Menunggu Approval
+    </option>
+    <option value="Disetujui" ${item.approval_manager === "Disetujui" ? "selected" : ""}>
+      Disetujui
+    </option>
+    <option value="Ditolak" ${item.approval_manager === "Ditolak" ? "selected" : ""}>
+      Ditolak
+    </option>
+  </select>
+</td>
+
+<td>
+  <textarea id="manager-${docId}" placeholder="Catatan Manager...">${item.manager_respon || ""}</textarea>
+</td>
           <td>
             <button onclick="simpanRespon('${docId}')">Simpan</button>
           </td>
