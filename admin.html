@@ -101,6 +101,58 @@
     }
   </style>
 </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+async function exportPDF() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Laporan Keluhan Karyawan - HRD", 14, 20);
+
+    doc.setFontSize(11);
+    let y = 35;
+
+    const laporan = JSON.parse(localStorage.getItem("laporan")) || [];
+
+    if (laporan.length === 0) {
+      alert("Belum ada data laporan");
+      return;
+    }
+
+    laporan.forEach((item, index) => {
+      const text = [
+        `${index + 1}. ${item.judul || "-"}`,
+        `Tanggal : ${item.tanggal || "-"}`,
+        `Jenis   : ${item.jenis || "-"}`,
+        `Status  : ${item.status || "-"}`,
+        `Respon  : ${item.respon || "-"}`,
+        `------------------------------`
+      ];
+
+      text.forEach(line => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+
+        doc.text(line, 14, y);
+        y += 8;
+      });
+    });
+
+    doc.save("laporan-hrd.pdf");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal export PDF");
+  }
+}
+
+window.exportPDF = exportPDF;
+</script>
 <body>
 <!-- Library jsPDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
