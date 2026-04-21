@@ -82,6 +82,25 @@
   <h1>Dashboard Statistik HRD</h1>
 </header>
 
+<div style="width:92%; max-width:1200px; margin:20px auto; display:flex; justify-content:space-between; gap:10px;">
+  <button onclick="window.location.href='admin.html'">← Kembali ke Admin</button>
+  <button onclick="history.forward()">Maju →</button>
+</div>
+
+<div style="display:flex; min-height:100vh;">
+
+  <aside style="width:240px; background:#0d47a1; color:white; padding:30px 20px;">
+    <h2 style="color:white; margin-bottom:30px;">Menu HRD</h2>
+
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <button onclick="window.location.href='admin.html'">Dashboard Admin</button>
+      <button onclick="window.location.href='statistik.html'">Dashboard Statistik</button>
+      <button onclick="exportPDF()">Export PDF</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <div style="flex:1;">
 <div class="container">
 
   <div class="grid">
