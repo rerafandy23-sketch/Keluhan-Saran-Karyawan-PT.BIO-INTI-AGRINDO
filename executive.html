@@ -225,6 +225,25 @@
           </tr>
         </tbody>
       </table>
+      <div class="card">
+  <h2>Ranking Estate Keluhan</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Ranking</th>
+        <th>Estate</th>
+        <th>Total Keluhan</th>
+      </tr>
+    </thead>
+
+    <tbody id="rankingEstateTable">
+      <tr>
+        <td colspan="3">Memuat data ranking...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
     </div>
   </div>
 
@@ -320,6 +339,29 @@ if (estate && estate.trim() !== "") {
         document.getElementById("summaryTotal").textContent = total;
         document.getElementById("summaryPending").textContent = pending;
         document.getElementById("summaryClosed").textContent = closed;
+        const rankingTable = document.getElementById("rankingEstateTable");
+rankingTable.innerHTML = "";
+
+const sortedEstate = Object.entries(estateCount)
+  .sort((a, b) => b[1] - a[1]);
+
+if (sortedEstate.length === 0) {
+  rankingTable.innerHTML = `
+    <tr>
+      <td colspan="3">Belum ada data estate</td>
+    </tr>
+  `;
+} else {
+  sortedEstate.forEach((estate, index) => {
+    rankingTable.innerHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${estate[0]}</td>
+        <td>${estate[1]}</td>
+      </tr>
+    `;
+  });
+}
       } catch (error) {
         console.log(error);
         alert("Gagal memuat Executive Dashboard");
