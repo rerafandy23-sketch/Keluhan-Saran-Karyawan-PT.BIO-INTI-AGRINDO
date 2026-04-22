@@ -48,7 +48,66 @@
       width: 100%;
       border-collapse: collapse;
     }
+body {
+  margin: 0;
+  background: #f4f6f8;
+  display: flex;
+  font-family: Arial, sans-serif;
+}
 
+.sidebar {
+  width: 270px;
+  min-height: 100vh;
+  background: #0E4D2B;
+  color: white;
+  padding: 30px 20px;
+  box-shadow: 4px 0 14px rgba(0,0,0,0.1);
+}
+
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.sidebar-logo img {
+  width: 90px;
+  margin-bottom: 10px;
+}
+
+.sidebar-logo h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.sidebar-logo p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.sidebar button {
+  width: 100%;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: white;
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.sidebar button:hover {
+  background: #1565c0;
+  transform: translateX(4px);
+}
+
+.container {
+  flex: 1;
+  padding: 30px;
+}
     th, td {
       border: 1px solid #ddd;
       padding: 12px;
@@ -143,7 +202,39 @@ header {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+<div class="sidebar">
 
+  <div class="sidebar-logo">
+    <img src="logo.png" alt="BIACARE HR SYSTEM">
+    <h2>BIACARE</h2>
+    <p>HR SYSTEM</p>
+  </div>
+
+  <button onclick="window.location.href='admin.html'">
+    Dashboard
+  </button>
+
+  <button onclick="window.location.href='karyawan.html'">
+    Data Master Karyawan
+  </button>
+
+  <button onclick="window.location.href='statistik.html'">
+    Dashboard Statistik
+  </button>
+
+  <button onclick="window.location.href='executive.html'">
+    Executive Dashboard
+  </button>
+
+  <button onclick="exportPDF()">
+    Export PDF Report
+  </button>
+
+  <button onclick="logout()">
+    Logout
+  </button>
+
+</div>
 <header>
 <div class="header-box">
 
@@ -160,7 +251,6 @@ header {
 
 <div class="container">
 
-  <div class="top-actions">
     <button onclick="window.location.href='karyawan.html'">Data Master Karyawan</button>
     <button onclick="window.location.href='statistik.html'">Lihat Statistik</button>
     <button onclick="window.location.href='executive.html'">
