@@ -227,7 +227,27 @@
       </table>
       <div class="card">
   <h2>Ranking Estate Keluhan</h2>
+<div class="card">
+  <h2>SLA Monitoring Laporan</h2>
 
+  <table>
+    <thead>
+      <tr>
+        <th>Judul</th>
+        <th>Estate</th>
+        <th>Tanggal Masuk</th>
+        <th>Hari Berjalan</th>
+        <th>Status SLA</th>
+      </tr>
+    </thead>
+
+    <tbody id="slaTable">
+      <tr>
+        <td colspan="5">Memuat data SLA...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
   <table>
     <thead>
       <tr>
@@ -341,7 +361,51 @@ if (estate && estate.trim() !== "") {
         document.getElementById("summaryClosed").textContent = closed;
         const rankingTable = document.getElementById("rankingEstateTable");
 rankingTable.innerHTML = "";
+const slaTable = document.getElementById("slaTable");
+slaTable.innerHTML = "";
 
+querySnapshot.forEach((docSnap) => {
+  const item = docSnap.data();
+
+  if (item.status !== "Selesai") {
+    const tanggalMasuk = item.tanggal || "-";
+    const judul = item.judul || "-";
+    const estate = item.departemen || "-";
+
+    let hariBerjalan = "-";
+    let statusSLA = "Normal";
+
+    try {
+      const parts = tanggalMasuk.split("/");
+      const tanggalLaporan = new Date(
+        parts[2],
+        parts[1] - 1,
+        parts[0]
+      );
+
+      const today = new Date();
+      const diffTime = today - tanggalLaporan;
+      hariBerjalan = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      if (hariBerjalan >= 7) {
+        statusSLA = "Warning";
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+
+    slaTable.innerHTML += `
+      <tr>
+        <td>${judul}</td>
+        <td>${estate}</td>
+        <td>${tanggalMasuk}</td>
+        <td>${hariBerjalan} hari</td>
+        <td>${statusSLA}</td>
+      </tr>
+    `;
+  }
+});
 const sortedEstate = Object.entries(estateCount)
   .sort((a, b) => b[1] - a[1]);
 
