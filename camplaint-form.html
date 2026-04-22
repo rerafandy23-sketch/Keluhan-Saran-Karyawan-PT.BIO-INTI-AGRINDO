@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anonymous Complaint Premium Feature</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      padding: 30px;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #64748b;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #dbe2ea;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .radio-box {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .note {
+      background: #f8fafc;
+      border-left: 4px solid #2563eb;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .btn-submit {
+      margin-top: 30px;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Anonymous Complaint Feature</h1>
+    <p class="subtitle">Karyawan dapat memilih untuk menyampaikan keluhan dengan identitas terbuka atau anonim</p>
+
+    <div class="form-group">
+      <label>Nama Karyawan</label>
+      <input type="text" placeholder="Nama lengkap">
+    </div>
+
+    <div class="form-group">
+      <label>Departemen</label>
+      <input type="text" placeholder="Contoh: Produksi">
+    </div>
+
+    <div class="form-group">
+      <label>Jenis Keluhan</label>
+      <select>
+        <option>Pilih Jenis Keluhan</option>
+        <option>Bullying</option>
+        <option>Pelecehan</option>
+        <option>Payroll</option>
+        <option>Absensi</option>
+        <option>Diskriminasi</option>
+        <option>Lainnya</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Detail Keluhan</label>
+      <textarea placeholder="Tuliskan keluhan secara lengkap..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Apakah Anda ingin identitas dirahasiakan?</label>
+      <div class="radio-box">
+        <div class="radio-item">
+          <input type="radio" name="anonymous" id="yes">
+          <label for="yes">Ya, buat anonim</label>
+        </div>
+
+        <div class="radio-item">
+          <input type="radio" name="anonymous" id="no">
+          <label for="no">Tidak, tampilkan identitas saya</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      Jika memilih anonim, identitas Anda akan disembunyikan dari pihak terkait dan hanya dapat diakses oleh HR berwenang sesuai kebijakan perusahaan.
+    </div>
+
+    <button class="btn-submit">Kirim Complaint</button>
+  </div>
+</body>
+</html>
