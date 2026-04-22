@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
- <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BIACARE HR SYSTEM</title>
@@ -273,7 +273,7 @@ async function kirimLaporan() {
 
   try {
     await addDoc(collection(db, "laporan"), {
-nama: user.nama || "-",
+  nama: user.nama || "-",
   nik: user.nik || "-",
   departemen: user.departemen || "Tidak Diketahui",
 
@@ -292,7 +292,8 @@ nama: user.nama || "-",
   direktur_respon: "",
 
   feedback_realisasi: "",
-  bukti_realisasi: ""
+  bukti_realisasi: "",
+
   tanggal: new Date().toLocaleDateString("id-ID")
 });
 await kirimWhatsApp(
