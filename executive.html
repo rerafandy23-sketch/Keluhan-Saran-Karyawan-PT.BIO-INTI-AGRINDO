@@ -310,9 +310,12 @@ console.log("Jumlah Data:", querySnapshot.size);
             pending++;
           }
 
-          if (item.status === "Selesai") {
-            closed++;
-          }
+        if (
+  item.status === "Selesai" ||
+  item.status === "Case Closed"
+) {
+  closed++;
+}
 
           const judul = item.judul || "Lainnya";
           if (!issueCount[judul]) {
