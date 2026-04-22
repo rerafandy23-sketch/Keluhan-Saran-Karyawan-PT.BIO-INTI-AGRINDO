@@ -281,12 +281,15 @@
           }
           issueCount[judul]++;
 
-          const estate = item.departemen || "Tidak Diketahui";
-          if (!estateCount[estate]) {
-            estateCount[estate] = 0;
-          }
-          estateCount[estate]++;
-        });
+  const estate = item.departemen;
+
+if (estate && estate.trim() !== "") {
+  if (!estateCount[estate]) {
+    estateCount[estate] = 0;
+  }
+
+  estateCount[estate]++;
+}       
 
         let topIssue = "-";
         let maxIssue = 0;
