@@ -110,61 +110,92 @@
 </head>
 <body>
 
-<header>
-  <div class="header-box">
-    <img src="logo.png" alt="BIACARE HR SYSTEM" class="logo-header">
+<body>
 
-    <div class="header-text">
-      <h1>BIACARE HR SYSTEM</h1>
-      <p>Executive Dashboard</p>
-      <small>PT. BIO INTI AGRINDO</small>
-    </div>
+<div class="sidebar">
+
+  <div class="sidebar-logo">
+    <img src="logo.png" alt="BIACARE">
+    <h2>BIACARE</h2>
+    <p>Executive Dashboard</p>
   </div>
-</header>
 
-<div class="container">
+  <button onclick="window.location.href='admin.html'">
+    Admin Panel
+  </button>
 
-  <div class="grid">
+  <button onclick="window.location.href='statistik.html'">
+    Dashboard Statistik
+  </button>
 
-    <div class="card">
-      <h2>Total Laporan</h2>
+  <button onclick="window.location.href='executive.html'">
+    Executive Dashboard
+  </button>
+
+  <button onclick="handleLogout()">
+    Logout
+  </button>
+
+</div>
+
+<div class="main-content">
+
+  <header>
+    <h1>Executive Dashboard</h1>
+    <p>Director Monitoring Center — BIACARE HR SYSTEM</p>
+  </header>
+
+  <div class="dashboard-cards">
+
+    <div class="dashboard-card">
+      <h3>Total Laporan</h3>
       <p id="totalLaporan">0</p>
     </div>
 
-    <div class="card">
-      <h2>Laporan Selesai</h2>
-      <p id="laporanSelesai">0</p>
+    <div class="dashboard-card">
+      <h3>Pending Approval</h3>
+      <p id="pendingApproval">0</p>
     </div>
 
-    <div class="card">
-      <h2>Laporan Diproses</h2>
-      <p id="laporanDiproses">0</p>
+    <div class="dashboard-card">
+      <h3>Case Closed</h3>
+      <p id="caseClosed">0</p>
     </div>
 
-    <div class="card">
-      <h2>Laporan Ditolak</h2>
-      <p id="laporanDitolak">0</p>
-    </div>
-
-    <div class="card">
-      <h2>Approval Manager Pending</h2>
-      <p id="approvalManager">0</p>
-    </div>
-
-    <div class="card">
-      <h2>Approval Direktur Pending</h2>
-      <p id="approvalDirektur">0</p>
+    <div class="dashboard-card">
+      <h3>Top Issue</h3>
+      <p id="topIssue">-</p>
     </div>
 
   </div>
 
-  <div class="back-btn">
-    <button onclick="window.location.href='admin.html'">
-      Kembali ke Admin Panel
-    </button>
+  <div class="card">
+    <h2>Management Summary</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Total Laporan</th>
+          <th>Approval Pending</th>
+          <th>Case Closed</th>
+          <th>Performance HRD</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td id="summaryTotal">0</td>
+          <td id="summaryPending">0</td>
+          <td id="summaryClosed">0</td>
+          <td>Excellent</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
 </div>
+
+</body>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
