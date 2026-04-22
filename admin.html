@@ -417,10 +417,25 @@ if (
 
           <td>
             <select onchange="updateStatus('${docId}', this.value)">
-              <option value="Menunggu Review" ${item.status === "Menunggu Review" ? "selected" : ""}>Menunggu Review</option>
-              <option value="Diproses" ${item.status === "Diproses" ? "selected" : ""}>Diproses</option>
-              <option value="Selesai" ${item.status === "Selesai" ? "selected" : ""}>Selesai</option>
-              <option value="Ditolak" ${item.status === "Ditolak" ? "selected" : ""}>Ditolak</option>
+       <option value="Menunggu Review" ${item.status === "Menunggu Review" ? "selected" : ""}>
+  Menunggu Review
+</option>
+
+<option value="Diproses" ${item.status === "Diproses" ? "selected" : ""}>
+  Diproses
+</option>
+
+<option value="Selesai" ${item.status === "Selesai" ? "selected" : ""}>
+  Selesai
+</option>
+
+<option value="Case Closed" ${item.status === "Case Closed" ? "selected" : ""}>
+  Case Closed
+</option>
+
+<option value="Ditolak" ${item.status === "Ditolak" ? "selected" : ""}>
+  Ditolak
+</option>
             </select>
           </td>
 
