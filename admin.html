@@ -239,19 +239,7 @@ header {
     Dashboard
   </button>
 
-  <button onclick="window.location.href='karyawan.html'">
-    Data Master Karyawan
-  </button>
-
-  <button onclick="window.location.href='statistik.html'">
-    Dashboard Statistik
-  </button>
-
-  <button onclick="window.location.href='executive.html'">
-    Executive Dashboard
-  </button>
-
-  <button onclick="exportPDF()">
+   <button onclick="exportPDF()">
     Export PDF Report
   </button>
 
@@ -293,16 +281,11 @@ header {
   </div>
 
 </div>
-    <button onclick="window.location.href='karyawan.html'">Data Master Karyawan</button>
-    <button onclick="window.location.href='statistik.html'">Lihat Statistik</button>
-    <button onclick="window.location.href='executive.html'">
-  Executive Dashboard
-</button>
-    <button onclick="exportPDF()">Export PDF Laporan</button>
+
   </div>
 
   <div class="card">
-    <button class="logout" onclick="handleLogout()">Logout</button>
+
     <h2>Monitoring Semua Laporan</h2>
 
     <table>
@@ -392,9 +375,7 @@ let pending = 0;
       const item = docSnap.data();
       const docId = docSnap.id;
 total++;
-document.getElementById("totalLaporan").textContent = total;
-document.getElementById("laporanSelesai").textContent = selesai;
-document.getElementById("approvalPending").textContent = pending;
+
 if (item.status === "Selesai") selesai++;
 
 if (
@@ -468,7 +449,9 @@ if (
         </tr>
       `;
     });
-
+document.getElementById("totalLaporan").textContent = total;
+document.getElementById("laporanSelesai").textContent = selesai;
+document.getElementById("approvalPending").textContent = pending;
   } catch (error) {
     console.log(error);
     tbody.innerHTML = '<tr><td colspan="8">Gagal memuat data</td></tr>';
@@ -526,16 +509,63 @@ async function simpanManagerRespon(docId) {
     alert("Gagal menyimpan catatan manager");
   }
 }
+async function updateApprovalDirektur(docId, value) {
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      approval_direktur: value
+    });
 
+    alert("Approval Direktur berhasil diperbarui");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal update approval direktur");
+  }
+}
+
+async function simpanDirekturRespon(docId) {
+  const respon = document.getElementById(`direktur-${docId}`).value;
+
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      direktur_respon: respon
+    });
+
+    alert("Catatan Direktur berhasil disimpan");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menyimpan catatan direktur");
+  }
+}
+
+async function simpanRealisasi(docId) {
+  const feedback = document.getElementById(`feedback-${docId}`).value;
+  const bukti = document.getElementById(`bukti-${docId}`).value;
+
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      feedback_realisasi: feedback,
+      bukti_realisasi: bukti
+    });
+
+    alert("Feedback & Bukti Realisasi berhasil disimpan");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menyimpan realisasi");
+  }
+}
 async function exportPDF() {
   try {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
 
     pdf.setFontSize(16);
-    pdf.text("Laporan Keluhan Karyawan - HRD", 14, 20);
+    pdf.text("BIACARE HR SYSTEM - Laporan Keluhan Karyawan", 14, 20);
 
     let y = 35;
+
     const querySnapshot = await getDocs(collection(db, "laporan"));
 
     if (querySnapshot.empty) {
@@ -548,11 +578,17 @@ async function exportPDF() {
 
       const lines = [
         `${index + 1}. ${item.judul || "-"}`,
-        `Tanggal : ${item.tanggal || "-"}`,
-        `Jenis   : ${item.jenis || "-"}`,
-        `Status HRD : ${item.status || "-"}`,
-        `Approval Manager : ${item.approval_manager || "-"}`,
-        `--------------------------------`
+        `Tanggal              : ${item.tanggal || "-"}`,
+        `Jenis                : ${item.jenis || "-"}`,
+        `Status HRD           : ${item.status || "-"}`,
+        `Approval Manager     : ${item.approval_manager || "-"}`,
+        `Approval Direktur    : ${item.approval_direktur || "-"}`,
+        `Respon HRD           : ${item.respon || "-"}`,
+        `Catatan Manager      : ${item.manager_respon || "-"}`,
+        `Catatan Direktur     : ${item.direktur_respon || "-"}`,
+        `Feedback Realisasi   : ${item.feedback_realisasi || "-"}`,
+        `Bukti Realisasi      : ${item.bukti_realisasi || "-"}`,
+        `------------------------------------------------------------`
       ];
 
       lines.forEach((line) => {
@@ -560,12 +596,19 @@ async function exportPDF() {
           pdf.addPage();
           y = 20;
         }
+
+        pdf.setFontSize(11);
         pdf.text(line, 14, y);
         y += 8;
       });
+
+      y += 4;
     });
 
-    pdf.save("laporan-hrd.pdf");
+    pdf.save("BIACARE-Laporan-HRD.pdf");
+
+    alert("Export PDF berhasil");
+
   } catch (error) {
     console.log(error);
     alert("Gagal export PDF");
@@ -586,6 +629,9 @@ window.updateStatus = updateStatus;
 window.updateApprovalManager = updateApprovalManager;
 window.simpanRespon = simpanRespon;
 window.simpanManagerRespon = simpanManagerRespon;
+ window.updateApprovalDirektur = updateApprovalDirektur;
+window.simpanDirekturRespon = simpanDirekturRespon;
+window.simpanRealisasi = simpanRealisasi; 
 window.exportPDF = exportPDF;
 window.handleLogout = handleLogout;
 
