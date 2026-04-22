@@ -14,372 +14,325 @@
     }
 
     body {
+      margin: 0;
       background: #f4f6f8;
+      display: flex;
       color: #333;
+    }
+
+    .sidebar {
+      width: 260px;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #0E4D2B, #1565c0);
+      color: white;
+      padding: 30px 20px;
+      box-shadow: 4px 0 14px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-logo {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .sidebar-logo img {
+      width: 110px;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-logo h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .sidebar-logo p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .sidebar button {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .sidebar button:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .main-content {
+      flex: 1;
     }
 
     header {
       background: linear-gradient(135deg, #0E4D2B, #1565c0);
       color: white;
-      padding: 30px 20px;
+      padding: 40px 20px;
       text-align: center;
       box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     }
 
-    .header-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 25px;
-      flex-wrap: wrap;
-    }
-
-    .logo-header {
-      width: 130px;
-      height: auto;
-    }
-
-    .header-text h1 {
+    header h1 {
       margin: 0;
-      font-size: 34px;
-      font-weight: bold;
+      font-size: 42px;
     }
 
-    .header-text p {
-      margin: 8px 0 4px;
+    header p {
+      margin-top: 10px;
       font-size: 18px;
-      font-weight: bold;
     }
 
-    .header-text small {
-      font-size: 14px;
-      opacity: 0.95;
-    }
-
-    .container {
-      width: 92%;
-      max-width: 1200px;
-      margin: 30px auto;
-    }
-
-    .grid {
+    .dashboard-cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      padding: 30px;
     }
 
-    .card {
+    .dashboard-card {
       background: white;
-      padding: 24px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      text-align: center;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      border-left: 6px solid #1565c0;
     }
 
-    .card h2 {
+    .dashboard-card h3 {
+      margin-bottom: 15px;
+      color: #666;
       font-size: 16px;
-      margin-bottom: 12px;
-      color: #1565c0;
     }
 
-    .card p {
-      font-size: 28px;
+    .dashboard-card p {
+      font-size: 34px;
       font-weight: bold;
       color: #0E4D2B;
     }
 
-    .back-btn {
-      margin-top: 30px;
+    .card {
+      background: white;
+      margin: 0 30px 30px;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-bottom: 20px;
+      color: #1565c0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 14px;
+      border: 1px solid #ddd;
       text-align: center;
     }
 
-    button {
-      background: #1565c0;
-      color: white;
-      border: none;
-      padding: 12px 22px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
+    th {
+      background: #f5f5f5;
     }
-
-    button:hover {
-      background: #0d47a1;
-    }
-    body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  display: flex;
-}
-
-.sidebar {
-  width: 260px;
-  min-height: 100vh;
-  background: linear-gradient(180deg, #0E4D2B, #1565c0);
-  color: white;
-  padding: 30px 20px;
-  box-shadow: 4px 0 14px rgba(0,0,0,0.1);
-}
-
-.sidebar-logo {
-  text-align: center;
-  margin-bottom: 35px;
-}
-
-.sidebar-logo img {
-  width: 110px;
-  margin-bottom: 10px;
-}
-
-.sidebar-logo h2 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.sidebar-logo p {
-  margin: 0;
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.sidebar button {
-  width: 100%;
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: white;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
-}
-
-.sidebar button:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.main-content {
-  flex: 1;
-}
-
-header {
-  background: linear-gradient(135deg, #0E4D2B, #1565c0);
-  color: white;
-  padding: 40px 20px;
-  text-align: center;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 42px;
-}
-
-header p {
-  margin-top: 10px;
-  font-size: 18px;
-}
-
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  padding: 30px;
-}
-
-.dashboard-card {
-  background: white;
-  padding: 30px;
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  border-left: 6px solid #1565c0;
-}
-
-.dashboard-card h3 {
-  margin-bottom: 15px;
-  color: #666;
-}
-
-.dashboard-card p {
-  font-size: 38px;
-  font-weight: bold;
-  color: #0E4D2B;
-}
-
-.card {
-  background: white;
-  margin: 0 30px 30px;
-  padding: 30px;
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-}
-
-.card h2 {
-  margin-bottom: 20px;
-  color: #1565c0;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 14px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-th {
-  background: #f5f5f5;
-}
   </style>
 </head>
 <body>
 
-<body>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="BIACARE">
+      <h2>BIACARE</h2>
+      <p>Executive Dashboard</p>
+    </div>
 
-<div class="sidebar">
+    <button onclick="window.location.href='admin.html'">
+      Admin Panel
+    </button>
 
-  <div class="sidebar-logo">
-    <img src="logo.png" alt="BIACARE">
-    <h2>BIACARE</h2>
-    <p>Executive Dashboard</p>
+    <button onclick="window.location.href='statistik.html'">
+      Dashboard Statistik
+    </button>
+
+    <button onclick="window.location.href='executive.html'">
+      Executive Dashboard
+    </button>
+
+    <button onclick="handleLogout()">
+      Logout
+    </button>
   </div>
 
-  <button onclick="window.location.href='admin.html'">
-    Admin Panel
-  </button>
+  <div class="main-content">
+    <header>
+      <h1>Executive Dashboard</h1>
+      <p>Director Monitoring Center — BIACARE HR SYSTEM</p>
+    </header>
 
-  <button onclick="window.location.href='statistik.html'">
-    Dashboard Statistik
-  </button>
+    <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <h3>Total Laporan</h3>
+        <p id="totalLaporan">0</p>
+      </div>
 
-  <button onclick="window.location.href='executive.html'">
-    Executive Dashboard
-  </button>
+      <div class="dashboard-card">
+        <h3>Pending Approval</h3>
+        <p id="pendingApproval">0</p>
+      </div>
 
-  <button onclick="handleLogout()">
-    Logout
-  </button>
+      <div class="dashboard-card">
+        <h3>Case Closed</h3>
+        <p id="caseClosed">0</p>
+      </div>
 
-</div>
+      <div class="dashboard-card">
+        <h3>Top Issue</h3>
+        <p id="topIssue">-</p>
+      </div>
 
-<div class="main-content">
-
-  <header>
-    <h1>Executive Dashboard</h1>
-    <p>Director Monitoring Center — BIACARE HR SYSTEM</p>
-  </header>
-
-  <div class="dashboard-cards">
-
-    <div class="dashboard-card">
-      <h3>Total Laporan</h3>
-      <p id="totalLaporan">0</p>
+      <div class="dashboard-card">
+        <h3>Top Estate Keluhan</h3>
+        <p id="topEstate">-</p>
+      </div>
     </div>
 
-    <div class="dashboard-card">
-      <h3>Pending Approval</h3>
-      <p id="pendingApproval">0</p>
-    </div>
+    <div class="card">
+      <h2>Management Summary</h2>
 
-    <div class="dashboard-card">
-      <h3>Case Closed</h3>
-      <p id="caseClosed">0</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Total Laporan</th>
+            <th>Approval Pending</th>
+            <th>Case Closed</th>
+            <th>Performance HRD</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="summaryTotal">0</td>
+            <td id="summaryPending">0</td>
+            <td id="summaryClosed">0</td>
+            <td>Excellent</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <div class="dashboard-card">
-      <h3>Top Issue</h3>
-      <p id="topIssue">-</p>
-    </div>
-
   </div>
 
-  <div class="card">
-    <h2>Management Summary</h2>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <table>
-      <thead>
-        <tr>
-          <th>Total Laporan</th>
-          <th>Approval Pending</th>
-          <th>Case Closed</th>
-          <th>Performance HRD</th>
-        </tr>
-      </thead>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
+      authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
+      projectId: "keluahan-karyawan--ptbia",
+      storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
+      messagingSenderId: "855781665617",
+      appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
+    };
 
-      <tbody>
-        <tr>
-          <td id="summaryTotal">0</td>
-          <td id="summaryPending">0</td>
-          <td id="summaryClosed">0</td>
-          <td>Excellent</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-</div>
+    async function loadExecutiveDashboard() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "laporan"));
 
-</body>
+        let total = 0;
+        let pending = 0;
+        let closed = 0;
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        const issueCount = {};
+        const estateCount = {};
 
-import {
-  getFirestore,
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        querySnapshot.forEach((docSnap) => {
+          const item = docSnap.data();
 
-const firebaseConfig = {
-   apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
-  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
-  projectId: "keluahan-karyawan--ptbia",
-  storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
-  messagingSenderId: "855781665617",
-  appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
-};
+          total++;
 
+          if (
+            item.approval_manager === "Menunggu Approval" ||
+            item.approval_direktur === "Menunggu Approval"
+          ) {
+            pending++;
+          }
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+          if (item.status === "Selesai") {
+            closed++;
+          }
 
-async function loadExecutiveDashboard() {
-  let total = 0;
-  let selesai = 0;
-  let diproses = 0;
-  let ditolak = 0;
-  let managerPending = 0;
-  let direkturPending = 0;
+          const judul = item.judul || "Lainnya";
+          if (!issueCount[judul]) {
+            issueCount[judul] = 0;
+          }
+          issueCount[judul]++;
 
-  const querySnapshot = await getDocs(collection(db, "laporan"));
+          const estate = item.departemen || "Tidak Diketahui";
+          if (!estateCount[estate]) {
+            estateCount[estate] = 0;
+          }
+          estateCount[estate]++;
+        });
 
-  querySnapshot.forEach((doc) => {
-    const item = doc.data();
+        let topIssue = "-";
+        let maxIssue = 0;
 
-    total++;
+        for (const issue in issueCount) {
+          if (issueCount[issue] > maxIssue) {
+            maxIssue = issueCount[issue];
+            topIssue = issue;
+          }
+        }
 
-    if (item.status === "Selesai") selesai++;
-    if (item.status === "Diproses") diproses++;
-    if (item.status === "Ditolak") ditolak++;
+        let topEstate = "-";
+        let maxEstate = 0;
 
-    if (item.approval_manager === "Menunggu Approval") managerPending++;
-    if (item.approval_direktur === "Menunggu Approval") direkturPending++;
-  });
+        for (const estate in estateCount) {
+          if (estateCount[estate] > maxEstate) {
+            maxEstate = estateCount[estate];
+            topEstate = estate;
+          }
+        }
 
-  document.getElementById("totalLaporan").textContent = total;
-  document.getElementById("laporanSelesai").textContent = selesai;
-  document.getElementById("laporanDiproses").textContent = diproses;
-  document.getElementById("laporanDitolak").textContent = ditolak;
-  document.getElementById("approvalManager").textContent = managerPending;
-  document.getElementById("approvalDirektur").textContent = direkturPending;
-}
+        document.getElementById("totalLaporan").textContent = total;
+        document.getElementById("pendingApproval").textContent = pending;
+        document.getElementById("caseClosed").textContent = closed;
+        document.getElementById("topIssue").textContent = topIssue;
+        document.getElementById("topEstate").textContent = topEstate;
 
-loadExecutiveDashboard();
-</script>
+        document.getElementById("summaryTotal").textContent = total;
+        document.getElementById("summaryPending").textContent = pending;
+        document.getElementById("summaryClosed").textContent = closed;
+      } catch (error) {
+        console.log(error);
+        alert("Gagal memuat Executive Dashboard");
+      }
+    }
+
+    function handleLogout() {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.replace("login.html");
+    }
+
+    window.handleLogout = handleLogout;
+
+    loadExecutiveDashboard();
+  </script>
 
 </body>
 </html>
