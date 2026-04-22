@@ -273,20 +273,26 @@ async function kirimLaporan() {
 
   try {
     await addDoc(collection(db, "laporan"), {
-  nama: user.nama || "-",
+nama: user.nama || "-",
   nik: user.nik || "-",
+  departemen: user.departemen || "Tidak Diketahui",
+
   jenis,
   judul,
   isi,
   lampiran: namaLampiran,
+
   status: "Menunggu Review",
   respon: "",
+
   approval_manager: "Menunggu Approval",
   manager_respon: "",
+
   approval_direktur: "Menunggu Approval",
-direktur_respon: "",
-     feedback_realisasi: "",
-bukti_realisasi: "",
+  direktur_respon: "",
+
+  feedback_realisasi: "",
+  bukti_realisasi: ""
   tanggal: new Date().toLocaleDateString("id-ID")
 });
 await kirimWhatsApp(
