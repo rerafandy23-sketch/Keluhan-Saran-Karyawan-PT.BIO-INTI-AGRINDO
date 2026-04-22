@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIACARE HR SYSTEM</title>
-
+  <title>HR Complaint System - Premium Responsive</title>
   <style>
     * {
       margin: 0;
@@ -15,379 +13,263 @@
     }
 
     body {
-      background: #f4f6f8;
-      color: #333;
-    }
-header {
-  background: linear-gradient(135deg, #0E4D2B, #2e7d32);
-  color: white;
-  padding: 30px 20px;
-  text-align: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-}
-
-.header-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 25px;
-  flex-wrap: wrap;
-}
-
-.logo-header {
-  width: 130px;
-  height: auto;
-}
-
-.header-text h1 {
-  margin: 0;
-  font-size: 34px;
-  font-weight: bold;
-}
-
-.header-text p {
-  margin: 8px 0 4px;
-  font-size: 17px;
-  font-weight: bold;
-}
-
-.header-text small {
-  font-size: 14px;
-  opacity: 0.95;
-}
-
-    header {
-      background: #2e7d32;
-      color: white;
-      padding: 20px;
-      text-align: center;
+      background: #f4f7fa;
+      color: #222;
     }
 
     .container {
-      width: 90%;
-      max-width: 1100px;
-      margin: 30px auto;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background: #0f172a;
+      color: white;
+      padding: 24px;
+      position: fixed;
+      height: 100%;
+      left: 0;
+      top: 0;
+      transition: 0.3s;
+      z-index: 1000;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      padding: 14px 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .sidebar ul li:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 24px;
+      transition: 0.3s;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .menu-btn {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    /* DASHBOARD CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
     }
 
     .card {
       background: white;
       padding: 24px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom: 24px;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
 
-    h2 {
-      margin-bottom: 16px;
-      color: #2e7d32;
+    .card h3 {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 10px;
     }
 
-    .user-info p {
-      margin: 8px 0;
+    .card p {
+      font-size: 28px;
+      font-weight: bold;
     }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    button {
-      background: #2e7d32;
-      color: white;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    button:hover {
-      background: #1b5e20;
+    /* TABLE */
+    .table-box {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      min-width: 800px;
     }
 
     th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
+      padding: 14px;
       text-align: left;
+      border-bottom: 1px solid #eee;
       font-size: 14px;
-      vertical-align: top;
     }
 
     th {
-      background: #f1f1f1;
+      background: #f8fafc;
     }
 
-    .logout {
-      float: right;
-      background: #c62828;
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
     }
 
-    .logout:hover {
-      background: #8e0000;
+    .btn-edit {
+      background: #2563eb;
+      color: white;
     }
 
-    .status {
-      font-weight: bold;
+    .btn-close {
+      background: #16a34a;
+      color: white;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .sidebar {
+        left: -100%;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .topbar h1 {
+        font-size: 20px;
+      }
+
+      .card p {
+        font-size: 22px;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-box">
+<div class="container">
 
-    <img src="logo.png" alt="BIACARE HR SYSTEM" class="logo-header">
+  <div class="sidebar" id="sidebar">
+    <h2>HR System</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>Employee Complaint</li>
+      <li>Follow Up</li>
+      <li>Case Close</li>
+      <li>Reports</li>
+      <li>Settings</li>
+      <li>Logout</li>
+    </ul>
+  </div>
 
-    <div class="header-text">
-      <h1>BIACARE HR SYSTEM</h1>
-      <p>PT. BIO INTI AGRINDO</p>
-      <small>Empowering People, Building a Better Future</small>
+  <div class="main">
+    <div class="topbar">
+      <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+      <h1>Dashboard HR Complaint</h1>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Total Complaint</h3>
+        <p>128</p>
+      </div>
+
+      <div class="card">
+        <h3>Open Case</h3>
+        <p>34</p>
+      </div>
+
+      <div class="card">
+        <h3>In Progress</h3>
+        <p>21</p>
+      </div>
+
+      <div class="card">
+        <h3>Closed Case</h3>
+        <p>73</p>
+      </div>
+    </div>
+
+    <div class="table-box">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nama</th>
+            <th>Departemen</th>
+            <th>Keluhan</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#001</td>
+            <td>Budi</td>
+            <td>Produksi</td>
+            <td>Masalah Payroll</td>
+            <td>Open</td>
+            <td>
+              <button class="btn btn-edit">Edit</button>
+              <button class="btn btn-close">Close</button>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#002</td>
+            <td>Sari</td>
+            <td>HRGA</td>
+            <td>Absensi Error</td>
+            <td>Progress</td>
+            <td>
+              <button class="btn btn-edit">Edit</button>
+              <button class="btn btn-close">Close</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>
-</header>
-
-<div class="container">
-
-  <div class="card user-info">
-<button class="logout" onclick="handleLogout()">
-  Logout
-</button>
-    <h2>Data Karyawan</h2>
-    <p><strong>Nama:</strong> <span id="nama">-</span></p>
-    <p><strong>NIK:</strong> <span id="nik">-</span></p>
-    <p><strong>Jabatan:</strong> <span id="jabatan">-</span></p>
-    <p><strong>Departemen:</strong> <span id="departemen">-</span></p>
-    <p><strong>Role:</strong> <span id="role">-</span></p>
-  </div>
-
-  <div class="card">
-    <h2>Form Pengajuan Keluhan / Saran</h2>
-
-    <select id="jenis">
-      <option value="Keluhan">Keluhan</option>
-      <option value="Saran">Saran</option>
-    </select>
-
-    <input type="text" id="judul" placeholder="Judul laporan" />
-
-    <textarea id="isi" placeholder="Tuliskan keluhan atau saran Anda..."></textarea>
-
-    <label><strong>Upload Lampiran (Foto / PDF)</strong></label>
-    <input type="file" id="lampiran" accept="image/*,.pdf" />
-
-    <button onclick="kirimLaporan()">Kirim Laporan</button>
-  </div>
-
-  <div class="card">
-    <h2>Riwayat Laporan</h2>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Jenis</th>
-          <th>Judul</th>
-          <th>Lampiran</th>
-          <th>Status</th>
-          <th>Respon HRD</th>
-        </tr>
-      </thead>
-      <tbody id="tabelLaporan">
-        <tr>
-          <td colspan="6">Belum ada laporan</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
 </div>
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
-  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
-  projectId: "keluahan-karyawan--ptbia",
-  storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
-  messagingSenderId: "855781665617",
-  appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const savedUser = localStorage.getItem("user");
-const user = savedUser ? JSON.parse(savedUser) : null;
-
-if (!user) {
-  alert("Session login habis, silakan login ulang");
-  window.location.href = "login.html";
-}
-document.getElementById("nama").textContent = user.nama || "-";
-document.getElementById("nik").textContent = user.nik || "-";
-document.getElementById("jabatan").textContent = user.jabatan || "-";
-document.getElementById("departemen").textContent = user.departemen || "-";
-document.getElementById("role").textContent = user.role || "-";
-
-async function kirimLaporan() {
-  const jenis = document.getElementById("jenis").value;
-  const judul = document.getElementById("judul").value;
-  const isi = document.getElementById("isi").value;
-  const lampiranFile = document.getElementById("lampiran").files[0];
-
-  if (!judul || !isi) {
-    alert("Mohon lengkapi data laporan");
-    return;
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
   }
-
-  let namaLampiran = "-";
-
-  if (lampiranFile) {
-    namaLampiran = lampiranFile.name;
-  }
-
-  try {
-    await addDoc(collection(db, "laporan"), {
-  nama: user.nama || "-",
-  nik: user.nik || "-",
-  departemen: user.departemen || "Tidak Diketahui",
-
-  jenis,
-  judul,
-  isi,
-  lampiran: namaLampiran,
-
-  status: "Menunggu Review",
-  respon: "",
-
-  approval_manager: "Menunggu Approval",
-  manager_respon: "",
-
-  approval_direktur: "Menunggu Approval",
-  direktur_respon: "",
-
-  feedback_realisasi: "",
-  bukti_realisasi: "",
-
-  tanggal: new Date().toLocaleDateString("id-ID")
-});
-await kirimWhatsApp(
-  "6282250102215",
-  `Laporan baru masuk
-
-Nama: ${user.nama}
-Departemen: ${user.departemen}
-Jenis: ${jenis}
-Judul: ${judul}
-Status: Menunggu Review`
-);
-    alert("Laporan berhasil dikirim ke Firestore");
-
-    document.getElementById("judul").value = "";
-    document.getElementById("isi").value = "";
-    document.getElementById("lampiran").value = "";
-
-    tampilkanLaporan();
-
-  } catch (error) {
-    console.log(error);
-    alert("Gagal menyimpan laporan");
-  }
-}
-
-async function tampilkanLaporan() {
-  const tbody = document.getElementById("tabelLaporan");
-  tbody.innerHTML = "";
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "laporan"));
-
-    if (querySnapshot.empty) {
-      tbody.innerHTML = '<tr><td colspan="6">Belum ada laporan</td></tr>';
-      return;
-    }
-
-    querySnapshot.forEach((doc) => {
-      const item = doc.data();
-
-      if (item.nik === user.nik) {
-        tbody.innerHTML += `
-          <tr>
-            <td>${item.tanggal}</td>
-            <td>${item.jenis}</td>
-            <td>${item.judul}</td>
-            <td>${item.lampiran || "-"}</td>
-            <td class="status">${item.status}</td>
-            <td>${item.respon || "-"}</td>
-          </tr>
-        `;
-      }
-    });
-
-  } catch (error) {
-    console.log(error);
-    tbody.innerHTML = '<tr><td colspan="6">Gagal memuat data</td></tr>';
-  }
-}
-
-function handleLogout() {
-  localStorage.clear();
-  sessionStorage.clear();
-
-  alert("Logout berhasil");
-
-  window.location.replace("login.html");
-}
-async function kirimWhatsApp(target, pesan) {
-  try {
-    await fetch("https://api.fonnte.com/send", {
-      method: "POST",
-      headers: {
-        "Authorization": "XQXaZkNQ3ZrUQ3RZsxTn"
-      },
-      body: new URLSearchParams({
-        target: target,
-        message: pesan,
-        countryCode: "62"
-      })
-    });
-
-    console.log("WhatsApp berhasil dikirim");
-
-  } catch (error) {
-    console.log(error);
-    alert("Gagal mengirim WhatsApp");
-  }
-}
-window.handleLogout = handleLogout;
-window.kirimLaporan = kirimLaporan;
-
-
-tampilkanLaporan();
-
 </script>
+
+</body>
+</html>
