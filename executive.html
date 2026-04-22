@@ -251,7 +251,7 @@
     async function loadExecutiveDashboard() {
       try {
         const querySnapshot = await getDocs(collection(db, "laporan"));
-
+console.log("Jumlah Data:", querySnapshot.size);
         let total = 0;
         let pending = 0;
         let closed = 0;
