@@ -204,7 +204,7 @@
       <li><a href="./case-close.html">Case Close</a></li>
       <li><a href="#">Reports</a></li>
       <li><a href="#">Settings</a></li>
-      <li><a href="#">Logout</a></li>
+      <li><a href="#" onclick="logoutUser()">Logout</a></li>
     </ul>
   </div>
 
@@ -376,6 +376,16 @@ loadComplaints();
   }
 
   window.toggleSidebar = toggleSidebar;
+</script>
+  <script>
+function logoutUser() {
+  localStorage.removeItem("userRole");
+  localStorage.removeItem("userName");
+
+  alert("Logout berhasil");
+
+  window.location.href = "login.html";
+}
 </script>
 </body>
 </html>
