@@ -90,7 +90,7 @@
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody id="managerTable">
+      <tbody id="direkturTable">
         <tr>
           <td colspan="6">Memuat data...</td>
         </tr>
@@ -123,13 +123,13 @@ const db = getFirestore(app);
 
 const userData = JSON.parse(localStorage.getItem("user"));
 
-if (!userData || (userData.role || "").toLowerCase() !== "manager") {
-  alert("Akses hanya untuk Manager");
+if (!userData || (userData.role || "").toLowerCase() !== "direktur") {
+  alert("Akses hanya untuk Direktur");
   window.location.href = "login.html";
 }
 
-async function tampilkanManagerPanel() {
-  const tbody = document.getElementById("managerTable");
+async function tampilkanDirekturPanel() {
+  const tbody = document.getElementById("direkturTable");
   tbody.innerHTML = "";
 
   const querySnapshot = await getDocs(collection(db, "laporan"));
@@ -150,36 +150,36 @@ async function tampilkanManagerPanel() {
         <td>${item.judul || "-"}</td>
         <td>
           <select id="approval-${docId}">
-            <option value="Menunggu Approval" ${item.approval_manager === "Menunggu Approval" ? "selected" : ""}>Menunggu Approval</option>
-            <option value="Disetujui" ${item.approval_manager === "Disetujui" ? "selected" : ""}>Disetujui</option>
-            <option value="Ditolak" ${item.approval_manager === "Ditolak" ? "selected" : ""}>Ditolak</option>
+            <option value="Menunggu Approval" ${item.approval_direktur === "Menunggu Approval" ? "selected" : ""}>Menunggu Approval</option>
+            <option value="Disetujui" ${item.approval_direktur === "Disetujui" ? "selected" : ""}>Disetujui</option>
+            <option value="Ditolak" ${item.approval_direktur === "Ditolak" ? "selected" : ""}>Ditolak</option>
           </select>
         </td>
         <td>
-          <textarea id="catatan-${docId}">${item.manager_respon || ""}</textarea>
+          <textarea id="catatan-${docId}">${item.direktur_respon || ""}</textarea>
         </td>
         <td>
-          <button onclick="simpanManager('${docId}')">Simpan</button>
+          <button onclick="simpanDirektur('${docId}')">Simpan</button>
         </td>
       </tr>
     `;
   });
 }
 
-async function simpanManager(docId) {
+async function simpanDirektur(docId) {
   const approval = document.getElementById(`approval-${docId}`).value;
   const catatan = document.getElementById(`catatan-${docId}`).value;
 
   await updateDoc(doc(db, "laporan", docId), {
-    approval_manager: approval,
-    manager_respon: catatan
+    approval_direktur: approval,
+    direktur_respon: catatan
   });
 
-  alert("Approval Manager berhasil disimpan");
+  alert("Approval Direktur berhasil disimpan");
 }
 
-window.simpanManager = simpanManager;
-tampilkanManagerPanel();
+window.simpanDirektur = simpanDirektur;
+tampilkanDirekturPanel();
 </script>
 
 </body>
