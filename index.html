@@ -157,7 +157,10 @@
       background: #16a34a;
       color: white;
     }
-
+.btn-export {
+  background: #7c3aed;
+  color: white;
+}
     /* MOBILE */
     @media (max-width: 768px) {
       .sidebar {
@@ -209,7 +212,15 @@
   <div class="main">
     <div class="topbar">
       <div class="menu-btn" onclick="toggleSidebar()">☰</div>
-      <h1>Dashboard HR Complaint</h1>
+     <div class="topbar">
+  <div class="menu-btn" onclick="toggleSidebar()">☰</div>
+
+  <h1>Dashboard HR Complaint</h1>
+
+  <button class="btn btn-export" onclick="exportReport()">
+    Export Report
+  </button>
+</div>
     </div>
 
     <!-- DASHBOARD CARDS -->
