@@ -166,15 +166,21 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
       success.textContent = "Login berhasil...";
 
       setTimeout(() => {
-        if (
-          foundUser.role &&
-          foundUser.role.toLowerCase() === "admin"
-        ) {
-          window.location.href = "admin.html";
-        } else {
-          window.location.href = "index.html";
-        }
-      }, 1000);
+     setTimeout(() => {
+  const role = (foundUser.role || "").toLowerCase();
+
+  if (
+    role === "admin" ||
+    role === "hr" ||
+    role === "manager" ||
+    role === "direktur"
+  ) {
+    window.location.href = "admin.html";
+  } else {
+    window.location.href = "employee.html";
+  }
+
+}, 1000);
 
     } else {
       error.textContent = "NIK atau tanggal lahir salah";
