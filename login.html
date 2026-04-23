@@ -7,12 +7,13 @@
 
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       background: #f2f2f2;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
 
     .login-box {
@@ -23,44 +24,41 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
 
-    h2 {
+    .logo-box {
       text-align: center;
-      margin-bottom: 20px;
-      color: #2e7d32;
+      margin-bottom: 25px;
     }
-.logo-box {
-  text-align: center;
-  margin-bottom: 25px;
-}
 
-.logo {
-  width: 140px;
-  height: auto;
-  margin-bottom: 15px;
-}
+    .logo {
+      width: 140px;
+      height: auto;
+      margin-bottom: 15px;
+    }
 
-.logo-box h2 {
-  color: #0E4D2B;
-  margin-bottom: 8px;
-  font-size: 28px;
-}
+    .logo-box h2 {
+      color: #0E4D2B;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
 
-.logo-box p {
-  font-weight: bold;
-  color: #2e7d32;
-  margin-bottom: 5px;
-}
+    .logo-box p {
+      font-weight: bold;
+      color: #2e7d32;
+      margin-bottom: 5px;
+    }
 
-.logo-box small {
-  color: #666;
-  font-size: 13px;
-}
+    .logo-box small {
+      color: #666;
+      font-size: 13px;
+    }
+
     input {
       width: 100%;
       padding: 12px;
       margin: 10px 0;
       border: 1px solid #ccc;
       border-radius: 6px;
+      box-sizing: border-box;
     }
 
     button {
@@ -71,6 +69,11 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #256b2a;
     }
 
     #error {
@@ -90,11 +93,11 @@
 
 <div class="login-box">
   <div class="logo-box">
-  <img src="logo.png" alt="BIACARE HR SYSTEM" class="logo">
-  <h2>BIACARE HR SYSTEM</h2>
-  <p>PT. BIO INTI AGRINDO</p>
-  <small>Empowering People, Building a Better Future</small>
-</div>
+    <img src="logo.png" alt="BIACARE HR SYSTEM" class="logo">
+    <h2>BIACARE HR SYSTEM</h2>
+    <p>PT. BIO INTI AGRINDO</p>
+    <small>Empowering People, Building a Better Future</small>
+  </div>
 
   <form id="loginForm">
     <input type="text" id="nik" placeholder="Masukkan NIK" required>
@@ -109,7 +112,6 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
 import {
   getFirestore,
   collection,
@@ -128,25 +130,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
+const form = document.getElementById("loginForm");
+const error = document.getElementById("error");
+const success = document.getElementById("success");
+
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const nikInput = document.getElementById("nik").value.trim();
   const dobInput = document.getElementById("dob").value;
 
-  const error = document.getElementById("error");
-  const success = document.getElementById("success");
-
   error.textContent = "";
   success.textContent = "";
 
-  // format YYYY-MM-DD → DD/MM/YYYY
+  if (!dobInput) {
+    error.textContent = "Tanggal lahir wajib diisi";
+    return;
+  }
+
   const parts = dobInput.split("-");
   const dobFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
   try {
     const querySnapshot = await getDocs(collection(db, "user"));
-
     let foundUser = null;
 
     querySnapshot.forEach((doc) => {
@@ -161,37 +167,31 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     });
 
     if (foundUser) {
-    if (foundUser) {
-  localStorage.setItem("user", JSON.stringify(foundUser));
+      localStorage.setItem("user", JSON.stringify(foundUser));
 
-  success.textContent = "Login berhasil...";
+      success.textContent = "Login berhasil...";
 
-  setTimeout(() => {
-    const role = (foundUser.role || "").toLowerCase();
+      setTimeout(() => {
+        const role = (foundUser.role || "").toLowerCase();
 
-    if (
-      role === "admin" ||
-      role === "hr" ||
-      role === "manager" ||
-      role === "direktur"
-    ) {
-      window.location.href = "admin.html";
-    } else {
-      window.location.href = "index.html";
-    }
-
-  }, 1000);
-
-} else {
-  error.textContent = "NIK atau tanggal lahir salah";
-}
+        if (
+          role === "admin" ||
+          role === "hr" ||
+          role === "manager" ||
+          role === "direktur"
+        ) {
+          window.location.href = "admin.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      }, 1000);
 
     } else {
       error.textContent = "NIK atau tanggal lahir salah";
     }
 
   } catch (err) {
-    console.log(err);
+    console.error(err);
     error.textContent = "Gagal koneksi ke Firestore";
   }
 });
