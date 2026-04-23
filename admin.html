@@ -261,9 +261,9 @@ td button {
     Dashboard
   </button>
 
-   <button onclick="exportPDF()">
-<button id="btn-export" class="btn btn-export" onclick="exportReport()">
-  </button>
+<button id="btn-export" onclick="exportPDF()">
+  Export PDF Report
+</button>
 <button onclick="window.location.href='executive.html'">
   Executive Dashboard
 </button>
@@ -673,7 +673,23 @@ window.simpanDirekturRespon = simpanDirekturRespon;
 window.simpanRealisasi = simpanRealisasi; 
 window.exportPDF = exportPDF;
 window.handleLogout = handleLogout;
+function applyRoleAccess() {
+  const userData = JSON.parse(localStorage.getItem("user"));
 
+  if (!userData) return;
+
+  const role = (userData.role || "").toLowerCase();
+
+  const exportBtn = document.getElementById("btn-export");
+
+  if (role !== "admin" && role !== "hr") {
+    if (exportBtn) {
+      exportBtn.style.display = "none";
+    }
+  }
+}
+
+applyRoleAccess();
 tampilkanAdminPanel();
 </script>
 
