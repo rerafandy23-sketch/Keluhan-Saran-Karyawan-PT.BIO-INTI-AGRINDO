@@ -156,5 +156,54 @@
      
     </div>
   </div>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore,
+    doc,
+    updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
+    authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
+    projectId: "hr-complaint-system-dc65e",
+    storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+    messagingSenderId: "687763805360",
+    appId: "1:687763805360:web:b914603af7c1057ce69775"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.closeCase = async function () {
+    const complaintId = document.getElementById("complaintId").value;
+    const resolutionNote = document.getElementById("resolutionNote").value;
+    const closedBy = document.getElementById("closedBy").value;
+    const closedDate = document.getElementById("closedDate").value;
+    const finalStatus = document.getElementById("finalStatus").value;
+
+    if (!complaintId) {
+      alert("Complaint ID wajib diisi");
+      return;
+    }
+
+    try {
+      const docRef = doc(db, "complaints", complaintId);
+
+      await updateDoc(docRef, {
+        status: finalStatus,
+        resolutionNote: resolutionNote,
+        closedBy: closedBy,
+        closedDate: closedDate
+      });
+
+      alert("Case berhasil ditutup!");
+    } catch (error) {
+      alert("Gagal menutup case");
+      console.error(error);
+    }
+  };
+</script>
 </body>
 </html>
