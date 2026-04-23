@@ -216,22 +216,22 @@
     <div class="cards">
       <div class="card">
         <h3>Total Complaint</h3>
-        <p>128</p>
+      <p id="totalComplaint">0</p>
       </div>
 
       <div class="card">
         <h3>Open Case</h3>
-        <p>34</p>
+       <p id="openCase">0</p>
       </div>
 
       <div class="card">
         <h3>In Progress</h3>
-        <p>21</p>
+      <p id="progressCase">0</p>
       </div>
 
       <div class="card">
         <h3>Closed Case</h3>
-        <p>73</p>
+       <p id="closedCase">0</p>
       </div>
     </div>
 
@@ -257,7 +257,7 @@
   </div>
 </div>
 
-</script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
@@ -279,49 +279,52 @@
   const db = getFirestore(app);
 
   async function loadComplaints() {
-    const table = document.getElementById("complaintTable");
-    table.innerHTML = "";
+ const table = document.getElementById("complaintTable");
+  table.innerHTML = "";
 
-    const querySnapshot = await getDocs(collection(db, "complaints"));
+  const querySnapshot = await getDocs(collection(db, "complaints"));
 
-    let nomor = 1;
+  let nomor = 1;
+  let total = 0;
+  let open = 0;
+  let progress = 0;
+  let closed = 0;
 
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
 
-      table.innerHTML += `
-        <tr>
-          <td>#${nomor++}</td>
-          <td>${data.nama || "-"}</td>
-          <td>${data.departemen || "-"}</td>
-          <td>${data.jenis || "-"}</td>
-          <td>${data.status || "Open"}</td>
-          <td>
-            <button class="btn btn-edit">Edit</button>
-            table.innerHTML += `
-<tr>
-  <td>#${nomor++}</td>
-  <td>${data.nama || "-"}</td>
-  <td>${data.departemen || "-"}</td>
-  <td>${data.jenis || "-"}</td>
-  <td>${data.status || "Open"}</td>
-  <td>
-    <button class="btn btn-edit">Edit</button>
-    <a href="./case-close.html?id=${doc.id}">
-      <button class="btn btn-close">Close</button>
-    </a>
-  </td>
-</tr>
-`;
-              <button class="btn btn-close">Close</button>
-            </a>
-          </td>
-        </tr>
-      `;
-    });
-  }
+    total++;
 
-  loadComplaints();
+    if (data.status === "Open") {
+      open++;
+    } else if (data.status === "Progress") {
+      progress++;
+    } else if (data.status === "Closed") {
+      closed++;
+    }
+
+    table.innerHTML += `
+      <tr>
+        <td>#${nomor++}</td>
+        <td>${data.nama || "-"}</td>
+        <td>${data.departemen || "-"}</td>
+        <td>${data.jenis || "-"}</td>
+        <td>${data.status || "Open"}</td>
+        <td>
+          <button class="btn btn-edit">Edit</button>
+          <a href="./case-close.html?id=${doc.id}">
+            <button class="btn btn-close">Close</button>
+          </a>
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("totalComplaint").innerText = total;
+  document.getElementById("openCase").innerText = open;
+  document.getElementById("progressCase").innerText = progress;
+  document.getElementById("closedCase").innerText = closed;
+}
 
   function toggleSidebar() {
     document.getElementById("sidebar").classList.toggle("active");
