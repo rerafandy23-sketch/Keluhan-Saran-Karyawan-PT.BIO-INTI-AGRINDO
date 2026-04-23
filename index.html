@@ -402,5 +402,59 @@ function logoutUser() {
   window.location.href = "login.html";
 }
 </script>
+  <script>
+function applyRoleAccess() {
+  const userData = JSON.parse(localStorage.getItem("user"));
+
+  if (!userData) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const role = userData.role ? userData.role.toLowerCase() : "";
+
+  // Default semua tampil
+  const allMenus = [
+    "menu-dashboard",
+    "menu-complaint",
+    "menu-followup",
+    "menu-caseclose",
+    "menu-reports",
+    "menu-settings"
+  ];
+
+  allMenus.forEach(id => {
+    const menu = document.getElementById(id);
+    if (menu) menu.style.display = "block";
+  });
+
+  // Role: Employee
+  if (role === "employee") {
+    document.getElementById("menu-followup").style.display = "none";
+    document.getElementById("menu-caseclose").style.display = "none";
+    document.getElementById("menu-reports").style.display = "none";
+    document.getElementById("menu-settings").style.display = "none";
+  }
+
+  // Role: Manager
+  if (role === "manager") {
+    document.getElementById("menu-complaint").style.display = "none";
+    document.getElementById("menu-caseclose").style.display = "none";
+    document.getElementById("menu-settings").style.display = "none";
+  }
+
+  // Role: Director
+  if (role === "director") {
+    document.getElementById("menu-complaint").style.display = "none";
+    document.getElementById("menu-followup").style.display = "none";
+    document.getElementById("menu-caseclose").style.display = "none";
+    document.getElementById("menu-settings").style.display = "none";
+  }
+
+  // Admin = full access
+}
+
+applyRoleAccess();
+</script>
 </body>
 </html>
