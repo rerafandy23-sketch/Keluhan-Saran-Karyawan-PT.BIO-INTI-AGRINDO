@@ -298,7 +298,21 @@
           <td>${data.status || "Open"}</td>
           <td>
             <button class="btn btn-edit">Edit</button>
-            <a href="./case-close.html">
+            table.innerHTML += `
+<tr>
+  <td>#${nomor++}</td>
+  <td>${data.nama || "-"}</td>
+  <td>${data.departemen || "-"}</td>
+  <td>${data.jenis || "-"}</td>
+  <td>${data.status || "Open"}</td>
+  <td>
+    <button class="btn btn-edit">Edit</button>
+    <a href="./case-close.html?id=${doc.id}">
+      <button class="btn btn-close">Close</button>
+    </a>
+  </td>
+</tr>
+`;
               <button class="btn btn-close">Close</button>
             </a>
           </td>
