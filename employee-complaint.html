@@ -154,22 +154,22 @@
 
     <div class="form-group">
       <label>Nama Karyawan</label>
-      <input type="text" placeholder="Masukkan nama lengkap">
+      <input id="nama" type="text" placeholder="Masukkan nama lengkap">
     </div>
 
     <div class="form-group">
       <label>NIK</label>
-      <input type="text" placeholder="Masukkan NIK karyawan">
+      <input id="nik" type="text" placeholder="Masukkan NIK karyawan">
     </div>
 
     <div class="form-group">
       <label>Departemen</label>
-      <input type="text" placeholder="Contoh: Produksi / HRGA / Finance">
+      <input id="departemen" type="text" placeholder="Contoh: Produksi / HRGA / Finance">
     </div>
 
     <div class="form-group">
       <label>Jenis Complaint</label>
-      <select>
+      <select id="jenis">
         <option>Pilih Jenis Complaint</option>
         <option>Bullying</option>
         <option>Pelecehan</option>
@@ -184,7 +184,7 @@
 
     <div class="form-group">
       <label>Detail Complaint</label>
-      <textarea placeholder="Tuliskan detail keluhan secara lengkap..."></textarea>
+      <textarea id="detail" placeholder="Tuliskan detail keluhan secara lengkap..."></textarea>
     </div>
 
     <div class="form-group">
@@ -208,10 +208,55 @@
     </div>
 
     <div class="actions">
-      <button class="btn btn-submit">Kirim Complaint</button>
+      <button class="btn btn-submit" onclick="submitComplaint()">Kirim Complaint</button>
       <button class="btn btn-reset">Reset Form</button>
     </div>
   </div>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
+      authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
+      projectId: "hr-complaint-system-dc65e",
+      storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+      messagingSenderId: "687763805360",
+      appId: "1:687763805360:web:b914603af7c1057ce69775"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.submitComplaint = async function () {
+      const nama = document.getElementById("nama").value;
+      const nik = document.getElementById("nik").value;
+      const departemen = document.getElementById("departemen").value;
+      const jenis = document.getElementById("jenis").value;
+      const detail = document.getElementById("detail").value;
+
+      try {
+        await addDoc(collection(db, "complaints"), {
+          nama,
+          nik,
+          departemen,
+          jenis,
+          detail,
+          status: "Open",
+          createdAt: new Date()
+        });
+
+        alert("Complaint berhasil dikirim!");
+      } catch (error) {
+        alert("Gagal mengirim complaint");
+        console.error(error);
+      }
+    };
+  </script>
 </body>
 </html>
