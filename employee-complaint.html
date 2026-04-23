@@ -1,9 +1,217 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Employee Complaint</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Complaint - Anonymous Premium Final</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f7fb;
+      color: #1e293b;
+      padding: 30px;
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #64748b;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #dbe2ea;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .radio-box {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .radio-item input {
+      width: auto;
+    }
+
+    .info-box {
+      background: #f8fafc;
+      border-left: 5px solid #2563eb;
+      padding: 18px;
+      border-radius: 12px;
+      margin-top: 10px;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-reset {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Employee Complaint Page Success</h1>
+
+  <div class="container">
+    <h1>Employee Complaint Form</h1>
+    <p class="subtitle">
+      Form ini digunakan untuk menyampaikan keluhan, saran, atau laporan internal.
+      Karyawan dapat memilih untuk menampilkan identitas atau menggunakan mode anonim.
+    </p>
+
+    <div class="form-group">
+      <label>Nama Karyawan</label>
+      <input type="text" placeholder="Masukkan nama lengkap">
+    </div>
+
+    <div class="form-group">
+      <label>NIK</label>
+      <input type="text" placeholder="Masukkan NIK karyawan">
+    </div>
+
+    <div class="form-group">
+      <label>Departemen</label>
+      <input type="text" placeholder="Contoh: Produksi / HRGA / Finance">
+    </div>
+
+    <div class="form-group">
+      <label>Jenis Complaint</label>
+      <select>
+        <option>Pilih Jenis Complaint</option>
+        <option>Bullying</option>
+        <option>Pelecehan</option>
+        <option>Diskriminasi</option>
+        <option>Masalah Payroll</option>
+        <option>Absensi</option>
+        <option>Penyalahgunaan Wewenang</option>
+        <option>Fraud Internal</option>
+        <option>Lainnya</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Detail Complaint</label>
+      <textarea placeholder="Tuliskan detail keluhan secara lengkap..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Apakah identitas ingin dirahasiakan?</label>
+      <div class="radio-box">
+        <div class="radio-item">
+          <input type="radio" name="anonymous" id="yes-anon">
+          <label for="yes-anon">Ya, buat anonim</label>
+        </div>
+
+        <div class="radio-item">
+          <input type="radio" name="anonymous" id="no-anon">
+          <label for="no-anon">Tidak, tampilkan identitas saya</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      Jika memilih mode anonim, identitas Anda akan disembunyikan dari pihak terkait
+      dan hanya dapat diakses oleh HR yang berwenang sesuai kebijakan perusahaan.
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-submit">Kirim Complaint</button>
+      <button class="btn btn-reset">Reset Form</button>
+    </div>
+  </div>
+
 </body>
 </html>
