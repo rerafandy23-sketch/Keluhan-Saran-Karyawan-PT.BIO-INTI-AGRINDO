@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direktur Panel - BIACARE HR SYSTEM</title>
+</head>
+<body>
+
+<h1>Direktur Panel</h1>
+<p>Halaman khusus role Direktur</p>
+
+<script>
+const userData = JSON.parse(localStorage.getItem("user"));
+
+if (!userData) {
+  window.location.href = "login.html";
+}
+
+const role = (userData.role || "").toLowerCase();
+
+if (role !== "direktur") {
+  alert("Akses ditolak. Halaman khusus Direktur.");
+  window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
