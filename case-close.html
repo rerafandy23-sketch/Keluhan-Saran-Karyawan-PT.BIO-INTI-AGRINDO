@@ -123,83 +123,37 @@
     <h1>Case Close Premium Final</h1>
     <p class="subtitle">Finalisasi penyelesaian keluhan karyawan dan approval penutupan kasus</p>
 
-    <div class="grid">
-      <div class="form-group">
-        <label>ID Kasus</label>
-        <input type="text" placeholder="Contoh: CC-001">
-      </div>
+   <div class="form-group">
+  <label>Complaint ID</label>
+  <input type="text" id="complaintId" placeholder="Auto from complaint">
+</div>
 
-      <div class="form-group">
-        <label>Nama Karyawan</label>
-        <input type="text" placeholder="Nama lengkap">
-      </div>
+<div class="form-group">
+  <label>Resolution Note</label>
+  <textarea id="resolutionNote" placeholder="Tuliskan penyelesaian masalah..."></textarea>
+</div>
 
-      <div class="form-group">
-        <label>Departemen</label>
-        <input type="text" placeholder="Departemen">
-      </div>
+<div class="form-group">
+  <label>Closed By (HR PIC)</label>
+  <input type="text" id="closedBy" placeholder="Nama HR yang menangani">
+</div>
 
-      <div class="form-group">
-        <label>PIC Penanganan</label>
-        <input type="text" placeholder="Nama PIC HR">
-      </div>
+<div class="form-group">
+  <label>Closed Date</label>
+  <input type="date" id="closedDate">
+</div>
 
-      <div class="form-group">
-        <label>Status Investigasi</label>
-        <select>
-          <option>Open</option>
-          <option>In Progress</option>
-          <option>Resolved</option>
-        </select>
-      </div>
+<div class="form-group">
+  <label>Final Status</label>
+  <select id="finalStatus">
+    <option value="Closed">Closed</option>
+  </select>
+</div>
 
-      <div class="form-group">
-        <label>Status Final</label>
-        <select>
-          <option>Closed</option>
-          <option>Reopen</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Tanggal Penyelesaian</label>
-        <input type="date">
-      </div>
-
-      <div class="form-group">
-        <label>Approval HR Manager</label>
-        <select>
-          <option>Pending</option>
-          <option>Approved</option>
-          <option>Rejected</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="full form-group">
-      <label>Solusi yang Diberikan</label>
-      <textarea placeholder="Tuliskan solusi final..."></textarea>
-    </div>
-
-    <div class="full form-group">
-      <label>Catatan Penutupan Kasus</label>
-      <textarea placeholder="Catatan tambahan..."></textarea>
-    </div>
-
-    <div class="full form-group">
-      <label>Feedback Karyawan</label>
-      <textarea placeholder="Masukan dari karyawan..."></textarea>
-    </div>
-
-    <div class="full form-group">
-      <label>Alasan Reopen (Jika Ada)</label>
-      <textarea placeholder="Isi jika kasus dibuka kembali..."></textarea>
-    </div>
-
-    <div class="actions">
-      <button class="save">Simpan Draft</button>
-      <button class="close-case">Close Case</button>
-      <button class="reopen">Reopen Case</button>
+<button class="btn btn-submit" onclick="closeCase()">
+  Submit Case Close
+</button>
+     
     </div>
   </div>
 </body>
