@@ -109,6 +109,7 @@
 
 <script type="module">
 
+<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
@@ -141,12 +142,12 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
   error.textContent = "";
   success.textContent = "";
 
-  // ubah format YYYY-MM-DD → DD/MM/YYYY
+  // format YYYY-MM-DD → DD/MM/YYYY
   const parts = dobInput.split("-");
   const dobFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
   try {
-    const querySnapshot = await getDocs(collection(db, "karyawan"));
+    const querySnapshot = await getDocs(collection(db, "user"));
 
     let foundUser = null;
 
@@ -162,33 +163,31 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     });
 
     if (foundUser) {
-  localStorage.setItem("user", JSON.stringify(foundUser));
+      localStorage.setItem("user", JSON.stringify(foundUser));
 
-  success.textContent = "Login berhasil...";
+      success.textContent = "Login berhasil...";
 
-  setTimeout(() => {
+      setTimeout(() => {
+        if (
+          foundUser.role &&
+          foundUser.role.toLowerCase() === "admin"
+        ) {
+          window.location.href = "admin.html";
+        } else {
+          window.location.href = "index.html";
+        }
+      }, 1000);
 
-    // Auto Redirect berdasarkan role
-    if (
-      foundUser.role &&
-      foundUser.role.toLowerCase() === "hr"
-    ) {
-      window.location.href = "admin.html";
     } else {
-      window.location.href = "index.html";
+      error.textContent = "NIK atau tanggal lahir salah";
     }
-
-  }, 1000);
-
-} else {
-  error.textContent = "NIK atau tanggal lahir salah";
-}
 
   } catch (err) {
     console.log(err);
     error.textContent = "Gagal koneksi ke Firestore";
   }
 });
+</script>
 
 </script>
 
