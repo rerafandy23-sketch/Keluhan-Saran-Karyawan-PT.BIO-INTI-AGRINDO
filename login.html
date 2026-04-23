@@ -174,13 +174,12 @@ form.addEventListener("submit", async (e) => {
       setTimeout(() => {
         const role = (foundUser.role || "").toLowerCase();
 
-        if (
-          role === "admin" ||
-          role === "hr" ||
-          role === "manager" ||
-          role === "direktur"
-        ) {
+        if (role === "admin" || role === "hr") {
           window.location.href = "admin.html";
+        } else if (role === "manager") {
+          window.location.href = "manager.html";
+        } else if (role === "direktur") {
+          window.location.href = "direktur.html";
         } else {
           window.location.href = "index.html";
         }
