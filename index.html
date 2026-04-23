@@ -337,6 +337,40 @@
   document.getElementById("closedCase").innerText = closed;
 }
 loadComplaints();
+  window.exportReport = async function () {
+  const querySnapshot = await getDocs(collection(db, "complaints"));
+
+  let csvContent =
+    "ID,Nama,Departemen,Jenis Complaint,Status,Closed By,Closed Date\n";
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+
+    csvContent +=
+      `${doc.id},` +
+      `${data.nama || "-"},` +
+      `${data.departemen || "-"},` +
+      `${data.jenis || "-"},` +
+      `${data.status || "-"},` +
+      `${data.closedBy || "-"},` +
+      `${data.closedDate || "-"}\n`;
+  });
+
+  const blob = new Blob([csvContent], {
+    type: "text/csv;charset=utf-8;"
+  });
+
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+
+  link.setAttribute("href", url);
+  link.setAttribute("download", "HR_Complaint_Report.csv");
+  link.style.visibility = "hidden";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
   function toggleSidebar() {
     document.getElementById("sidebar").classList.toggle("active");
   }
