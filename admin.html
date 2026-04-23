@@ -674,6 +674,7 @@ window.simpanRealisasi = simpanRealisasi;
 window.exportPDF = exportPDF;
 window.handleLogout = handleLogout;
 function applyRoleAccess() {
+function applyRoleAccess() {
   const userData = JSON.parse(localStorage.getItem("user"));
 
   if (!userData) return;
@@ -682,10 +683,69 @@ function applyRoleAccess() {
 
   const exportBtn = document.getElementById("btn-export");
 
+  // EXPORT BUTTON
   if (role !== "admin" && role !== "hr") {
     if (exportBtn) {
       exportBtn.style.display = "none";
     }
+  }
+
+  // ALL SELECT
+  const allSelect = document.querySelectorAll("select");
+
+  // ALL TEXTAREA
+  const allTextarea = document.querySelectorAll("textarea");
+
+  // ALL BUTTON SAVE
+  const allButtons = document.querySelectorAll("td button");
+
+  // EMPLOYEE = VIEW ONLY
+  if (role === "employee") {
+    allSelect.forEach(el => el.disabled = true);
+    allTextarea.forEach(el => el.disabled = true);
+    allButtons.forEach(el => el.style.display = "none");
+  }
+
+  // MANAGER = ONLY APPROVAL MANAGER
+  if (role === "manager") {
+    allSelect.forEach(el => {
+      if (!el.getAttribute("onchange")?.includes("updateApprovalManager")) {
+        el.disabled = true;
+      }
+    });
+
+    allTextarea.forEach(el => {
+      if (!el.id.includes("manager-")) {
+        el.disabled = true;
+      }
+    });
+
+    allButtons.forEach(el => {
+      if (!el.innerText.includes("Manager")) {
+        el.style.display = "none";
+      }
+    });
+  }
+
+  // DIREKTUR = ONLY APPROVAL DIREKTUR
+  if (role === "direktur") {
+    allSelect.forEach(el => {
+      if (!el.getAttribute("onchange")?.includes("updateApprovalDirektur")) {
+        el.disabled = true;
+      }
+    });
+
+    allTextarea.forEach(el => {
+      if (!el.id.includes("direktur-")) {
+        el.disabled = true;
+      }
+    });
+
+    allButtons.forEach(el => {
+      if (!el.innerText.includes("Direktur")) {
+        el.style.display = "none";
+      }
+    });
   }
 }
 
