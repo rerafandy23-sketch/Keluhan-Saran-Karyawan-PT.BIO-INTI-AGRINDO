@@ -173,8 +173,17 @@
     appId: "1:687763805360:web:b914603af7c1057ce69775"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const params = new URLSearchParams(window.location.search);
+const complaintIdFromURL = params.get("id");
+
+if (complaintIdFromURL) {
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("complaintId").value = complaintIdFromURL;
+  });
+}
 
   window.closeCase = async function () {
     const complaintId = document.getElementById("complaintId").value;
