@@ -174,15 +174,15 @@ form.addEventListener("submit", async (e) => {
       setTimeout(() => {
         const role = (foundUser.role || "").toLowerCase();
 
-        if (role === "admin" || role === "hr") {
-          window.location.href = "admin.html";
-        } else if (role === "manager") {
-          window.location.href = "manager.html";
-        } else if (role === "direktur") {
-          window.location.href = "direktur.html";
-        } else {
-          window.location.href = "index.html";
-        }
+       if (role === "admin" || role === "hr") {
+  window.location.href = "admin.html";
+} else if (role === "manager") {
+  window.location.href = "manager_dashboard.html";
+} else if (role === "direktur") {
+  window.location.href = "direktur_dashboard.html";
+} else {
+  window.location.href = "index.html";
+}
       }, 1000);
 
     } else {
