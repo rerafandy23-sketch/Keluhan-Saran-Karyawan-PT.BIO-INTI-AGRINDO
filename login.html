@@ -172,15 +172,18 @@ form.addEventListener("submit", async (e) => {
       success.textContent = "Login berhasil...";
 
       setTimeout(() => {
-        const role = (foundUser.role || "").toLowerCase();
+  const role = (foundUser.role || "").toLowerCase();
 
-       if (role === "admin" || role === "hr") {
+if (role === "admin" || role === "hr") {
   window.location.href = "admin.html";
-} else if (role === "manager") {
-  window.location.href = "manager_dashboard.html";
-} else if (role === "direktur") {
-  window.location.href = "direktur_dashboard.html";
-} else {
+}
+else if (role === "manager") {
+  window.location.href = "manager.html";
+}
+else if (role === "direktur") {
+  window.location.href = "direktur.html";
+}
+else {
   window.location.href = "index.html";
 }
       }, 1000);
