@@ -121,6 +121,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+async function kirimWhatsApp(target, pesan) {
+  try {
+    await fetch("https://api.fonnte.com/send", {
+      method: "POST",
+      headers: {
+        "Authorization": "XQXaZkNQ3ZrUQ3RZsxTn"
+      },
+      body: new URLSearchParams({
+        target: target,
+        message: pesan,
+        countryCode: "62"
+      })
+    });
+  } catch (error) {
+    console.log(error);
+    alert("Gagal mengirim WhatsApp");
+  }
+}
+
 const userData = JSON.parse(localStorage.getItem("user"));
 
 if (!userData || (userData.role || "").toLowerCase() !== "direktur") {
@@ -175,7 +194,14 @@ async function simpanDirektur(docId) {
     direktur_respon: catatan
   });
 
-  alert("Approval Direktur berhasil disimpan");
+  await kirimWhatsApp(
+    userData.no_hp || "08xxxxxxxxxx",
+    `Laporan Anda telah diproses Direktur.
+Status: ${approval}
+Catatan: ${catatan}`
+  );
+
+  alert("Approval Direktur + Notifikasi WhatsApp berhasil dikirim");
 }
 
 window.simpanDirektur = simpanDirektur;
