@@ -233,30 +233,49 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    window.submitComplaint = async function () {
-      const nama = document.getElementById("nama").value;
-      const nik = document.getElementById("nik").value;
-      const departemen = document.getElementById("departemen").value;
-      const jenis = document.getElementById("jenis").value;
-      const detail = document.getElementById("detail").value;
+window.submitComplaint = async function () {
+  const nama = document.getElementById("nama").value;
+  const nik = document.getElementById("nik").value;
+  const departemen = document.getElementById("departemen").value;
+  const jenis = document.getElementById("jenis").value;
+  const detail = document.getElementById("detail").value;
 
-      try {
-        await addDoc(collection(db, "complaints"), {
-          nama,
-          nik,
-          departemen,
-          jenis,
-          detail,
-          status: "Open",
-          createdAt: new Date()
-        });
+  const today = new Date();
+  const tanggal = today.toLocaleDateString("id-ID");
 
-        alert("Complaint berhasil dikirim!");
-      } catch (error) {
-        alert("Gagal mengirim complaint");
-        console.error(error);
-      }
-    };
+  try {
+    await addDoc(collection(db, "laporan"), {
+      nama: nama || "Anonim",
+      nik: nik || "-",
+      departemen: departemen || "-",
+      jenis: jenis || "-",
+      judul: detail.substring(0, 50),
+      detail: detail || "-",
+      tanggal: tanggal,
+
+      status: "Menunggu Review",
+      approval_manager: "Menunggu Approval",
+      approval_direktur: "Menunggu Approval",
+
+      respon: "",
+      manager_respon: "",
+      direktur_respon: "",
+
+      feedback_realisasi: "",
+      bukti_realisasi: "",
+
+      createdAt: new Date()
+    });
+
+    alert("Complaint berhasil dikirim!");
+
+    location.reload();
+
+  } catch (error) {
+    console.error(error);
+    alert("Gagal mengirim complaint");
+  }
+};
   </script>
 </body>
 </html>
