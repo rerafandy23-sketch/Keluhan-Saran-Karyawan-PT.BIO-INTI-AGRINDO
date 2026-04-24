@@ -14,437 +14,290 @@
     }
 
     body {
-      margin: 0;
       background: #f4f6f8;
-      display: flex;
       color: #333;
-    }
-
-    .sidebar {
-      width: 260px;
-      min-height: 100vh;
-      background: linear-gradient(180deg, #0E4D2B, #1565c0);
-      color: white;
-      padding: 30px 20px;
-      box-shadow: 4px 0 14px rgba(0,0,0,0.1);
-    }
-
-    .sidebar-logo {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-
-    .sidebar-logo img {
-      width: 110px;
-      margin-bottom: 10px;
-    }
-
-    .sidebar-logo h2 {
       margin: 0;
-      font-size: 28px;
     }
 
-    .sidebar-logo p {
-      margin: 0;
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    .sidebar button {
-      width: 100%;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      color: white;
-      padding: 14px;
-      margin-bottom: 12px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: 0.3s;
-    }
-
-    .sidebar button:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    .main-content {
-      flex: 1;
-    }
-
-    header {
+    .header {
       background: linear-gradient(135deg, #0E4D2B, #1565c0);
       color: white;
-      padding: 40px 20px;
       text-align: center;
+      padding: 35px 20px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.15);
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 42px;
+    .header h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
     }
 
-    header p {
-      margin-top: 10px;
+    .header p {
       font-size: 18px;
     }
 
-    .dashboard-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 25px;
-      padding: 30px;
+    .container {
+      width: 92%;
+      max-width: 1400px;
+      margin: 30px auto;
     }
 
-    .dashboard-card {
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card-box {
       background: white;
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       border-left: 6px solid #1565c0;
     }
 
-    .dashboard-card h3 {
-      margin-bottom: 15px;
+    .card-box h3 {
+      margin-bottom: 12px;
       color: #666;
-      font-size: 16px;
+      font-size: 15px;
     }
 
-    .dashboard-card p {
-      font-size: 34px;
+    .card-box p {
+      font-size: 32px;
       font-weight: bold;
       color: #0E4D2B;
     }
 
-    .card {
+    .table-box {
       background: white;
-      margin: 0 30px 30px;
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      overflow-x: auto;
     }
 
-    .card h2 {
+    .table-box h2 {
       margin-bottom: 20px;
       color: #1565c0;
     }
 
     table {
       width: 100%;
+      min-width: 900px;
       border-collapse: collapse;
     }
 
     th, td {
-      padding: 14px;
       border: 1px solid #ddd;
+      padding: 12px;
+      font-size: 14px;
       text-align: center;
     }
 
     th {
-      background: #f5f5f5;
+      background: #f1f1f1;
+    }
+
+    .btn-area {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    button {
+      background: #1565c0;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #0d47a1;
+    }
+
+    .logout {
+      background: #c62828;
+    }
+
+    .logout:hover {
+      background: #8e0000;
     }
   </style>
 </head>
 <body>
 
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <img src="logo.png" alt="BIACARE">
-      <h2>BIACARE</h2>
-      <p>Executive Dashboard</p>
+<div class="header">
+  <h1>BIACARE HR SYSTEM</h1>
+  <p>Executive Dashboard Premium</p>
+</div>
+
+<div class="container">
+
+  <div class="cards">
+
+    <div class="card-box">
+      <h3>Total Laporan</h3>
+      <p id="totalLaporan">0</p>
     </div>
 
-    <button onclick="window.location.href='admin.html'">
-      Admin Panel
-    </button>
+    <div class="card-box">
+      <h3>Open Case</h3>
+      <p id="openCase">0</p>
+    </div>
 
-    <button onclick="window.location.href='statistik.html'">
-      Dashboard Statistik
-    </button>
+    <div class="card-box">
+      <h3>In Progress</h3>
+      <p id="inProgress">0</p>
+    </div>
 
-    <button onclick="window.location.href='executive.html'">
-      Executive Dashboard
-    </button>
+    <div class="card-box">
+      <h3>Closed Case</h3>
+      <p id="closedCase">0</p>
+    </div>
 
-    <button onclick="handleLogout()">
-      Logout
-    </button>
+    <div class="card-box">
+      <h3>Ditolak</h3>
+      <p id="ditolakCase">0</p>
+    </div>
+
   </div>
 
-  <div class="main-content">
-    <header>
-      <h1>Executive Dashboard</h1>
-      <p>Director Monitoring Center — BIACARE HR SYSTEM</p>
-    </header>
+  <div class="table-box">
+    <h2>Final Monitoring Semua Laporan</h2>
 
-    <div class="dashboard-cards">
-      <div class="dashboard-card">
-        <h3>Total Laporan</h3>
-        <p id="totalLaporan">0</p>
-      </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Jenis</th>
+          <th>Judul</th>
+          <th>Status Final</th>
+          <th>Approval Manager</th>
+          <th>Approval Direktur</th>
+        </tr>
+      </thead>
 
-      <div class="dashboard-card">
-        <h3>Pending Approval</h3>
-        <p id="pendingApproval">0</p>
-      </div>
+      <tbody id="executiveTable">
+        <tr>
+          <td colspan="6">Memuat data...</td>
+        </tr>
+      </tbody>
+    </table>
 
-      <div class="dashboard-card">
-        <h3>Case Closed</h3>
-        <p id="caseClosed">0</p>
-      </div>
-
-      <div class="dashboard-card">
-        <h3>Top Issue</h3>
-        <p id="topIssue">-</p>
-      </div>
-
-      <div class="dashboard-card">
-        <h3>Top Estate Keluhan</h3>
-        <p id="topEstate">-</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Management Summary</h2>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Total Laporan</th>
-            <th>Approval Pending</th>
-            <th>Case Closed</th>
-            <th>Performance HRD</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="summaryTotal">0</td>
-            <td id="summaryPending">0</td>
-            <td id="summaryClosed">0</td>
-            <td>Excellent</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="card">
-  <h2>Ranking Estate Keluhan</h2>
-<div class="card">
-  <h2>SLA Monitoring Laporan</h2>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Judul</th>
-        <th>Estate</th>
-        <th>Tanggal Masuk</th>
-        <th>Hari Berjalan</th>
-        <th>Status SLA</th>
-      </tr>
-    </thead>
-
-    <tbody id="slaTable">
-      <tr>
-        <td colspan="5">Memuat data SLA...</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-  <table>
-    <thead>
-      <tr>
-        <th>Ranking</th>
-        <th>Estate</th>
-        <th>Total Keluhan</th>
-      </tr>
-    </thead>
-
-    <tbody id="rankingEstateTable">
-      <tr>
-        <td colspan="3">Memuat data ranking...</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+    <div class="btn-area">
+      <button class="logout" onclick="handleLogout()">
+        Logout
+      </button>
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+</div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
-      authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
-      projectId: "keluahan-karyawan--ptbia",
-      storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
-      messagingSenderId: "855781665617",
-      appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
-    };
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+import {
+  getFirestore,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    async function loadExecutiveDashboard() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "laporan"));
-console.log("Jumlah Data:", querySnapshot.size);
-        let total = 0;
-        let pending = 0;
-        let closed = 0;
+const firebaseConfig = {
+  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
+  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
+  projectId: "keluahan-karyawan--ptbia",
+  storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
+  messagingSenderId: "855781665617",
+  appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
+};
 
-        const issueCount = {};
-        const estateCount = {};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-        querySnapshot.forEach((docSnap) => {
-          const item = docSnap.data();
+async function tampilkanExecutiveDashboard() {
+  const tbody = document.getElementById("executiveTable");
+  tbody.innerHTML = "";
 
-          total++;
+  let total = 0;
+  let open = 0;
+  let progress = 0;
+  let closed = 0;
+  let ditolak = 0;
 
-          if (
-            item.approval_manager === "Menunggu Approval" ||
-            item.approval_direktur === "Menunggu Approval"
-          ) {
-            pending++;
-          }
+  try {
+    const querySnapshot = await getDocs(collection(db, "laporan"));
 
-        if (
-  item.status === "Selesai" ||
-  item.status === "Case Closed"
-) {
-  closed++;
-}
+    if (querySnapshot.empty) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6">Belum ada data laporan</td>
+        </tr>
+      `;
+      return;
+    }
 
-          const judul = item.judul || "Lainnya";
-          if (!issueCount[judul]) {
-            issueCount[judul] = 0;
-          }
-          issueCount[judul]++;
+    querySnapshot.forEach((docSnap) => {
+      const item = docSnap.data();
 
-  const estate = item.departemen;
+      total++;
 
-if (estate && estate.trim() !== "") {
-  if (!estateCount[estate]) {
-    estateCount[estate] = 0;
-  }
-
-  estateCount[estate]++;
-}       
-});
-        let topIssue = "-";
-        let maxIssue = 0;
-
-        for (const issue in issueCount) {
-          if (issueCount[issue] > maxIssue) {
-            maxIssue = issueCount[issue];
-            topIssue = issue;
-          }
-        }
-
-        let topEstate = "-";
-        let maxEstate = 0;
-
-        for (const estate in estateCount) {
-          if (estateCount[estate] > maxEstate) {
-            maxEstate = estateCount[estate];
-            topEstate = estate;
-          }
-        }
-
-        document.getElementById("totalLaporan").textContent = total;
-        document.getElementById("pendingApproval").textContent = pending;
-        document.getElementById("caseClosed").textContent = closed;
-        document.getElementById("topIssue").textContent = topIssue;
-        document.getElementById("topEstate").textContent = topEstate;
-
-        document.getElementById("summaryTotal").textContent = total;
-        document.getElementById("summaryPending").textContent = pending;
-        document.getElementById("summaryClosed").textContent = closed;
-        const rankingTable = document.getElementById("rankingEstateTable");
-rankingTable.innerHTML = "";
-const slaTable = document.getElementById("slaTable");
-slaTable.innerHTML = "";
-
-querySnapshot.forEach((docSnap) => {
-  const item = docSnap.data();
-
-  if (item.status !== "Selesai") {
-    const tanggalMasuk = item.tanggal || "-";
-    const judul = item.judul || "-";
-    const estate = item.departemen || "-";
-
-    let hariBerjalan = "-";
-    let statusSLA = "Normal";
-
-    try {
-      const parts = tanggalMasuk.split("/");
-      const tanggalLaporan = new Date(
-        parts[2],
-        parts[1] - 1,
-        parts[0]
-      );
-
-      const today = new Date();
-      const diffTime = today - tanggalLaporan;
-      hariBerjalan = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      if (hariBerjalan >= 7) {
-        statusSLA = "Warning";
+      if (item.status === "Menunggu Review") {
+        open++;
       }
 
-    } catch (e) {
-      console.log(e);
-    }
-
-    slaTable.innerHTML += `
-      <tr>
-        <td>${judul}</td>
-        <td>${estate}</td>
-        <td>${tanggalMasuk}</td>
-        <td>${hariBerjalan} hari</td>
-        <td>${statusSLA}</td>
-      </tr>
-    `;
-  }
-});
-const sortedEstate = Object.entries(estateCount)
-  .sort((a, b) => b[1] - a[1]);
-
-if (sortedEstate.length === 0) {
-  rankingTable.innerHTML = `
-    <tr>
-      <td colspan="3">Belum ada data estate</td>
-    </tr>
-  `;
-} else {
-  sortedEstate.forEach((estate, index) => {
-    rankingTable.innerHTML += `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${estate[0]}</td>
-        <td>${estate[1]}</td>
-      </tr>
-    `;
-  });
-}
-      } catch (error) {
-        console.log(error);
-        alert("Gagal memuat Executive Dashboard");
+      if (item.status === "Diproses") {
+        progress++;
       }
-    }
 
-    function handleLogout() {
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.replace("login.html");
-    }
+      if (
+        item.status === "Selesai" ||
+        item.status === "Case Closed"
+      ) {
+        closed++;
+      }
 
-    window.handleLogout = handleLogout;
+      if (item.status === "Ditolak") {
+        ditolak++;
+      }
 
-    loadExecutiveDashboard();
-  </script>
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.tanggal || "-"}</td>
+          <td>${item.jenis || "-"}</td>
+          <td>${item.judul || "-"}</td>
+          <td>${item.status || "-"}</td>
+          <td>${item.approval_manager || "-"}</td>
+          <td>${item.approval_direktur || "-"}</td>
+        </tr>
+      `;
+    });
+
+    document.getElementById("totalLaporan").textContent = total;
+    document.getElementById("openCase").textContent = open;
+    document.getElementById("inProgress").textContent = progress;
+    document.getElementById("closedCase").textContent = closed;
+    document.getElementById("ditolakCase").textContent = ditolak;
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal memuat Executive Dashboard");
+  }
+}
+
+function handleLogout() {
+  localStorage.clear();
+  sessionStorage.clear();
+  alert("Logout berhasil");
+  window.location.href = "login.html";
+}
+
+window.handleLogout = handleLogout;
+
+tampilkanExecutiveDashboard();
+</script>
 
 </body>
 </html>
