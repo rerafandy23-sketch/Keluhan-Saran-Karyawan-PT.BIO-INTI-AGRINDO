@@ -449,27 +449,15 @@ window.exportExecutivePDF = exportExecutivePDF;
 window.handleLogout = handleLogout;
 
 loadExecutiveDashboard();
-  const slaTable = document.getElementById("slaTable");
-slaTable.innerHTML = "";
-
-querySnapshot.forEach((docSnap) => {
-  const item = docSnap.data();
-
-  // hanya tampilkan yang belum selesai
-  if (
-    item.status === "Case Closed" ||
-    item.status === "Selesai"
-  ) return;
-
-  const judul = item.judul || "-";
-  const departemen = item.departemen || "-";
-  const tanggalMasuk = item.tanggal || "-";
-
-  let hariBerjalan = "-";
+ if (
+  item.status !== "Case Closed" &&
+  item.status !== "Selesai"
+) {
+  let hari = "-";
   let statusSLA = "Normal";
 
   try {
-    const parts = tanggalMasuk.split("/");
+    const parts = (item.tanggal || "").split("/");
 
     const tanggalLaporan = new Date(
       parts[2],
@@ -480,34 +468,36 @@ querySnapshot.forEach((docSnap) => {
     const today = new Date();
     const diffTime = today - tanggalLaporan;
 
-    hariBerjalan = Math.floor(
+    hari = Math.floor(
       diffTime / (1000 * 60 * 60 * 24)
     );
 
-    if (hariBerjalan >= 14) {
+    if (hari >= 14) {
       statusSLA = "Critical";
+      slaWarning++;
     }
-    else if (hariBerjalan >= 7) {
+    else if (hari >= 7) {
       statusSLA = "Warning";
+      slaWarning++;
     }
-    else if (hariBerjalan >= 4) {
+    else if (hari >= 4) {
       statusSLA = "Perhatian";
     }
 
-  } catch (error) {
-    console.log(error);
+  } catch (e) {
+    console.log(e);
   }
 
   slaTable.innerHTML += `
     <tr>
-      <td>${judul}</td>
-      <td>${departemen}</td>
-      <td>${tanggalMasuk}</td>
-      <td>${hariBerjalan} Hari</td>
+      <td>${item.judul || "-"}</td>
+      <td>${estate}</td>
+      <td>${item.tanggal || "-"}</td>
+      <td>${hari} Hari</td>
       <td>${statusSLA}</td>
     </tr>
   `;
-});
+}
 </script>
 
 </body>
