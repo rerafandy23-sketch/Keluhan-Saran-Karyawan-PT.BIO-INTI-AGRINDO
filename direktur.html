@@ -126,7 +126,7 @@ async function kirimWhatsApp(target, pesan) {
     await fetch("https://api.fonnte.com/send", {
       method: "POST",
       headers: {
-        "Authorization": "XQXaZkNQ3ZrUQ3RZsxTn"
+        "Authorization": "TOKEN_FONNTE_KAMU"
       },
       body: new URLSearchParams({
         target: target,
@@ -134,11 +134,15 @@ async function kirimWhatsApp(target, pesan) {
         countryCode: "62"
       })
     });
+
+    console.log("WhatsApp berhasil dikirim");
+
   } catch (error) {
     console.log(error);
-    alert("Gagal mengirim WhatsApp");
+    alert("Gagal kirim WhatsApp");
   }
 }
+ 
 
 const userData = JSON.parse(localStorage.getItem("user"));
 
@@ -186,22 +190,52 @@ async function tampilkanDirekturPanel() {
 }
 
 async function simpanDirektur(docId) {
+  async function simpanDirektur(docId) {
   const approval = document.getElementById(`approval-${docId}`).value;
   const catatan = document.getElementById(`catatan-${docId}`).value;
 
-  await updateDoc(doc(db, "laporan", docId), {
-    approval_direktur: approval,
-    direktur_respon: catatan
-  });
+  let statusFinal = "Diproses";
 
-  await kirimWhatsApp(
-    userData.no_hp || "08xxxxxxxxxx",
-    `Laporan Anda telah diproses Direktur.
+  // AUTO CLOSE CASE
+  if (approval === "Disetujui") {
+    statusFinal = "Case Closed";
+  }
+
+  if (approval === "Ditolak") {
+    statusFinal = "Ditolak";
+  }
+
+  try {
+    await updateDoc(doc(db, "laporan", docId), {
+      approval_direktur: approval,
+      direktur_respon: catatan,
+      status: statusFinal
+    });
+
+    // NOTIFIKASI WHATSAPP FINAL
+    await kirimWhatsApp(
+      "628xxxxxxxxxx",
+      `BIACARE HR SYSTEM
+
+Approval Direktur telah diperbarui
+
 Status: ${approval}
-Catatan: ${catatan}`
-  );
+Final Status: ${statusFinal}
 
-  alert("Approval Direktur + Notifikasi WhatsApp berhasil dikirim");
+Catatan Direktur:
+${catatan}
+
+Laporan telah diproses.`
+    );
+
+    alert("Approval Direktur + Closed Case berhasil disimpan");
+
+    tampilkanDirekturPanel();
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal menyimpan approval direktur");
+  }
 }
 
 window.simpanDirektur = simpanDirektur;
