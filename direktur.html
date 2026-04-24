@@ -126,7 +126,7 @@ async function kirimWhatsApp(target, pesan) {
     await fetch("https://api.fonnte.com/send", {
       method: "POST",
       headers: {
-        "Authorization": "TOKEN_FONNTE_KAMU"
+        "Authorization": "ISI_TOKEN_FONNTE_ANDA"
       },
       body: new URLSearchParams({
         target: target,
@@ -139,64 +139,16 @@ async function kirimWhatsApp(target, pesan) {
 
   } catch (error) {
     console.log(error);
-    alert("Gagal kirim WhatsApp");
+    alert("Gagal mengirim WhatsApp");
   }
-}
- 
-
-const userData = JSON.parse(localStorage.getItem("user"));
-
-if (!userData || (userData.role || "").toLowerCase() !== "direktur") {
-  alert("Akses hanya untuk Direktur");
-  window.location.href = "login.html";
-}
-
-async function tampilkanDirekturPanel() {
-  const tbody = document.getElementById("direkturTable");
-  tbody.innerHTML = "";
-
-  const querySnapshot = await getDocs(collection(db, "laporan"));
-
-  if (querySnapshot.empty) {
-    tbody.innerHTML = `<tr><td colspan="6">Belum ada laporan</td></tr>`;
-    return;
-  }
-
-  querySnapshot.forEach((docSnap) => {
-    const item = docSnap.data();
-    const docId = docSnap.id;
-
-    tbody.innerHTML += `
-      <tr>
-        <td>${item.tanggal || "-"}</td>
-        <td>${item.jenis || "-"}</td>
-        <td>${item.judul || "-"}</td>
-        <td>
-          <select id="approval-${docId}">
-            <option value="Menunggu Approval" ${item.approval_direktur === "Menunggu Approval" ? "selected" : ""}>Menunggu Approval</option>
-            <option value="Disetujui" ${item.approval_direktur === "Disetujui" ? "selected" : ""}>Disetujui</option>
-            <option value="Ditolak" ${item.approval_direktur === "Ditolak" ? "selected" : ""}>Ditolak</option>
-          </select>
-        </td>
-        <td>
-          <textarea id="catatan-${docId}">${item.direktur_respon || ""}</textarea>
-        </td>
-        <td>
-          <button onclick="simpanDirektur('${docId}')">Simpan</button>
-        </td>
-      </tr>
-    `;
-  });
 }
 
 async function simpanDirektur(docId) {
-  async function simpanDirektur(docId) {
   const approval = document.getElementById(`approval-${docId}`).value;
   const catatan = document.getElementById(`catatan-${docId}`).value;
 
   let statusFinal = "Diproses";
 
-  // AUTO CLOSE CASE
   if (approval === "Disetujui") {
     statusFinal = "Case Closed";
   }
@@ -212,23 +164,37 @@ async function simpanDirektur(docId) {
       status: statusFinal
     });
 
-    // NOTIFIKASI WHATSAPP FINAL
-    await kirimWhatsApp(
-      "628xxxxxxxxxx",
-      `BIACARE HR SYSTEM
+    const querySnapshot = await getDocs(collection(db, "laporan"));
 
-Approval Direktur telah diperbarui
+    querySnapshot.forEach(async (docSnap) => {
+      if (docSnap.id === docId) {
+        const item = docSnap.data();
 
-Status: ${approval}
-Final Status: ${statusFinal}
+        if (item.no_hp && approval === "Disetujui") {
+          await kirimWhatsApp(
+            item.no_hp,
+            `BIACARE HR SYSTEM\n\n` +
+            `Halo ${item.nama || "Karyawan"},\n\n` +
+            `Laporan Anda dengan judul:\n"${item.judul}"\n\n` +
+            `telah selesai diproses dan dinyatakan CASE CLOSED oleh Direktur.\n\n` +
+            `Terima kasih.`
+          );
+        }
 
-Catatan Direktur:
-${catatan}
+        if (item.no_hp && approval === "Ditolak") {
+          await kirimWhatsApp(
+            item.no_hp,
+            `BIACARE HR SYSTEM\n\n` +
+            `Halo ${item.nama || "Karyawan"},\n\n` +
+            `Laporan Anda dengan judul:\n"${item.judul}"\n\n` +
+            `telah ditinjau Direktur dan statusnya DITOLAK.\n\n` +
+            `Silakan hubungi HRD untuk informasi lebih lanjut.`
+          );
+        }
+      }
+    });
 
-Laporan telah diproses.`
-    );
-
-    alert("Approval Direktur + Closed Case berhasil disimpan");
+    alert("Approval Direktur + Auto Closed Case + WhatsApp Final berhasil");
 
     tampilkanDirekturPanel();
 
