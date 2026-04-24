@@ -1,9 +1,12 @@
+<!-- GANTI SELURUH FILE direktur.html DENGAN VERSI LENGKAP INI -->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Direktur Dashboard - BIACARE HR SYSTEM</title>
+
   <style>
     body {
       margin: 0;
@@ -19,7 +22,7 @@
     }
 
     .container {
-      width: 90%;
+      width: 92%;
       margin: 30px auto;
     }
 
@@ -28,10 +31,16 @@
       padding: 24px;
       border-radius: 14px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
     }
 
     h1, h2 {
       margin: 0;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #1565c0;
     }
 
     table {
@@ -45,6 +54,7 @@
       padding: 12px;
       text-align: left;
       font-size: 14px;
+      vertical-align: top;
     }
 
     th {
@@ -56,6 +66,12 @@
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
     }
 
     button {
@@ -65,17 +81,51 @@
       padding: 10px 14px;
       border-radius: 8px;
       cursor: pointer;
+      margin: 4px;
+    }
+
+    button:hover {
+      background: #0d47a1;
+    }
+
+    .card-box {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .card-box h3 {
+      margin-bottom: 10px;
+    }
+
+    .card-box p {
+      font-size: 30px;
+      font-weight: bold;
+      color: #0E4D2B;
+    }
+
+    .table-box {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
   </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
 <div class="header">
   <h1>BIACARE HR SYSTEM</h1>
-  <p>Direktur Dashboard</p>
+  <p>Direktur Dashboard Premium</p>
 </div>
 
 <div class="container">
+
+  <!-- APPROVAL DIREKTUR -->
   <div class="card">
     <h2>Approval Direktur</h2>
 
@@ -90,6 +140,7 @@
           <th>Aksi</th>
         </tr>
       </thead>
+
       <tbody id="direkturTable">
         <tr>
           <td colspan="6">Memuat data...</td>
@@ -97,6 +148,40 @@
       </tbody>
     </table>
   </div>
+
+  <!-- SLA WARNING -->
+  <div class="card-box">
+    <h3>SLA Warning</h3>
+    <p id="slaWarning">0</p>
+  </div>
+
+  <!-- RANKING ESTATE -->
+  <div class="table-box">
+    <h2>Ranking Estate / Departemen</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Ranking</th>
+          <th>Departemen</th>
+          <th>Total Kasus</th>
+        </tr>
+      </thead>
+
+      <tbody id="rankingEstateTable">
+        <tr>
+          <td colspan="3">Memuat data...</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br>
+
+    <button onclick="exportExecutivePDF()">
+      Export Executive PDF
+    </button>
+  </div>
+
 </div>
 
 <script type="module">
@@ -134,12 +219,125 @@ async function kirimWhatsApp(target, pesan) {
         countryCode: "62"
       })
     });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-    console.log("WhatsApp berhasil dikirim");
+async function tampilkanDirekturPanel() {
+  const tbody = document.getElementById("direkturTable");
+  const rankingTable = document.getElementById("rankingEstateTable");
+
+  tbody.innerHTML = "";
+  rankingTable.innerHTML = "";
+
+  let slaWarning = 0;
+  const estateCount = {};
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "laporan"));
+
+    if (querySnapshot.empty) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6">Belum ada laporan</td>
+        </tr>
+      `;
+      return;
+    }
+
+    querySnapshot.forEach((docSnap) => {
+      const item = docSnap.data();
+      const docId = docSnap.id;
+
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.tanggal || "-"}</td>
+          <td>${item.jenis || "-"}</td>
+          <td>${item.judul || "-"}</td>
+
+          <td>
+            <select id="approval-${docId}">
+              <option value="Menunggu Approval"
+                ${item.approval_direktur === "Menunggu Approval" ? "selected" : ""}>
+                Menunggu Approval
+              </option>
+
+              <option value="Disetujui"
+                ${item.approval_direktur === "Disetujui" ? "selected" : ""}>
+                Disetujui
+              </option>
+
+              <option value="Ditolak"
+                ${item.approval_direktur === "Ditolak" ? "selected" : ""}>
+                Ditolak
+              </option>
+            </select>
+          </td>
+
+          <td>
+            <textarea id="catatan-${docId}">${item.direktur_respon || ""}</textarea>
+          </td>
+
+          <td>
+            <button onclick="simpanDirektur('${docId}')">
+              Simpan
+            </button>
+          </td>
+        </tr>
+      `;
+
+      /* SLA WARNING */
+      if (
+        item.tanggal &&
+        item.status !== "Case Closed"
+      ) {
+        try {
+          const parts = item.tanggal.split("/");
+          const tgl = new Date(parts[2], parts[1] - 1, parts[0]);
+          const today = new Date();
+
+          const diff = Math.floor(
+            (today - tgl) / (1000 * 60 * 60 * 24)
+          );
+
+          if (diff >= 7) {
+            slaWarning++;
+          }
+
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
+      /* RANKING ESTATE */
+      const estate = item.departemen || "Lainnya";
+
+      if (!estateCount[estate]) {
+        estateCount[estate] = 0;
+      }
+
+      estateCount[estate]++;
+    });
+
+    document.getElementById("slaWarning").textContent = slaWarning;
+
+    const sortedEstate = Object.entries(estateCount)
+      .sort((a, b) => b[1] - a[1]);
+
+    sortedEstate.forEach((estate, index) => {
+      rankingTable.innerHTML += `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${estate[0]}</td>
+          <td>${estate[1]}</td>
+        </tr>
+      `;
+    });
 
   } catch (error) {
     console.log(error);
-    alert("Gagal mengirim WhatsApp");
+    alert("Gagal memuat data direktur");
   }
 }
 
@@ -161,40 +359,18 @@ async function simpanDirektur(docId) {
     await updateDoc(doc(db, "laporan", docId), {
       approval_direktur: approval,
       direktur_respon: catatan,
-      status: statusFinal
+      status: statusFinal,
+
+      approved_by: "Direktur",
+      approved_at: new Date().toLocaleString("id-ID"),
+
+      closed_by: approval === "Disetujui" ? "Direktur" : "",
+      closed_at: approval === "Disetujui"
+        ? new Date().toLocaleString("id-ID")
+        : ""
     });
 
-    const querySnapshot = await getDocs(collection(db, "laporan"));
-
-    querySnapshot.forEach(async (docSnap) => {
-      if (docSnap.id === docId) {
-        const item = docSnap.data();
-
-        if (item.no_hp && approval === "Disetujui") {
-          await kirimWhatsApp(
-            item.no_hp,
-            `BIACARE HR SYSTEM\n\n` +
-            `Halo ${item.nama || "Karyawan"},\n\n` +
-            `Laporan Anda dengan judul:\n"${item.judul}"\n\n` +
-            `telah selesai diproses dan dinyatakan CASE CLOSED oleh Direktur.\n\n` +
-            `Terima kasih.`
-          );
-        }
-
-        if (item.no_hp && approval === "Ditolak") {
-          await kirimWhatsApp(
-            item.no_hp,
-            `BIACARE HR SYSTEM\n\n` +
-            `Halo ${item.nama || "Karyawan"},\n\n` +
-            `Laporan Anda dengan judul:\n"${item.judul}"\n\n` +
-            `telah ditinjau Direktur dan statusnya DITOLAK.\n\n` +
-            `Silakan hubungi HRD untuk informasi lebih lanjut.`
-          );
-        }
-      }
-    });
-
-    alert("Approval Direktur + Auto Closed Case + WhatsApp Final berhasil");
+    alert("Approval Direktur berhasil");
 
     tampilkanDirekturPanel();
 
@@ -204,7 +380,52 @@ async function simpanDirektur(docId) {
   }
 }
 
+async function exportExecutivePDF() {
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    pdf.setFontSize(16);
+    pdf.text("BIACARE HR SYSTEM - Executive Premium Report", 14, 20);
+
+    let y = 35;
+
+    const querySnapshot = await getDocs(collection(db, "laporan"));
+
+    querySnapshot.forEach((docSnap, index) => {
+      const item = docSnap.data();
+
+      const lines = [
+        `${index + 1}. ${item.judul || "-"}`,
+        `Tanggal : ${item.tanggal || "-"}`,
+        `Jenis : ${item.jenis || "-"}`,
+        `Status : ${item.status || "-"}`,
+        `Approval Direktur : ${item.approval_direktur || "-"}`,
+        `--------------------------------------`
+      ];
+
+      lines.forEach((line) => {
+        if (y > 270) {
+          pdf.addPage();
+          y = 20;
+        }
+
+        pdf.text(line, 14, y);
+        y += 8;
+      });
+    });
+
+    pdf.save("Executive-Premium-Report.pdf");
+
+  } catch (error) {
+    console.log(error);
+    alert("Gagal export PDF");
+  }
+}
+
 window.simpanDirektur = simpanDirektur;
+window.exportExecutivePDF = exportExecutivePDF;
+
 tampilkanDirekturPanel();
 </script>
 
