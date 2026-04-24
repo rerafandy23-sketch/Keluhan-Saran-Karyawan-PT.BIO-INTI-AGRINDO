@@ -234,19 +234,46 @@
     const db = getFirestore(app);
 
 window.submitComplaint = async function () {
-  const nama = document.getElementById("nama").value;
-  const nik = document.getElementById("nik").value;
-  const departemen = document.getElementById("departemen").value;
+const nama = document.getElementById("nama").value.trim();
+  const nik = document.getElementById("nik").value.trim();
+  const departemen = document.getElementById("departemen").value.trim();
   const jenis = document.getElementById("jenis").value;
-  const detail = document.getElementById("detail").value;
+  const detail = document.getElementById("detail").value.trim();
+
+  const anonimYa = document.getElementById("yes-anon").checked;
+  const anonimTidak = document.getElementById("no-anon").checked;
 
   const today = new Date();
   const tanggal = today.toLocaleDateString("id-ID");
 
+  if (!jenis || jenis === "Pilih Jenis Complaint") {
+    alert("Pilih jenis complaint terlebih dahulu");
+    return;
+  }
+
+  if (!detail) {
+    alert("Detail complaint wajib diisi");
+    return;
+  }
+
+  if (!anonimYa && !anonimTidak) {
+    alert("Pilih mode anonim atau tampilkan identitas");
+    return;
+  }
+
+  let finalNama = nama;
+  let finalNik = nik;
+
+  // jika pilih anonim
+  if (anonimYa) {
+    finalNama = "Anonim";
+    finalNik = "-";
+  }
+
   try {
     await addDoc(collection(db, "laporan"), {
-      nama: nama || "Anonim",
-      nik: nik || "-",
+      nama: finalNama || "Anonim",
+      nik: finalNik || "-",
       departemen: departemen || "-",
       jenis: jenis || "-",
       judul: detail.substring(0, 50),
