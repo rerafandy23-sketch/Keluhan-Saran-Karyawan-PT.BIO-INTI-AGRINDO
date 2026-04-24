@@ -244,9 +244,17 @@ async function tampilkanDirekturPanel() {
       return;
     }
 
-    querySnapshot.forEach((docSnap) => {
-      const item = docSnap.data();
-      const docId = docSnap.id;
+   querySnapshot.forEach((docSnap) => {
+  const item = docSnap.data();
+  const docId = docSnap.id;
+
+  // hanya tampilkan yang masih menunggu approval direktur
+  if (item.approval_direktur === "Disetujui") return;
+  if (item.approval_direktur === "Ditolak") return;
+
+  if (item.approval_manager !== "Disetujui") return;
+
+  tbody.innerHTML += `
 
       tbody.innerHTML += `
         <tr>
