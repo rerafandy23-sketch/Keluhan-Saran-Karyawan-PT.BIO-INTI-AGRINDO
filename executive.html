@@ -449,6 +449,65 @@ window.exportExecutivePDF = exportExecutivePDF;
 window.handleLogout = handleLogout;
 
 loadExecutiveDashboard();
+  const slaTable = document.getElementById("slaTable");
+slaTable.innerHTML = "";
+
+querySnapshot.forEach((docSnap) => {
+  const item = docSnap.data();
+
+  // hanya tampilkan yang belum selesai
+  if (
+    item.status === "Case Closed" ||
+    item.status === "Selesai"
+  ) return;
+
+  const judul = item.judul || "-";
+  const departemen = item.departemen || "-";
+  const tanggalMasuk = item.tanggal || "-";
+
+  let hariBerjalan = "-";
+  let statusSLA = "Normal";
+
+  try {
+    const parts = tanggalMasuk.split("/");
+
+    const tanggalLaporan = new Date(
+      parts[2],
+      parts[1] - 1,
+      parts[0]
+    );
+
+    const today = new Date();
+    const diffTime = today - tanggalLaporan;
+
+    hariBerjalan = Math.floor(
+      diffTime / (1000 * 60 * 60 * 24)
+    );
+
+    if (hariBerjalan >= 14) {
+      statusSLA = "Critical";
+    }
+    else if (hariBerjalan >= 7) {
+      statusSLA = "Warning";
+    }
+    else if (hariBerjalan >= 4) {
+      statusSLA = "Perhatian";
+    }
+
+  } catch (error) {
+    console.log(error);
+  }
+
+  slaTable.innerHTML += `
+    <tr>
+      <td>${judul}</td>
+      <td>${departemen}</td>
+      <td>${tanggalMasuk}</td>
+      <td>${hariBerjalan} Hari</td>
+      <td>${statusSLA}</td>
+    </tr>
+  `;
+});
 </script>
 
 </body>
