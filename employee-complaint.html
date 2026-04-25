@@ -219,7 +219,14 @@
       </button>
     </div>
   </div>
+<div class="card">
+  <h2>Informasi Karyawan</h2>
 
+  <p><strong>Nama:</strong> <span id="employeeNama">-</span></p>
+  <p><strong>NIK:</strong> <span id="employeeNik">-</span></p>
+  <p><strong>Jabatan:</strong> <span id="employeeJabatan">-</span></p>
+  <p><strong>Departemen:</strong> <span id="employeeDepartemen">-</span></p>
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
@@ -299,6 +306,18 @@ window.submitComplaint = async function () {
   }
 };
 </script>
+<script>
+document.getElementById("employeeNama").innerText =
+  localStorage.getItem("employee_nama") || "-";
 
+document.getElementById("employeeNik").innerText =
+  localStorage.getItem("employee_nik") || "-";
+
+document.getElementById("employeeJabatan").innerText =
+  localStorage.getItem("employee_jabatan") || "-";
+
+document.getElementById("employeeDepartemen").innerText =
+  localStorage.getItem("employee_departemen") || "-";
+</script>
 </body>
 </html>
