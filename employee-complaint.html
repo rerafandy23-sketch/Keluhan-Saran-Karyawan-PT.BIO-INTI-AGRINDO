@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Employee Complaint - Anonymous Premium Final</title>
+  <title>Employee Complaint Form</title>
 
   <style>
     * {
@@ -147,6 +147,7 @@
 
   <div class="container">
     <h1>Employee Complaint Form</h1>
+
     <p class="subtitle">
       Form ini digunakan untuk menyampaikan keluhan, saran, atau laporan internal.
       Karyawan dapat memilih untuk menampilkan identitas atau menggunakan mode anonim.
@@ -189,6 +190,7 @@
 
     <div class="form-group">
       <label>Apakah identitas ingin dirahasiakan?</label>
+
       <div class="radio-box">
         <div class="radio-item">
           <input type="radio" name="anonymous" id="yes-anon">
@@ -208,8 +210,13 @@
     </div>
 
     <div class="actions">
-      <button class="btn btn-submit" onclick="submitComplaint()">Kirim Complaint</button>
-      <button class="btn btn-reset">Reset Form</button>
+      <button class="btn btn-submit" onclick="submitComplaint()">
+        Kirim Complaint
+      </button>
+
+      <button class="btn btn-reset" onclick="location.reload()">
+        Reset Form
+      </button>
     </div>
   </div>
 
@@ -221,100 +228,81 @@
       addDoc
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-   const firebaseConfig = {
-  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
-  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
-  projectId: "keluahan-karyawan--ptbia",
-  storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
-  messagingSenderId: "855781665617",
-  appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
+      authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
+      projectId: "keluahan-karyawan--ptbia",
+      storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
+      messagingSenderId: "855781665617",
+      appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-window.submitComplaint = async function () {
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    window.submitComplaint = async function () {
+      const nama = document.getElementById("nama").value.trim();
+      const nik = document.getElementById("nik").value.trim();
+      const departemen = document.getElementById("departemen").value.trim();
+      const jenis = document.getElementById("jenis").value;
+      const detail = document.getElementById("detail").value.trim();
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCfxTY0SNtQJBAz7yu8f_BDhZ3w_O244eE",
-  authDomain: "keluahan-karyawan--ptbia.firebaseapp.com",
-  projectId: "keluahan-karyawan--ptbia",
-  storageBucket: "keluahan-karyawan--ptbia.firebasestorage.app",
-  messagingSenderId: "855781665617",
-  appId: "1:855781665617:web:c7a6a34bd1e2eca0ef0170"
-};
+      const anonimYa = document.getElementById("yes-anon").checked;
+      const anonimTidak = document.getElementById("no-anon").checked;
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+      if (jenis === "Pilih Jenis Complaint") {
+        alert("Pilih jenis complaint terlebih dahulu");
+        return;
+      }
 
-window.submitComplaint = async function () {
-  const nama = document.getElementById("nama").value.trim();
-  const nik = document.getElementById("nik").value.trim();
-  const departemen = document.getElementById("departemen").value.trim();
-  const jenis = document.getElementById("jenis").value;
-  const detail = document.getElementById("detail").value.trim();
+      if (!detail) {
+        alert("Detail complaint wajib diisi");
+        return;
+      }
 
-  const anonimYa = document.getElementById("yes-anon").checked;
-  const anonimTidak = document.getElementById("no-anon").checked;
+      if (!anonimYa && !anonimTidak) {
+        alert("Pilih mode anonim atau tampilkan identitas");
+        return;
+      }
 
-  if (jenis === "Pilih Jenis Complaint") {
-    alert("Pilih jenis complaint terlebih dahulu");
-    return;
-  }
+      let finalNama = nama;
+      let finalNik = nik;
 
-  if (!detail) {
-    alert("Detail complaint wajib diisi");
-    return;
-  }
+      if (anonimYa) {
+        finalNama = "Anonim";
+        finalNik = "-";
+      }
 
-  if (!anonimYa && !anonimTidak) {
-    alert("Pilih mode anonim atau tampilkan identitas");
-    return;
-  }
+      try {
+        await addDoc(collection(db, "complaints"), {
+          nama: finalNama || "Anonim",
+          nik: finalNik || "-",
+          department: departemen || "-",
+          jenis: jenis || "-",
 
-  let finalNama = nama;
-  let finalNik = nik;
+          complaint: detail || "-",
+          case_id: "CASE-" + Date.now(),
 
-  if (anonimYa) {
-    finalNama = "Anonim";
-    finalNik = "-";
-  }
+          status: "Submitted",
+          approval_step: "Supervisor Review",
+          priority: "Medium",
 
-  try {
-    await addDoc(collection(db, "complaints"), {
-      nama: finalNama || "Anonim",
-      nik: finalNik || "-",
-      department: departemen || "-",
+          feedback: "",
+          rating: "",
+          resolution_note: "",
 
-      complaint: detail || "-",
-      case_id: "CASE-" + Date.now(),
+          created_at: new Date()
+        });
 
-      status: "Submitted",
-      approval_step: "Supervisor Review",
-      priority: "Medium",
+        alert("Complaint berhasil dikirim!");
+        location.reload();
 
-      feedback: "",
-      rating: "",
-      resolution_note: "",
+      } catch (error) {
+        console.error(error);
+        alert("Gagal mengirim complaint");
+      }
+    };
+  </script>
 
-      created_at: new Date()
-    });
-
-    alert("Complaint berhasil dikirim!");
-    location.reload();
-
-  } catch (error) {
-    console.error(error);
-    alert("Gagal mengirim complaint");
-  }
-};
-</script>
 </body>
 </html>
