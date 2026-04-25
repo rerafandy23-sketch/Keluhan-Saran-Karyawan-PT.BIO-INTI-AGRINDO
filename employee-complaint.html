@@ -297,9 +297,11 @@
         alert("Complaint berhasil dikirim!");
         location.reload();
 
-      } catch (error) {
-        console.error(error);
-        alert("Gagal mengirim complaint");
+    } catch (error) {
+  console.error(error);
+  alert("Gagal mengirim complaint: " + error.message);
+}
+alert("Gagal mengirim complaint: " + error.message);
       }
     };
   </script>
