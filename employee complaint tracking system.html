@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employee Complaint Tracking System</title>
+  <title>Employee Personal Complaint Tracking Dashboard</title>
 
   <style>
     * {
@@ -52,24 +52,45 @@
       margin-top: 10px;
     }
 
-    table th,
-    table td {
+    th, td {
       padding: 14px;
       border-bottom: 1px solid #ddd;
       text-align: left;
       font-size: 14px;
     }
 
-    table th {
+    th {
       background: #f0f4f8;
     }
 
+    .step-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .step-box {
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: #eef4ff;
+      border: 1px solid #cfe2ff;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .active-step {
+      background: #1e88e5;
+      color: white;
+      border: none;
+    }
+
     .notes {
-      margin-top: 20px;
+      margin-top: 10px;
       padding: 16px;
       background: #f8f9fa;
       border-left: 4px solid #1e88e5;
       border-radius: 8px;
+      line-height: 1.6;
     }
 
     textarea {
@@ -93,10 +114,6 @@
       font-weight: bold;
     }
 
-    button:hover {
-      background: #1565c0;
-    }
-
     .stars {
       font-size: 24px;
       margin-top: 10px;
@@ -113,136 +130,86 @@
 </head>
 <body>
 
-  <div class="header">
-    Employee Complaint Tracking System
+<div class="header">
+  Employee Personal Complaint Tracking Dashboard
+</div>
+
+<div class="container">
+
+  <!-- SECTION 1 -->
+  <div class="card">
+    <h2>My Complaint List</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Case ID</th>
+          <th>Tanggal</th>
+          <th>Jenis Complaint</th>
+          <th>Status</th>
+          <th>Approval Step</th>
+          <th>Priority</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="myComplaintTableBody">
+        <tr>
+          <td colspan="8">Memuat data complaint...</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <div class="container">
+  <!-- SECTION 2 -->
+  <div class="card">
+    <h2>Complaint Detail</h2>
 
-    <div class="card">
-      <h2>My Complaint Status</h2>
-
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Case ID</th>
-            <th>Keluhan</th>
-            <th>Status</th>
-            <th>Approval Step</th>
-            <th>Feedback</th>
-            <th>Rating</th>
-          </tr>
-        </thead>
-        <tbody id="trackingTableBody"></tbody>
-      </table>
+    <div id="complaintDetailBox">
+      <p><strong>Case ID:</strong> <span id="detailCaseId">-</span></p>
+      <p><strong>Tanggal Pengajuan:</strong> <span id="detailTanggal">-</span></p>
+      <p><strong>Jenis Complaint:</strong> <span id="detailJenis">-</span></p>
+      <p><strong>Detail Complaint:</strong> <span id="detailComplaint">-</span></p>
+      <p><strong>Status:</strong> <span id="detailStatus">-</span></p>
+      <p><strong>Approval Step:</strong> <span id="detailApproval">-</span></p>
+      <p><strong>Priority:</strong> <span id="detailPriority">-</span></p>
+      <p><strong>Feedback HR:</strong> <span id="detailFeedback">-</span></p>
     </div>
-
-    <div class="card">
-      <h2>Approval Notes</h2>
-      <div class="notes" id="approvalNotes">
-        Menunggu data complaint dari Firebase...
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Final Feedback</h2>
-      <p><strong>Apakah Anda puas dengan penyelesaian ini?</strong></p>
-
-      <div class="stars">★★★★★</div>
-
-      <textarea placeholder="Tulis komentar Anda di sini..."></textarea>
-
-      <button>Submit Feedback</button>
-    </div>
-
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      query,
-      where
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <!-- SECTION 3 -->
+  <div class="card">
+    <h2>Approval Timeline</h2>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
-      authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
-      projectId: "hr-complaint-system-dc65e",
-      storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
-      messagingSenderId: "687763805360",
-      appId: "1:687763805360:web:b914603af7c1057ce69775"
-    };
+    <div class="step-wrapper">
+      <div class="step-box" id="step-submitted">Submitted</div>
+      <div class="step-box" id="step-supervisor">Supervisor Review</div>
+      <div class="step-box" id="step-hr">HR Review</div>
+      <div class="step-box" id="step-manager">Manager Approval</div>
+      <div class="step-box" id="step-director">Director Approval</div>
+      <div class="step-box" id="step-closed">Case Closed</div>
+    </div>
+  </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  <!-- SECTION 4 -->
+  <div class="card">
+    <h2>HR Feedback</h2>
+    <div class="notes" id="approvalNotes">
+      Menunggu feedback dari HR...
+    </div>
+  </div>
 
-    // sementara manual, nanti diganti otomatis dari login session
-    const currentUserNIK = "55";
+  <!-- SECTION 5 -->
+  <div class="card">
+    <h2>Final Employee Feedback</h2>
 
-    async function loadComplaintTracking() {
-      const tbody = document.getElementById("trackingTableBody");
-      const notes = document.getElementById("approvalNotes");
+    <p><strong>Apakah Anda puas dengan penyelesaian ini?</strong></p>
+    <div class="stars">★★★★★</div>
+    <textarea placeholder="Tulis komentar akhir Anda..."></textarea>
+    <button>Submit Feedback</button>
+  </div>
 
-      tbody.innerHTML = "";
-
-      try {
-        const q = query(
-          collection(db, "complaints"),
-          where("nik", "==", currentUserNIK)
-        );
-
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          tbody.innerHTML = `
-            <tr>
-              <td colspan="7">Belum ada complaint untuk NIK ini.</td>
-            </tr>
-          `;
-          notes.innerHTML = "Belum ada approval notes tersedia.";
-          return;
-        }
-
-        let no = 1;
-        let latestNote = "Belum ada feedback dari HR.";
-
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-
-          latestNote = data.feedback || "Complaint sedang diproses oleh HR dan Supervisor.";
-
-          tbody.innerHTML += `
-            <tr>
-              <td>${no++}</td>
-              <td>${data.case_id || "-"}</td>
-              <td>${data.jenis || data.complaint || "-"}</td>
-              <td>${data.status || "-"}</td>
-              <td>${data.approval_step || "-"}</td>
-              <td>${data.feedback || "Belum ada"}</td>
-              <td>${data.rating || "-"}</td>
-            </tr>
-          `;
-        });
-
-        notes.innerHTML = latestNote;
-
-      } catch (error) {
-        console.error(error);
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="7">Gagal memuat data complaint.</td>
-          </tr>
-        `;
-        notes.innerHTML = "Terjadi kesalahan saat mengambil data dari Firebase.";
-      }
-    }
-
-    loadComplaintTracking();
-  </script>
+</div>
 
 </body>
 </html>
