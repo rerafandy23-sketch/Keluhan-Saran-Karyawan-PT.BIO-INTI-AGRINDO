@@ -234,7 +234,9 @@
     const db = getFirestore(app);
 
 window.submitComplaint = async function () {
-const nama = document.getElementById("nama").value.trim();
+<script type="module">
+window.submitComplaint = async function () {
+  const nama = document.getElementById("nama").value.trim();
   const nik = document.getElementById("nik").value.trim();
   const departemen = document.getElementById("departemen").value.trim();
   const jenis = document.getElementById("jenis").value;
@@ -243,10 +245,7 @@ const nama = document.getElementById("nama").value.trim();
   const anonimYa = document.getElementById("yes-anon").checked;
   const anonimTidak = document.getElementById("no-anon").checked;
 
-  const today = new Date();
-  const tanggal = today.toLocaleDateString("id-ID");
-
-  if (!jenis || jenis === "Pilih Jenis Complaint") {
+  if (jenis === "Pilih Jenis Complaint") {
     alert("Pilih jenis complaint terlebih dahulu");
     return;
   }
@@ -264,42 +263,40 @@ const nama = document.getElementById("nama").value.trim();
   let finalNama = nama;
   let finalNik = nik;
 
-  // jika pilih anonim
   if (anonimYa) {
     finalNama = "Anonim";
     finalNik = "-";
   }
 
   try {
-  await addDoc(collection(db, "complaints"), {
-  await addDoc(collection(db, "complaints"), {
-  nama: finalNama || "Anonim",
-  nik: finalNik || "-",
-  department: departemen || "-",
+    await addDoc(collection(db, "complaints"), {
+      nama: finalNama || "Anonim",
+      nik: finalNik || "-",
+      department: departemen || "-",
 
-  complaint: detail || "-",
-  case_id: "CASE-" + Date.now(),
+      complaint: detail || "-",
+      case_id: "CASE-" + Date.now(),
 
-  status: "Submitted",
-  approval_step: "Supervisor Review",
-  priority: "Medium",
+      status: "Submitted",
+      approval_step: "Supervisor Review",
+      priority: "Medium",
 
-  feedback: "",
-  rating: "",
-  resolution_note: "",
+      feedback: "",
+      rating: "",
+      resolution_note: "",
 
-  created_at: new Date()
-});   
+      created_at: new Date()
+    });
 
     alert("Complaint berhasil dikirim!");
 
     location.reload();
 
   } catch (error) {
-    console.error(error);
+    console.error("ERROR:", error);
     alert("Gagal mengirim complaint");
   }
 };
-  </script>
+</script>
 </body>
 </html>
