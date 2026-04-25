@@ -220,15 +220,15 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
   authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
   projectId: "hr-complaint-system-dc65e",
@@ -237,74 +237,68 @@
   appId: "1:687763805360:web:b914603af7c1057ce69775"
 };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    window.submitComplaint = async function () {
-      const nama = document.getElementById("nama").value.trim();
-      const nik = document.getElementById("nik").value.trim();
-      const departemen = document.getElementById("departemen").value.trim();
-      const jenis = document.getElementById("jenis").value;
-      const detail = document.getElementById("detail").value.trim();
+window.submitComplaint = async function () {
+  const nama = document.getElementById("nama").value.trim();
+  const nik = document.getElementById("nik").value.trim();
+  const departemen = document.getElementById("departemen").value.trim();
+  const jenis = document.getElementById("jenis").value;
+  const detail = document.getElementById("detail").value.trim();
 
-      const anonimYa = document.getElementById("yes-anon").checked;
-      const anonimTidak = document.getElementById("no-anon").checked;
+  const anonimYa = document.getElementById("yes-anon").checked;
+  const anonimTidak = document.getElementById("no-anon").checked;
 
-      if (jenis === "Pilih Jenis Complaint") {
-        alert("Pilih jenis complaint terlebih dahulu");
-        return;
-      }
+  if (jenis === "Pilih Jenis Complaint") {
+    alert("Pilih jenis complaint terlebih dahulu");
+    return;
+  }
 
-      if (!detail) {
-        alert("Detail complaint wajib diisi");
-        return;
-      }
+  if (!detail) {
+    alert("Detail complaint wajib diisi");
+    return;
+  }
 
-      if (!anonimYa && !anonimTidak) {
-        alert("Pilih mode anonim atau tampilkan identitas");
-        return;
-      }
+  if (!anonimYa && !anonimTidak) {
+    alert("Pilih mode anonim atau tampilkan identitas");
+    return;
+  }
 
-      let finalNama = nama;
-      let finalNik = nik;
+  let finalNama = nama;
+  let finalNik = nik;
 
-      if (anonimYa) {
-        finalNama = "Anonim";
-        finalNik = "-";
-      }
+  if (anonimYa) {
+    finalNama = "Anonim";
+    finalNik = "-";
+  }
 
-      try {
-        await addDoc(collection(db, "complaints"), {
-          nama: finalNama || "Anonim",
-          nik: finalNik || "-",
-          department: departemen || "-",
-          jenis: jenis || "-",
+  try {
+    await addDoc(collection(db, "complaints"), {
+      nama: finalNama || "Anonim",
+      nik: finalNik || "-",
+      department: departemen || "-",
+      jenis: jenis || "-",
+      complaint: detail || "-",
+      case_id: "CASE-" + Date.now(),
+      status: "Submitted",
+      approval_step: "Supervisor Review",
+      priority: "Medium",
+      feedback: "",
+      rating: "",
+      resolution_note: "",
+      created_at: new Date()
+    });
 
-          complaint: detail || "-",
-          case_id: "CASE-" + Date.now(),
+    alert("Complaint berhasil dikirim!");
+    location.reload();
 
-          status: "Submitted",
-          approval_step: "Supervisor Review",
-          priority: "Medium",
-
-          feedback: "",
-          rating: "",
-          resolution_note: "",
-
-          created_at: new Date()
-        });
-
-        alert("Complaint berhasil dikirim!");
-        location.reload();
-
-    } catch (error) {
-  console.error(error);
-  alert("Gagal mengirim complaint: " + error.message);
-}
-alert("Gagal mengirim complaint: " + error.message);
-      }
-    };
-  </script>
+  } catch (error) {
+    console.error("Firebase Error:", error);
+    alert("Gagal mengirim complaint: " + error.message);
+  }
+};
+</script>
 
 </body>
 </html>
