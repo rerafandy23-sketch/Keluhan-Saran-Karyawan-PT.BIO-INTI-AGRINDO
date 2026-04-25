@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employee Personal Complaint Tracking Dashboard</title>
+  <title>Dashboard Tracking Keluhan Karyawan</title>
 
   <style>
     * {
@@ -21,7 +21,7 @@
     .header {
       background: linear-gradient(to right, #0f4c81, #1e88e5);
       color: white;
-      padding: 20px;
+      padding: 22px;
       text-align: center;
       font-size: 24px;
       font-weight: bold;
@@ -35,15 +35,15 @@
 
     .card {
       background: white;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 24px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       margin-bottom: 24px;
     }
 
     h2 {
-      margin-bottom: 20px;
       color: #0f4c81;
+      margin-bottom: 18px;
     }
 
     table {
@@ -85,11 +85,10 @@
     }
 
     .notes {
-      margin-top: 10px;
-      padding: 16px;
       background: #f8f9fa;
       border-left: 4px solid #1e88e5;
       border-radius: 8px;
+      padding: 16px;
       line-height: 1.6;
     }
 
@@ -125,37 +124,40 @@
         display: block;
         overflow-x: auto;
       }
+
+      .step-wrapper {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
 
 <div class="header">
-  Employee Personal Complaint Tracking Dashboard
+  Dashboard Tracking Keluhan Karyawan
 </div>
 
 <div class="container">
 
   <!-- SECTION 1 -->
   <div class="card">
-    <h2>My Complaint List</h2>
+    <h2>Daftar Keluhan Saya</h2>
 
     <table>
       <thead>
         <tr>
           <th>No</th>
-          <th>Case ID</th>
-          <th>Tanggal</th>
-          <th>Jenis Complaint</th>
+          <th>ID Kasus</th>
+          <th>Jenis Keluhan</th>
           <th>Status</th>
-          <th>Approval Step</th>
-          <th>Priority</th>
-          <th>Action</th>
+          <th>Tahap Approval</th>
+          <th>Feedback HR</th>
+          <th>Rating</th>
         </tr>
       </thead>
-      <tbody id="myComplaintTableBody">
+      <tbody id="trackingTableBody">
         <tr>
-          <td colspan="8">Memuat data complaint...</td>
+          <td colspan="7">Memuat data keluhan...</td>
         </tr>
       </tbody>
     </table>
@@ -163,23 +165,18 @@
 
   <!-- SECTION 2 -->
   <div class="card">
-    <h2>Complaint Detail</h2>
+    <h2>Detail Keluhan</h2>
 
-    <div id="complaintDetailBox">
-      <p><strong>Case ID:</strong> <span id="detailCaseId">-</span></p>
-      <p><strong>Tanggal Pengajuan:</strong> <span id="detailTanggal">-</span></p>
-      <p><strong>Jenis Complaint:</strong> <span id="detailJenis">-</span></p>
-      <p><strong>Detail Complaint:</strong> <span id="detailComplaint">-</span></p>
-      <p><strong>Status:</strong> <span id="detailStatus">-</span></p>
-      <p><strong>Approval Step:</strong> <span id="detailApproval">-</span></p>
-      <p><strong>Priority:</strong> <span id="detailPriority">-</span></p>
-      <p><strong>Feedback HR:</strong> <span id="detailFeedback">-</span></p>
-    </div>
+    <p><strong>ID Kasus:</strong> <span id="detailCaseId">-</span></p>
+    <p><strong>Jenis Keluhan:</strong> <span id="detailJenis">-</span></p>
+    <p><strong>Status:</strong> <span id="detailStatus">-</span></p>
+    <p><strong>Tahap Approval:</strong> <span id="detailApproval">-</span></p>
+    <p><strong>Feedback HR:</strong> <span id="detailFeedback">-</span></p>
   </div>
 
   <!-- SECTION 3 -->
   <div class="card">
-    <h2>Approval Timeline</h2>
+    <h2>Tracking Progress Keluhan</h2>
 
     <div class="step-wrapper">
       <div class="step-box" id="step-submitted">Submitted</div>
@@ -193,20 +190,20 @@
 
   <!-- SECTION 4 -->
   <div class="card">
-    <h2>HR Feedback</h2>
+    <h2>Riwayat Persetujuan</h2>
     <div class="notes" id="approvalNotes">
-      Menunggu feedback dari HR...
+      Menunggu proses approval dari HR...
     </div>
   </div>
 
   <!-- SECTION 5 -->
   <div class="card">
-    <h2>Final Employee Feedback</h2>
+    <h2>Feedback Akhir</h2>
 
     <p><strong>Apakah Anda puas dengan penyelesaian ini?</strong></p>
     <div class="stars">★★★★★</div>
     <textarea placeholder="Tulis komentar akhir Anda..."></textarea>
-    <button>Submit Feedback</button>
+    <button>Kirim Feedback</button>
   </div>
 
 </div>
