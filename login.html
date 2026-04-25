@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Karyawan</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Keluhan Karyawan</title>
 
   <style>
     * {
@@ -14,32 +14,48 @@
     }
 
     body {
-      background: #f4f6f8;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: #f4f7fb;
+      color: #1e293b;
+      padding: 30px;
     }
 
-    .login-box {
-      width: 100%;
-      max-width: 420px;
-      background: white;
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 20px;
       padding: 32px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      padding: 24px;
+      margin-bottom: 24px;
     }
 
     h1 {
-      text-align: center;
+      font-size: 28px;
       margin-bottom: 10px;
       color: #0f4c81;
     }
 
-    p {
-      text-align: center;
-      color: #666;
+    h2 {
+      font-size: 20px;
+      margin-bottom: 16px;
+      color: #0f4c81;
+    }
+
+    .subtitle {
+      color: #64748b;
       margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
     }
 
     label {
@@ -49,110 +65,399 @@
       font-size: 14px;
     }
 
-    input {
+    input,
+    select,
+    textarea {
       width: 100%;
       padding: 14px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      margin-bottom: 18px;
+      border: 1px solid #dbe2ea;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .radio-box {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .radio-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .radio-item input {
+      width: auto;
+    }
+
+    .info-box {
+      background: #f8fafc;
+      border-left: 5px solid #2563eb;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 10px;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-submit {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-reset {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
       font-size: 14px;
     }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      background: #1e88e5;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 15px;
+    th {
+      background: #f8fafc;
     }
 
-    button:hover {
-      background: #1565c0;
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="login-box">
-    <h1>Login Karyawan</h1>
-    <p>Masuk menggunakan NIK dan tanggal lahir</p>
+<div class="container">
 
-    <label>NIK</label>
-    <input type="text" id="nik" placeholder="Masukkan NIK" />
+  <h1>Dashboard Tracking Keluhan Karyawan</h1>
+  <p class="subtitle">
+    Sistem ini digunakan untuk menyampaikan keluhan, memantau proses approval,
+    serta melihat tindak lanjut penyelesaian keluhan karyawan.
+  </p>
 
-    <label>Password (Tanggal Lahir)</label>
-    <input type="text" id="password" placeholder="Contoh: 25/04/1998" />
-
-    <button onclick="loginEmployee()">Login</button>
+  <div class="card">
+    <h2>Informasi Karyawan</h2>
+    <p><strong>Nama:</strong> <span id="employeeNama">-</span></p>
+    <p><strong>NIK:</strong> <span id="employeeNik">-</span></p>
+    <p><strong>Jabatan:</strong> <span id="employeeJabatan">-</span></p>
+    <p><strong>Departemen:</strong> <span id="employeeDepartemen">-</span></p>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  <div class="card">
+    <h2>Kirim Keluhan Baru</h2>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
-      authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
-      projectId: "hr-complaint-system-dc65e",
-      storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
-      messagingSenderId: "687763805360",
-      appId: "1:687763805360:web:b914603af7c1057ce69775"
-    };
+    <div class="form-group">
+      <label>Nama Karyawan</label>
+      <input id="nama" type="text" placeholder="Masukkan nama lengkap">
+    </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    <div class="form-group">
+      <label>NIK</label>
+      <input id="nik" type="text" placeholder="Masukkan NIK karyawan">
+    </div>
 
-    window.loginEmployee = async function () {
+    <div class="form-group">
+      <label>Departemen</label>
+      <input id="departemen" type="text" placeholder="Contoh: HRGA / Produksi">
+    </div>
+
+    <div class="form-group">
+      <label>Jenis Keluhan</label>
+      <select id="jenis">
+        <option>Pilih Jenis Complaint</option>
+        <option>Bullying</option>
+        <option>Pelecehan</option>
+        <option>Diskriminasi</option>
+        <option>Masalah Payroll</option>
+        <option>Absensi</option>
+        <option>Penyalahgunaan Wewenang</option>
+        <option>Fraud Internal</option>
+        <option>Lainnya</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Detail Keluhan</label>
+      <textarea id="detail" placeholder="Tuliskan detail keluhan secara lengkap..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Apakah identitas ingin dirahasiakan?</label>
+      <div class="radio-box">
+        <div class="radio-item">
+          <input type="radio" name="anonymous" id="yes-anon">
+          <label for="yes-anon">Ya, buat anonim</label>
+        </div>
+        <div class="radio-item">
+          <input type="radio" name="anonymous" id="no-anon">
+          <label for="no-anon">Tidak, tampilkan identitas saya</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      Jika memilih mode anonim, identitas hanya dapat diakses oleh HR yang berwenang.
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-submit" onclick="submitComplaint()">Kirim Complaint</button>
+      <button class="btn btn-reset" onclick="location.reload()">Reset Form</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Daftar Keluhan Saya</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>ID Kasus</th>
+          <th>Jenis Keluhan</th>
+          <th>Status</th>
+          <th>Tahap Approval</th>
+          <th>Feedback</th>
+        </tr>
+      </thead>
+      <tbody id="trackingTableBody">
+        <tr>
+          <td colspan="6">Memuat data keluhan...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Tracking Progress Keluhan</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tahapan</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Submitted</td><td id="stepSubmitted">⏳ Menunggu</td></tr>
+        <tr><td>Supervisor Review</td><td id="stepSupervisor">⏳ Menunggu</td></tr>
+        <tr><td>HR Review</td><td id="stepHR">⏳ Menunggu</td></tr>
+        <tr><td>Manager Approval</td><td id="stepManager">⏳ Menunggu</td></tr>
+        <tr><td>Director Approval</td><td id="stepDirector">⏳ Menunggu</td></tr>
+        <tr><td>Case Closed</td><td id="stepClosed">⏳ Menunggu</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
+  authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
+  projectId: "hr-complaint-system-dc65e",
+  storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+  messagingSenderId: "687763805360",
+  appId: "1:687763805360:web:b914603af7c1057ce69775"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const currentUserNIK = localStorage.getItem("employee_nik") || "";
+
+window.submitComplaint = async function () {
+  const nama = document.getElementById("nama").value.trim();
   const nik = document.getElementById("nik").value.trim();
-  const password = document.getElementById("password").value.trim();
+  const departemen = document.getElementById("departemen").value.trim();
+  const jenis = document.getElementById("jenis").value;
+  const detail = document.getElementById("detail").value.trim();
+  const anonimYa = document.getElementById("yes-anon").checked;
+  const anonimTidak = document.getElementById("no-anon").checked;
 
-  if (!nik || !password) {
-    alert("NIK dan Password wajib diisi");
+  if (jenis === "Pilih Jenis Complaint") {
+    alert("Pilih jenis complaint terlebih dahulu");
     return;
   }
 
+  if (!detail) {
+    alert("Detail complaint wajib diisi");
+    return;
+  }
+
+  if (!anonimYa && !anonimTidak) {
+    alert("Pilih mode anonim atau tampilkan identitas");
+    return;
+  }
+
+  let finalNama = nama;
+  let finalNik = nik;
+
+  if (anonimYa) {
+    finalNama = "Anonim";
+    finalNik = "-";
+  }
+
   try {
-    const snapshot = await getDocs(collection(db, "karyawan"));
-    let loginBerhasil = false;
-
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-
-      if (
-        data.nik === nik &&
-        data.tgl_lahir === password &&
-        data.role === "staff"
-      ) {
-        loginBerhasil = true;
-
-        localStorage.setItem("employee_nik", data.nik || "");
-        localStorage.setItem("employee_nama", data.nama || "");
-        localStorage.setItem("employee_jabatan", data.jabatan || "");
-        localStorage.setItem("employee_departemen", data.departemen || "");
-        localStorage.setItem("employee_role", data.role || "");
-
-        window.location.href = "employee-complaint.html";
-      }
+    await addDoc(collection(db, "complaints"), {
+      nama: finalNama || "Anonim",
+      nik: finalNik || "-",
+      department: departemen || "-",
+      jenis: jenis || "-",
+      complaint: detail || "-",
+      case_id: "CASE-" + Date.now(),
+      status: "Submitted",
+      approval_step: "Supervisor Review",
+      feedback: "",
+      created_at: new Date()
     });
 
-    if (!loginBerhasil) {
-      alert("Login gagal. Periksa NIK dan Password");
-    }
-
+    alert("Complaint berhasil dikirim!");
+    location.reload();
   } catch (error) {
     console.error(error);
-    alert("Terjadi kesalahan saat login");
+    alert("Gagal mengirim complaint");
   }
 };
-  </script>
+
+async function loadComplaintTracking() {
+  const tbody = document.getElementById("trackingTableBody");
+  tbody.innerHTML = "";
+
+  if (!currentUserNIK) {
+    tbody.innerHTML = `<tr><td colspan="6">Data login tidak ditemukan</td></tr>`;
+    return;
+  }
+
+  const q = query(
+    collection(db, "complaints"),
+    where("nik", "==", currentUserNIK)
+  );
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) {
+    tbody.innerHTML = `<tr><td colspan="6">Belum ada keluhan</td></tr>`;
+    return;
+  }
+
+  let no = 1;
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+
+    updateTrackingStep(data.approval_step || "Submitted");
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${no++}</td>
+        <td>${data.case_id || "-"}</td>
+        <td>${data.jenis || "-"}</td>
+        <td>${data.status || "-"}</td>
+        <td>${data.approval_step || "-"}</td>
+        <td>${data.feedback || "Belum ada"}</td>
+      </tr>
+    `;
+  });
+}
+
+function updateTrackingStep(currentStep) {
+  const steps = {
+    "Submitted": "stepSubmitted",
+    "Supervisor Review": "stepSupervisor",
+    "HR Review": "stepHR",
+    "Manager Approval": "stepManager",
+    "Director Approval": "stepDirector",
+    "Case Closed": "stepClosed"
+  };
+
+  let active = false;
+
+  for (const stepName in steps) {
+    const el = document.getElementById(steps[stepName]);
+
+    if (!active) {
+      el.innerText = "✅ Selesai";
+    }
+
+    if (stepName === currentStep) {
+      el.innerText = "🔵 Sedang Diproses";
+      active = true;
+    }
+  }
+}
+
+loadComplaintTracking();
+</script>
+
+<script>
+document.getElementById("employeeNama").innerText = localStorage.getItem("employee_nama") || "-";
+document.getElementById("employeeNik").innerText = localStorage.getItem("employee_nik") || "-";
+document.getElementById("employeeJabatan").innerText = localStorage.getItem("employee_jabatan") || "-";
+document.getElementById("employeeDepartemen").innerText = localStorage.getItem("employee_departemen") || "-";
+
+document.getElementById("nama").value = localStorage.getItem("employee_nama") || "";
+document.getElementById("nik").value = localStorage.getItem("employee_nik") || "";
+document.getElementById("departemen").value = localStorage.getItem("employee_departemen") || "";
+</script>
 
 </body>
 </html>
