@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Complaint Tracking System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      color: #333;
+    }
+
+    .header {
+      background: linear-gradient(to right, #0f4c81, #1e88e5);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 1200px;
+      margin: 30px auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #0f4c81;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table th,
+    table td {
+      padding: 14px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    table th {
+      background: #f0f4f8;
+    }
+
+    .status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .review {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .closed {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background: #e0e0e0;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 18px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #1e88e5;
+      width: 60%;
+      text-align: center;
+      color: white;
+      font-size: 11px;
+      line-height: 18px;
+    }
+
+    .tracking-step {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .step {
+      background: #eef4ff;
+      border: 1px solid #cfe2ff;
+      padding: 12px;
+      border-radius: 10px;
+      min-width: 150px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .active {
+      background: #1e88e5;
+      color: white;
+      border: none;
+    }
+
+    .notes {
+      margin-top: 20px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-left: 4px solid #1e88e5;
+      border-radius: 8px;
+    }
+
+    .feedback-box {
+      margin-top: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 100px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 15px;
+      background: #1e88e5;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #1565c0;
+    }
+
+    .stars {
+      font-size: 24px;
+      margin-top: 10px;
+      color: #f4b400;
+    }
+
+    @media (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .tracking-step {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    Employee Complaint Tracking System
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>My Complaint Status</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Case ID</th>
+            <th>Keluhan</th>
+            <th>Status</th>
+            <th>Progress</th>
+            <th>Feedback</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CASE-2026-00125</td>
+            <td>Keluhan Mess Karyawan</td>
+            <td><span class="status review">HR Review</span></td>
+            <td>60%</td>
+            <td>Belum</td>
+          </tr>
+          <tr>
+            <td>CASE-2026-00110</td>
+            <td>Keterlambatan Gaji</td>
+            <td><span class="status closed">Closed</span></td>
+            <td>100%</td>
+            <td>Sudah</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Tracking Detail - CASE-2026-00125</h2>
+
+      <p><strong>Judul Keluhan:</strong> Keluhan Mess Karyawan</p>
+      <p><strong>Tanggal Pengajuan:</strong> 25 April 2026</p>
+
+      <div style="margin-top:20px;">
+        <p><strong>Progress:</strong></p>
+        <div class="progress-bar">
+          <div class="progress-fill">60%</div>
+        </div>
+      </div>
+
+      <div class="tracking-step">
+        <div class="step">Submitted</div>
+        <div class="step">Supervisor Review</div>
+        <div class="step active">HR Review</div>
+        <div class="step">Manager Approval</div>
+        <div class="step">Director Approval</div>
+        <div class="step">Case Closed</div>
+      </div>
+
+      <div class="notes">
+        <strong>HR Notes:</strong><br>
+        Keluhan sudah diterima dan sedang dalam proses peninjauan oleh tim HR untuk tindak lanjut berikutnya.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Final Feedback</h2>
+
+      <div class="feedback-box">
+        <p><strong>Apakah Anda puas dengan penyelesaian ini?</strong></p>
+
+        <div class="stars">★★★★★</div>
+
+        <textarea placeholder="Tulis komentar Anda di sini..."></textarea>
+
+        <button>Submit Feedback</button>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
