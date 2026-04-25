@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Employee Complaint Tracking System</title>
+
   <style>
     * {
       margin: 0;
@@ -63,75 +64,12 @@
       background: #f0f4f8;
     }
 
-    .status {
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      display: inline-block;
-    }
-
-    .review {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .closed {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .progress-bar {
-      width: 100%;
-      background: #e0e0e0;
-      border-radius: 20px;
-      overflow: hidden;
-      height: 18px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: #1e88e5;
-      width: 60%;
-      text-align: center;
-      color: white;
-      font-size: 11px;
-      line-height: 18px;
-    }
-
-    .tracking-step {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .step {
-      background: #eef4ff;
-      border: 1px solid #cfe2ff;
-      padding: 12px;
-      border-radius: 10px;
-      min-width: 150px;
-      text-align: center;
-      font-size: 13px;
-    }
-
-    .active {
-      background: #1e88e5;
-      color: white;
-      border: none;
-    }
-
     .notes {
       margin-top: 20px;
       padding: 16px;
       background: #f8f9fa;
       border-left: 4px solid #1e88e5;
       border-radius: 8px;
-    }
-
-    .feedback-box {
-      margin-top: 20px;
     }
 
     textarea {
@@ -170,10 +108,6 @@
         display: block;
         overflow-x: auto;
       }
-
-      .tracking-step {
-        flex-direction: column;
-      }
     }
   </style>
 </head>
@@ -191,116 +125,124 @@
       <table>
         <thead>
           <tr>
+            <th>No</th>
             <th>Case ID</th>
             <th>Keluhan</th>
             <th>Status</th>
-            <th>Progress</th>
+            <th>Approval Step</th>
             <th>Feedback</th>
+            <th>Rating</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>CASE-2026-00125</td>
-            <td>Keluhan Mess Karyawan</td>
-            <td><span class="status review">HR Review</span></td>
-            <td>60%</td>
-            <td>Belum</td>
-          </tr>
-          <tr>
-            <td>CASE-2026-00110</td>
-            <td>Keterlambatan Gaji</td>
-            <td><span class="status closed">Closed</span></td>
-            <td>100%</td>
-            <td>Sudah</td>
-          </tr>
-        </tbody>
+        <tbody id="trackingTableBody"></tbody>
       </table>
     </div>
 
     <div class="card">
-      <h2>Tracking Detail - CASE-2026-00125</h2>
-
-      <p><strong>Judul Keluhan:</strong> Keluhan Mess Karyawan</p>
-      <p><strong>Tanggal Pengajuan:</strong> 25 April 2026</p>
-
-      <div style="margin-top:20px;">
-        <p><strong>Progress:</strong></p>
-        <div class="progress-bar">
-          <div class="progress-fill">60%</div>
-        </div>
+      <h2>Approval Notes</h2>
+      <div class="notes" id="approvalNotes">
+        Menunggu data complaint dari Firebase...
       </div>
-
-      <div class="tracking-step">
-        <div class="step">Submitted</div>
-        <div class="step">Supervisor Review</div>
-        <div class="step active">HR Review</div>
-        <div class="step">Manager Approval</div>
-        <div class="step">Director Approval</div>
-        <div class="step">Case Closed</div>
-      </div>
-
-      <div class="card">
-      <h2>Approval History</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Tahapan</th>
-            <th>Approver</th>
-            <th>Tanggal</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Submitted</td>
-            <td>Employee</td>
-            <td>25 April 2026</td>
-            <td><span class="status closed">Completed</span></td>
-          </tr>
-          <tr>
-            <td>Supervisor Review</td>
-            <td>Supervisor Area</td>
-            <td>25 April 2026</td>
-            <td><span class="status closed">Approved</span></td>
-          </tr>
-          <tr>
-            <td>HR Review</td>
-            <td>HR Department</td>
-            <td>26 April 2026</td>
-            <td><span class="status review">In Progress</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="notes">
-        <strong>HR Notes:</strong><br>
-        Keluhan sudah diterima dan sedang dalam proses peninjauan oleh tim HR untuk tindak lanjut berikutnya.
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Upload Bukti Penyelesaian</h2>
-      <p><strong>Dokumen / Foto Penyelesaian:</strong></p>
-      <p style="margin-top:10px;">Foto perbaikan mess dan laporan tindak lanjut dari tim HR telah diunggah.</p>
-      <button>Lihat Bukti</button>
     </div>
 
     <div class="card">
       <h2>Final Feedback</h2>
+      <p><strong>Apakah Anda puas dengan penyelesaian ini?</strong></p>
 
-      <div class="feedback-box">
-        <p><strong>Apakah Anda puas dengan penyelesaian ini?</strong></p>
+      <div class="stars">★★★★★</div>
 
-        <div class="stars">★★★★★</div>
+      <textarea placeholder="Tulis komentar Anda di sini..."></textarea>
 
-        <textarea placeholder="Tulis komentar Anda di sini..."></textarea>
-
-        <button>Submit Feedback</button>
-      </div>
+      <button>Submit Feedback</button>
     </div>
 
   </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      query,
+      where
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
+      authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
+      projectId: "hr-complaint-system-dc65e",
+      storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+      messagingSenderId: "687763805360",
+      appId: "1:687763805360:web:b914603af7c1057ce69775"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // sementara manual, nanti diganti otomatis dari login session
+    const currentUserNIK = "55";
+
+    async function loadComplaintTracking() {
+      const tbody = document.getElementById("trackingTableBody");
+      const notes = document.getElementById("approvalNotes");
+
+      tbody.innerHTML = "";
+
+      try {
+        const q = query(
+          collection(db, "complaints"),
+          where("nik", "==", currentUserNIK)
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7">Belum ada complaint untuk NIK ini.</td>
+            </tr>
+          `;
+          notes.innerHTML = "Belum ada approval notes tersedia.";
+          return;
+        }
+
+        let no = 1;
+        let latestNote = "Belum ada feedback dari HR.";
+
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+
+          latestNote = data.feedback || "Complaint sedang diproses oleh HR dan Supervisor.";
+
+          tbody.innerHTML += `
+            <tr>
+              <td>${no++}</td>
+              <td>${data.case_id || "-"}</td>
+              <td>${data.jenis || data.complaint || "-"}</td>
+              <td>${data.status || "-"}</td>
+              <td>${data.approval_step || "-"}</td>
+              <td>${data.feedback || "Belum ada"}</td>
+              <td>${data.rating || "-"}</td>
+            </tr>
+          `;
+        });
+
+        notes.innerHTML = latestNote;
+
+      } catch (error) {
+        console.error(error);
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7">Gagal memuat data complaint.</td>
+          </tr>
+        `;
+        notes.innerHTML = "Terjadi kesalahan saat mengambil data dari Firebase.";
+      }
+    }
+
+    loadComplaintTracking();
+  </script>
 
 </body>
 </html>
