@@ -271,28 +271,25 @@ const nama = document.getElementById("nama").value.trim();
   }
 
   try {
-    await addDoc(collection(db, "laporan"), {
-      nama: finalNama || "Anonim",
-      nik: finalNik || "-",
-      departemen: departemen || "-",
-      jenis: jenis || "-",
-      judul: detail.substring(0, 50),
-      detail: detail || "-",
-      tanggal: tanggal,
+  await addDoc(collection(db, "complaints"), {
+  await addDoc(collection(db, "complaints"), {
+  nama: finalNama || "Anonim",
+  nik: finalNik || "-",
+  department: departemen || "-",
 
-      status: "Menunggu Review",
-      approval_manager: "Menunggu Approval",
-      approval_direktur: "Menunggu Approval",
+  complaint: detail || "-",
+  case_id: "CASE-" + Date.now(),
 
-      respon: "",
-      manager_respon: "",
-      direktur_respon: "",
+  status: "Submitted",
+  approval_step: "Supervisor Review",
+  priority: "Medium",
 
-      feedback_realisasi: "",
-      bukti_realisasi: "",
+  feedback: "",
+  rating: "",
+  resolution_note: "",
 
-      createdAt: new Date()
-    });
+  created_at: new Date()
+});   
 
     alert("Complaint berhasil dikirim!");
 
