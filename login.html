@@ -126,17 +126,21 @@
         snapshot.forEach((doc) => {
           const data = doc.data();
 
-          if (
-            data.nik === nik &&
-            data.tgl_lahir === password &&
-            data.role === "staff"
-          ) {
-            loginBerhasil = true;
-            localStorage.setItem("employee_nik", nik);
-            window.location.href = "employee-complaint.html";
-          }
-        });
+         if (
+  data.nik === nik &&
+  data.tgl_lahir === password &&
+  data.role === "staff"
+) {
+  loginBerhasil = true;
 
+  localStorage.setItem("employee_nik", data.nik || "");
+  localStorage.setItem("employee_nama", data.nama || "");
+  localStorage.setItem("employee_jabatan", data.jabatan || "");
+  localStorage.setItem("employee_departemen", data.departemen || "");
+  localStorage.setItem("employee_role", data.role || "");
+
+  window.location.href = "employee-complaint.html";
+}
         if (!loginBerhasil) {
           alert("Login gagal. Periksa NIK dan Password");
         }
