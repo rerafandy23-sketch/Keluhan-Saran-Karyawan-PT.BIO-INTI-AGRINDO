@@ -111,44 +111,47 @@
     const db = getFirestore(app);
 
     window.loginEmployee = async function () {
-      const nik = document.getElementById("nik").value.trim();
-      const password = document.getElementById("password").value.trim();
+  const nik = document.getElementById("nik").value.trim();
+  const password = document.getElementById("password").value.trim();
 
-      if (!nik || !password) {
-        alert("NIK dan Password wajib diisi");
-        return;
+  if (!nik || !password) {
+    alert("NIK dan Password wajib diisi");
+    return;
+  }
+
+  try {
+    const snapshot = await getDocs(collection(db, "karyawan"));
+    let loginBerhasil = false;
+
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+
+      if (
+        data.nik === nik &&
+        data.tgl_lahir === password &&
+        data.role === "staff"
+      ) {
+        loginBerhasil = true;
+
+        localStorage.setItem("employee_nik", data.nik || "");
+        localStorage.setItem("employee_nama", data.nama || "");
+        localStorage.setItem("employee_jabatan", data.jabatan || "");
+        localStorage.setItem("employee_departemen", data.departemen || "");
+        localStorage.setItem("employee_role", data.role || "");
+
+        window.location.href = "employee-complaint.html";
       }
+    });
 
-      try {
-        const snapshot = await getDocs(collection(db, "karyawan"));
-        let loginBerhasil = false;
+    if (!loginBerhasil) {
+      alert("Login gagal. Periksa NIK dan Password");
+    }
 
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-
-         if (
-  data.nik === nik &&
-  data.tgl_lahir === password &&
-  data.role === "staff"
-) {
-  loginBerhasil = true;
-
-  localStorage.setItem("employee_nik", data.nik || "");
-  localStorage.setItem("employee_nama", data.nama || "");
-  localStorage.setItem("employee_jabatan", data.jabatan || "");
-  localStorage.setItem("employee_departemen", data.departemen || "");
-  localStorage.setItem("employee_role", data.role || "");
-
-  window.location.href = "employee-complaint.html";
-}
-        if (!loginBerhasil) {
-          alert("Login gagal. Periksa NIK dan Password");
-        }
-      } catch (error) {
-        console.error(error);
-        alert("Terjadi kesalahan saat login");
-      }
-    };
+  } catch (error) {
+    console.error(error);
+    alert("Terjadi kesalahan saat login");
+  }
+};
   </script>
 
 </body>
