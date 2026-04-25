@@ -1,203 +1,151 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIACARE HR SYSTEM - Login</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Karyawan</title>
 
   <style>
-    body {
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
+    }
+
+    body {
+      background: #f4f6f8;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
     }
 
     .login-box {
+      width: 100%;
+      max-width: 420px;
       background: white;
-      width: 350px;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
-    .logo-box {
+    h1 {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 10px;
+      color: #0f4c81;
     }
 
-    .logo {
-      width: 140px;
-      height: auto;
-      margin-bottom: 15px;
-    }
-
-    .logo-box h2 {
-      color: #0E4D2B;
-      margin-bottom: 8px;
-      font-size: 28px;
-    }
-
-    .logo-box p {
-      font-weight: bold;
-      color: #2e7d32;
-      margin-bottom: 5px;
-    }
-
-    .logo-box small {
+    p {
+      text-align: center;
       color: #666;
-      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
     }
 
     input {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 14px;
     }
 
     button {
       width: 100%;
-      padding: 12px;
-      background: #2e7d32;
-      color: white;
+      padding: 14px;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
+      background: #1e88e5;
+      color: white;
+      font-weight: bold;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     button:hover {
-      background: #256b2a;
-    }
-
-    #error {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    #success {
-      color: green;
-      text-align: center;
-      margin-top: 10px;
+      background: #1565c0;
     }
   </style>
 </head>
 <body>
 
-<div class="login-box">
-  <div class="logo-box">
-    <img src="logo.png" alt="BIACARE HR SYSTEM" class="logo">
-    <h2>BIACARE HR SYSTEM</h2>
-    <p>PT. BIO INTI AGRINDO</p>
-    <small>Empowering People, Building a Better Future</small>
+  <div class="login-box">
+    <h1>Login Karyawan</h1>
+    <p>Masuk menggunakan NIK dan tanggal lahir</p>
+
+    <label>NIK</label>
+    <input type="text" id="nik" placeholder="Masukkan NIK" />
+
+    <label>Password (Tanggal Lahir)</label>
+    <input type="text" id="password" placeholder="Contoh: 25/04/1998" />
+
+    <button onclick="loginEmployee()">Login</button>
   </div>
 
-  <form id="loginForm">
-    <input type="text" id="nik" placeholder="Masukkan NIK" required>
-    <input type="date" id="dob" required>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <button type="submit">Login</button>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
+      authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
+      projectId: "hr-complaint-system-dc65e",
+      storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+      messagingSenderId: "687763805360",
+      appId: "1:687763805360:web:b914603af7c1057ce69775"
+    };
 
-    <p id="error"></p>
-    <p id="success"></p>
-  </form>
-</div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    window.loginEmployee = async function () {
+      const nik = document.getElementById("nik").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
-  authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
-  projectId: "hr-complaint-system-dc65e",
-  storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
-  messagingSenderId: "687763805360",
-  appId: "1:687763805360:web:b914603af7c1057ce69775"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const form = document.getElementById("loginForm");
-const error = document.getElementById("error");
-const success = document.getElementById("success");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const nikInput = document.getElementById("nik").value.trim();
-  const dobInput = document.getElementById("dob").value;
-
-  error.textContent = "";
-  success.textContent = "";
-
-  if (!dobInput) {
-    error.textContent = "Tanggal lahir wajib diisi";
-    return;
-  }
-
-  const parts = dobInput.split("-");
-  const dobFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
-
-  try {
-    const querySnapshot = await getDocs(collection(db, "user"));
-    let foundUser = null;
-
-    querySnapshot.forEach((doc) => {
-      const user = doc.data();
-
-      if (
-        user.nik === nikInput &&
-        user.tgl_lahir === dobFormatted
-      ) {
-        foundUser = user;
+      if (!nik || !password) {
+        alert("NIK dan Password wajib diisi");
+        return;
       }
-    });
 
-    if (foundUser) {
-      localStorage.setItem("user", JSON.stringify(foundUser));
+      try {
+        const snapshot = await getDocs(collection(db, "karyawan"));
+        let loginBerhasil = false;
 
-      success.textContent = "Login berhasil...";
+        snapshot.forEach((doc) => {
+          const data = doc.data();
 
-      setTimeout(() => {
-  const role = (foundUser.role || "").toLowerCase();
+          if (
+            data.nik === nik &&
+            data.tgl_lahir === password &&
+            data.role === "staff"
+          ) {
+            loginBerhasil = true;
+            localStorage.setItem("employee_nik", nik);
+            window.location.href = "employee-complaint.html";
+          }
+        });
 
-if (role === "admin" || role === "hr") {
-  window.location.href = "admin.html";
-}
-else if (role === "manager") {
-  window.location.href = "manager.html";
-}
-else if (role === "direktur") {
-  window.location.href = "direktur.html";
-}
-else {
-  window.location.href = "index.html";
-}
-      }, 1000);
-
-    } else {
-      error.textContent = "NIK atau tanggal lahir salah";
-    }
-
-  } catch (err) {
-    console.error(err);
-    error.textContent = "Gagal koneksi ke Firestore";
-  }
-});
-</script>
+        if (!loginBerhasil) {
+          alert("Login gagal. Periksa NIK dan Password");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Terjadi kesalahan saat login");
+      }
+    };
+  </script>
 
 </body>
 </html>
