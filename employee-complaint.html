@@ -219,13 +219,32 @@
 
 </div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
+  authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
+  projectId: "hr-complaint-system-dc65e",
+  storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+  messagingSenderId: "687763805360",
+  appId: "1:687763805360:web:b914603af7c1057ce69775"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 document.getElementById('employeeNama').innerText = localStorage.getItem('employee_nama') || '-';
 document.getElementById('employeeNik').innerText = localStorage.getItem('employee_nik') || '-';
 document.getElementById('employeeJabatan').innerText = localStorage.getItem('employee_jabatan') || '-';
 document.getElementById('employeeDepartemen').innerText = localStorage.getItem('employee_departemen') || '-';
 
-function logoutEmployee() {
+window.logoutEmployee = function () {
   const ok = confirm('Yakin ingin logout?');
   if (!ok) return;
 
@@ -236,11 +255,50 @@ function logoutEmployee() {
   localStorage.removeItem('employee_role');
 
   window.location.href = './employee-login.html';
-}
+};
 
-function submitComplaint() {
-  alert('Versi final siap. Berikutnya tinggal sambungkan penuh ke Firebase.');
-}
+window.submitComplaint = async function () {
+  const jenis = document.getElementById('jenis').value;
+  const detail = document.getElementById('detail').value.trim();
+
+  const nama = localStorage.getItem('employee_nama') || '-';
+  const nik = localStorage.getItem('employee_nik') || '-';
+  const departemen = localStorage.getItem('employee_departemen') || '-';
+
+  if (jenis === 'Pilih Jenis Keluhan') {
+    alert('Pilih jenis keluhan terlebih dahulu');
+    return;
+  }
+
+  if (!detail) {
+    alert('Detail keluhan wajib diisi');
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, 'complaints'), {
+      nama: nama,
+      nik: nik,
+      departemen: departemen,
+      jenis: jenis,
+      complaint: detail,
+      case_id: 'CASE-' + Date.now(),
+      status: 'Submitted',
+      approval_step: 'Askeb Review',
+      priority: 'Medium',
+      feedback: '',
+      rating: '',
+      resolution_note: '',
+      created_at: new Date()
+    });
+
+    alert('Keluhan berhasil dikirim!');
+    location.reload();
+  } catch (error) {
+    console.error('Firebase Error:', error);
+    alert('Gagal mengirim keluhan: ' + error.message);
+  }
+};
 </script>
 
 </body>
