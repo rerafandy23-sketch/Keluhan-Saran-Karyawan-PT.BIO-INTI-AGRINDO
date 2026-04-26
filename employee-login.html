@@ -218,7 +218,7 @@
     <div class="form-group">
       <label>Jenis Keluhan</label>
       <select id="jenis">
-        <option>Pilih Jenis Complaint</option>
+        <option>Pilih Jenis Keluhan</option>
         <option>Bullying</option>
         <option>Pelecehan</option>
         <option>Diskriminasi</option>
@@ -254,7 +254,7 @@
     </div>
 
     <div class="actions">
-      <button class="btn btn-submit" onclick="submitComplaint()">Kirim Complaint</button>
+      <button class="btn btn-submit" onclick="submitComplaint()">Kirim Keluhan</button>
       <button class="btn btn-reset" onclick="location.reload()">Reset Form</button>
     </div>
   </div>
@@ -397,7 +397,7 @@ window.submitComplaint = async function () {
   const anonimYa = document.getElementById("yes-anon").checked;
   const anonimTidak = document.getElementById("no-anon").checked;
 
-  if (jenis === "Pilih Jenis Complaint") {
+  if (jenis === "Pilih Jenis Keluhan") {
     alert("Pilih jenis complaint terlebih dahulu");
     return;
   }
@@ -491,7 +491,7 @@ function updateTrackingStep(currentStep) {
   const steps = {
     "Submitted": "stepSubmitted",
     "Askeb Review": "stepSupervisor",
-    "HR Review": "stepHR",
+    "HR Final Resolution": "stepHR",
     "Manager Approval": "stepManager",
     "Director Approval": "stepDirector",
     "Case Closed": "stepClosed"
