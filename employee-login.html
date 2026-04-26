@@ -424,7 +424,7 @@ window.submitComplaint = async function () {
     await addDoc(collection(db, "complaints"), {
       nama: finalNama || "Anonim",
       nik: finalNik || "-",
-      department: departemen || "-",
+      departemen: departemen || "-",
       jenis: jenis || "-",
       complaint: detail || "-",
       case_id: "CASE-" + Date.now(),
@@ -447,7 +447,7 @@ async function loadComplaintTracking() {
   tbody.innerHTML = "";
 
   if (!localStorage.getItem("employee_nik")) {
-    window.location.href = "login.html";
+    window.location.href = "employee-login.html";
   }
 
   if (!currentUserNIK) {
@@ -548,7 +548,7 @@ window.logoutEmployee = function () {
   localStorage.removeItem("employee_departemen");
   localStorage.removeItem("employee_role");
 
-  window.location.href = "login.html";
+  window.location.href = "employee-login.html";
 };
 </script>
 
