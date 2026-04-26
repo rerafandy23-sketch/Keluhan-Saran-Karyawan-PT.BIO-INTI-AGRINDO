@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Employee Complaint Form</title>
+  <title>Dashboard Final Keluhan Karyawan</title>
 
   <style>
     * {
@@ -20,27 +20,39 @@
     }
 
     .container {
-      max-width: 950px;
+      max-width: 1100px;
       margin: auto;
+    }
+
+    .card {
       background: #ffffff;
-      border-radius: 20px;
-      padding: 32px;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 24px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
     }
 
     h1 {
       font-size: 30px;
+      color: #0f4c81;
       margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 20px;
+      color: #0f4c81;
+      margin-bottom: 16px;
     }
 
     .subtitle {
       color: #64748b;
-      margin-bottom: 30px;
+      margin-bottom: 24px;
       line-height: 1.6;
     }
 
     .form-group {
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
 
     label {
@@ -50,87 +62,74 @@
       font-size: 14px;
     }
 
-    input,
-    select,
-    textarea {
+    input, select, textarea {
       width: 100%;
       padding: 14px;
       border: 1px solid #dbe2ea;
       border-radius: 12px;
       font-size: 14px;
-      outline: none;
     }
 
     textarea {
-      min-height: 150px;
+      min-height: 140px;
       resize: vertical;
-    }
-
-    .radio-box {
-      display: flex;
-      gap: 25px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .radio-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .radio-item input {
-      width: auto;
-    }
-
-    .info-box {
-      background: #f8fafc;
-      border-left: 5px solid #2563eb;
-      padding: 18px;
-      border-radius: 12px;
-      margin-top: 10px;
-      color: #475569;
-      font-size: 14px;
-      line-height: 1.6;
     }
 
     .actions {
       display: flex;
-      gap: 15px;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-top: 30px;
+      margin-top: 20px;
     }
 
     .btn {
       padding: 14px 24px;
       border: none;
       border-radius: 12px;
-      font-size: 14px;
-      font-weight: bold;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
     }
 
-    .btn-submit {
+    .btn-primary {
       background: #2563eb;
       color: white;
     }
 
-    .btn-reset {
+    .btn-secondary {
       background: #e2e8f0;
       color: #1e293b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f8fafc;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
     @media (max-width: 768px) {
       body {
         padding: 15px;
-      }
-
-      .container {
-        padding: 22px;
-      }
-
-      h1 {
-        font-size: 24px;
       }
 
       .actions {
@@ -140,45 +139,41 @@
       .btn {
         width: 100%;
       }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="card">
-  <h2>Informasi Karyawan</h2>
+<div class="container">
 
-  <p><strong>Nama:</strong> <span id="employeeNama">-</span></p>
-  <p><strong>NIK:</strong> <span id="employeeNik">-</span></p>
-  <p><strong>Jabatan:</strong> <span id="employeeJabatan">-</span></p>
-  <p><strong>Departemen:</strong> <span id="employeeDepartemen">-</span></p>
-</div>
-    <h1>Employee Complaint Form</h1>
-    <p class="subtitle">
-      Form ini digunakan untuk menyampaikan keluhan, saran, atau laporan internal.
-      Karyawan dapat memilih untuk menampilkan identitas atau menggunakan mode anonim.
-    </p>
-
-    <div class="form-group">
-      <label>Nama Karyawan</label>
-      <input id="nama" type="text" placeholder="Masukkan nama lengkap">
+  <div class="topbar">
+    <div>
+      <h1>Dashboard Final Keluhan Karyawan</h1>
+      <p class="subtitle">Sistem pengaduan internal PT BIO INTI AGRINDO</p>
     </div>
+    <button class="btn btn-secondary" onclick="logoutEmployee()">Logout</button>
+  </div>
+
+  <div class="card">
+    <h2>Informasi Karyawan</h2>
+    <p><strong>Nama:</strong> <span id="employeeNama">-</span></p>
+    <p><strong>NIK:</strong> <span id="employeeNik">-</span></p>
+    <p><strong>Jabatan:</strong> <span id="employeeJabatan">-</span></p>
+    <p><strong>Departemen:</strong> <span id="employeeDepartemen">-</span></p>
+  </div>
+
+  <div class="card">
+    <h2>Kirim Keluhan Baru</h2>
 
     <div class="form-group">
-      <label>NIK</label>
-      <input id="nik" type="text" placeholder="Masukkan NIK karyawan">
-    </div>
-
-    <div class="form-group">
-      <label>Departemen</label>
-      <input id="departemen" type="text" placeholder="Contoh: Produksi / HRGA / Finance">
-    </div>
-
-    <div class="form-group">
-      <label>Jenis Complaint</label>
+      <label>Jenis Keluhan</label>
       <select id="jenis">
-        <option>Pilih Jenis Complaint</option>
+        <option>Pilih Jenis Keluhan</option>
         <option>Bullying</option>
         <option>Pelecehan</option>
         <option>Diskriminasi</option>
@@ -191,140 +186,62 @@
     </div>
 
     <div class="form-group">
-      <label>Detail Complaint</label>
-      <textarea id="detail" placeholder="Tuliskan detail keluhan secara lengkap..."></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Apakah identitas ingin dirahasiakan?</label>
-
-      <div class="radio-box">
-        <div class="radio-item">
-          <input type="radio" name="anonymous" id="yes-anon">
-          <label for="yes-anon">Ya, buat anonim</label>
-        </div>
-
-        <div class="radio-item">
-          <input type="radio" name="anonymous" id="no-anon">
-          <label for="no-anon">Tidak, tampilkan identitas saya</label>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-box">
-      Jika memilih mode anonim, identitas Anda akan disembunyikan dari pihak terkait
-      dan hanya dapat diakses oleh HR yang berwenang sesuai kebijakan perusahaan.
+      <label>Detail Keluhan</label>
+      <textarea id="detail" placeholder="Tuliskan detail keluhan..."></textarea>
     </div>
 
     <div class="actions">
-      <button class="btn btn-submit" onclick="submitComplaint()">
-        Kirim Complaint
-      </button>
-
-      <button class="btn btn-reset" onclick="location.reload()">
-        Reset Form
-      </button>
+      <button class="btn btn-primary" onclick="submitComplaint()">Kirim Keluhan</button>
+      <button class="btn btn-secondary" onclick="location.reload()">Reset</button>
     </div>
   </div>
-<div class="card">
-  <h2>Informasi Karyawan</h2>
 
-  <p><strong>Nama:</strong> <span id="employeeNama">-</span></p>
-  <p><strong>NIK:</strong> <span id="employeeNik">-</span></p>
-  <p><strong>Jabatan:</strong> <span id="employeeJabatan">-</span></p>
-  <p><strong>Departemen:</strong> <span id="employeeDepartemen">-</span></p>
+  <div class="card">
+    <h2>Daftar Keluhan Saya</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>ID Kasus</th>
+          <th>Jenis</th>
+          <th>Status</th>
+          <th>Tahap Approval</th>
+          <th>Feedback</th>
+        </tr>
+      </thead>
+      <tbody id="trackingTableBody">
+        <tr>
+          <td colspan="6">Memuat data...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 </div>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
-  authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
-  projectId: "hr-complaint-system-dc65e",
-  storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
-  messagingSenderId: "687763805360",
-  appId: "1:687763805360:web:b914603af7c1057ce69775"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-window.submitComplaint = async function () {
-  const nama = document.getElementById("nama").value.trim();
-  const nik = document.getElementById("nik").value.trim();
-  const departemen = document.getElementById("departemen").value.trim();
-  const jenis = document.getElementById("jenis").value;
-  const detail = document.getElementById("detail").value.trim();
-
-  const anonimYa = document.getElementById("yes-anon").checked;
-  const anonimTidak = document.getElementById("no-anon").checked;
-
-  if (jenis === "Pilih Jenis Complaint") {
-    alert("Pilih jenis complaint terlebih dahulu");
-    return;
-  }
-
-  if (!detail) {
-    alert("Detail complaint wajib diisi");
-    return;
-  }
-
-  if (!anonimYa && !anonimTidak) {
-    alert("Pilih mode anonim atau tampilkan identitas");
-    return;
-  }
-
-  let finalNama = nama;
-  let finalNik = nik;
-
-  if (anonimYa) {
-    finalNama = "Anonim";
-    finalNik = "-";
-  }
-
-  try {
-    await addDoc(collection(db, "complaints"), {
-      nama: finalNama || "Anonim",
-      nik: finalNik || "-",
-      department: departemen || "-",
-      jenis: jenis || "-",
-      complaint: detail || "-",
-      case_id: "CASE-" + Date.now(),
-      status: "Submitted",
-      approval_step: "Supervisor Review",
-      priority: "Medium",
-      feedback: "",
-      rating: "",
-      resolution_note: "",
-      created_at: new Date()
-    });
-
-    alert("Complaint berhasil dikirim!");
-    location.reload();
-
-  } catch (error) {
-    console.error("Firebase Error:", error);
-    alert("Gagal mengirim complaint: " + error.message);
-  }
-};
-</script>
 <script>
-document.getElementById("employeeNama").innerText =
-  localStorage.getItem("employee_nama") || "-";
+document.getElementById('employeeNama').innerText = localStorage.getItem('employee_nama') || '-';
+document.getElementById('employeeNik').innerText = localStorage.getItem('employee_nik') || '-';
+document.getElementById('employeeJabatan').innerText = localStorage.getItem('employee_jabatan') || '-';
+document.getElementById('employeeDepartemen').innerText = localStorage.getItem('employee_departemen') || '-';
 
-document.getElementById("employeeNik").innerText =
-  localStorage.getItem("employee_nik") || "-";
+function logoutEmployee() {
+  const ok = confirm('Yakin ingin logout?');
+  if (!ok) return;
 
-document.getElementById("employeeJabatan").innerText =
-  localStorage.getItem("employee_jabatan") || "-";
+  localStorage.removeItem('employee_nik');
+  localStorage.removeItem('employee_nama');
+  localStorage.removeItem('employee_jabatan');
+  localStorage.removeItem('employee_departemen');
+  localStorage.removeItem('employee_role');
 
-document.getElementById("employeeDepartemen").innerText =
-  localStorage.getItem("employee_departemen") || "-";
+  window.location.href = './employee-login.html';
+}
+
+function submitComplaint() {
+  alert('Versi final siap. Berikutnya tinggal sambungkan penuh ke Firebase.');
+}
 </script>
+
 </body>
 </html>
