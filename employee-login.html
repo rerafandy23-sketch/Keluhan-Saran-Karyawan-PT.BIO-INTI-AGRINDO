@@ -85,7 +85,7 @@
   <input type="text" id="nik" placeholder="Masukkan NIK">
 
   <label>Password (Tanggal Lahir)</label>
-  <input type="text" id="password" placeholder="Contoh: 25/04/1998">
+  <input type="password" id="password" placeholder="Contoh: 25/04/1998">
 
   <button onclick="loginEmployee()">Login</button>
 </div>
@@ -99,16 +99,28 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_BUCKET",
-  messagingSenderId: "YOUR_MSG_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
+  authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
+  projectId: "hr-complaint-system-dc65e",
+  storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+  messagingSenderId: "687763805360",
+  appId: "1:687763805360:web:b914603af7c1057ce69775"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+/* AUTO REDIRECT JIKA SUDAH LOGIN */
+if (localStorage.getItem("employee_nik")) {
+  window.location.href = "employee-complaint.html";
+}
+
+/* LOGIN DENGAN TOMBOL ENTER */
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    loginEmployee();
+  }
+});
 
 window.loginEmployee = async function () {
   const nik = document.getElementById("nik").value.trim();
@@ -119,31 +131,37 @@ window.loginEmployee = async function () {
     return;
   }
 
-  const snapshot = await getDocs(collection(db, "karyawan"));
-  let loginBerhasil = false;
+  try {
+    const snapshot = await getDocs(collection(db, "karyawan"));
+    let loginBerhasil = false;
 
-  snapshot.forEach((doc) => {
-    const data = doc.data();
+    snapshot.forEach((doc) => {
+      const data = doc.data();
 
-    if (
-      data.nik === nik &&
-      data.tgl_lahir === password &&
-      data.role === "staff"
-    ) {
-      loginBerhasil = true;
+      if (
+        data.nik === nik &&
+        data.tgl_lahir === password &&
+        data.role === "staff"
+      ) {
+        loginBerhasil = true;
 
-      localStorage.setItem("employee_nik", data.nik || "");
-      localStorage.setItem("employee_nama", data.nama || "");
-      localStorage.setItem("employee_jabatan", data.jabatan || "");
-      localStorage.setItem("employee_departemen", data.departemen || "");
-      localStorage.setItem("employee_role", data.role || "");
+        localStorage.setItem("employee_nik", data.nik || "");
+        localStorage.setItem("employee_nama", data.nama || "");
+        localStorage.setItem("employee_jabatan", data.jabatan || "");
+        localStorage.setItem("employee_departemen", data.departemen || "");
+        localStorage.setItem("employee_role", data.role || "");
 
-      window.location.href = "employee-complaint.html";
+        window.location.href = "employee-complaint.html";
+      }
+    });
+
+    if (!loginBerhasil) {
+      alert("Login gagal. Periksa NIK dan Password");
     }
-  });
 
-  if (!loginBerhasil) {
-    alert("Login gagal. Periksa NIK dan Password");
+  } catch (error) {
+    console.error("Login Error:", error);
+    alert("Terjadi kesalahan saat login");
   }
 };
 </script>
