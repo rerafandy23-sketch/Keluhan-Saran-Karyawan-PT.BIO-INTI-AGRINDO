@@ -180,7 +180,10 @@
 
 <div class="container">
 
-  <h1>Dashboard Tracking Keluhan Karyawan</h1>
+  <div style="display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
+    <h1>Dashboard Tracking Keluhan Karyawan</h1>
+    <button class="btn btn-reset" onclick="logoutEmployee()">Logout</button>
+  </div>
   <p class="subtitle">
     Sistem ini digunakan untuk menyampaikan keluhan, memantau proses approval,
     serta melihat tindak lanjut penyelesaian keluhan karyawan.
@@ -289,13 +292,55 @@
       </thead>
       <tbody>
         <tr><td>Submitted</td><td id="stepSubmitted">⏳ Menunggu</td></tr>
-        <tr><td>Supervisor Review</td><td id="stepSupervisor">⏳ Menunggu</td></tr>
+        <tr><td>Askeb Review</td><td id="stepSupervisor">⏳ Menunggu</td></tr>
         <tr><td>HR Review</td><td id="stepHR">⏳ Menunggu</td></tr>
         <tr><td>Manager Approval</td><td id="stepManager">⏳ Menunggu</td></tr>
         <tr><td>Director Approval</td><td id="stepDirector">⏳ Menunggu</td></tr>
         <tr><td>Case Closed</td><td id="stepClosed">⏳ Menunggu</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="card">
+    <h2>Feedback Akhir</h2>
+
+    <p><strong>Apakah Anda puas dengan penyelesaian keluhan ini?</strong></p>
+
+    <div class="form-group">
+      <label>Rating</label>
+      <select id="finalRating">
+        <option value="">Pilih Rating</option>
+        <option value="5">★★★★★ - Sangat Puas</option>
+        <option value="4">★★★★ - Puas</option>
+        <option value="3">★★★ - Cukup</option>
+        <option value="2">★★ - Kurang Puas</option>
+        <option value="1">★ - Tidak Puas</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Komentar Akhir</label>
+      <textarea id="finalComment" placeholder="Tulis komentar akhir Anda..."></textarea>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-submit" onclick="submitFinalFeedback()">Kirim Feedback</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Bukti Penyelesaian</h2>
+
+    <p><strong>Dokumen / Foto Penyelesaian:</strong></p>
+    <p id="resolutionFileText" style="margin-top:10px; color:#475569;">
+      Belum ada bukti penyelesaian yang diunggah oleh HR.
+    </p>
+
+    <div class="actions">
+      <button class="btn btn-submit" onclick="lihatBuktiPenyelesaian()">
+        Lihat Bukti
+      </button>
+    </div>
   </div>
 
 </div>
@@ -323,6 +368,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const currentUserNIK = localStorage.getItem("employee_nik") || "";
+
+window.submitFinalFeedback = async function () {
+  const rating = document.getElementById("finalRating").value;
+  const comment = document.getElementById("finalComment").value.trim();
+
+  if (!rating) {
+    alert("Pilih rating terlebih dahulu");
+    return;
+  }
+
+  if (!comment) {
+    alert("Komentar akhir wajib diisi");
+    return;
+  }
+
+  alert("Feedback akhir berhasil dikirim");
+  document.getElementById("finalRating").value = "";
+  document.getElementById("finalComment").value = "";
+};
 
 window.submitComplaint = async function () {
   const nama = document.getElementById("nama").value.trim();
@@ -365,7 +429,7 @@ window.submitComplaint = async function () {
       complaint: detail || "-",
       case_id: "CASE-" + Date.now(),
       status: "Submitted",
-      approval_step: "Supervisor Review",
+      approval_step: "Askeb Review",
       feedback: "",
       created_at: new Date()
     });
@@ -381,6 +445,10 @@ window.submitComplaint = async function () {
 async function loadComplaintTracking() {
   const tbody = document.getElementById("trackingTableBody");
   tbody.innerHTML = "";
+
+  if (!localStorage.getItem("employee_nik")) {
+    window.location.href = "login.html";
+  }
 
   if (!currentUserNIK) {
     tbody.innerHTML = `<tr><td colspan="6">Data login tidak ditemukan</td></tr>`;
@@ -422,7 +490,7 @@ async function loadComplaintTracking() {
 function updateTrackingStep(currentStep) {
   const steps = {
     "Submitted": "stepSubmitted",
-    "Supervisor Review": "stepSupervisor",
+    "Askeb Review": "stepSupervisor",
     "HR Review": "stepHR",
     "Manager Approval": "stepManager",
     "Director Approval": "stepDirector",
@@ -457,6 +525,31 @@ document.getElementById("employeeDepartemen").innerText = localStorage.getItem("
 document.getElementById("nama").value = localStorage.getItem("employee_nama") || "";
 document.getElementById("nik").value = localStorage.getItem("employee_nik") || "";
 document.getElementById("departemen").value = localStorage.getItem("employee_departemen") || "";
+
+document.getElementById("resolutionFileText").innerText =
+  localStorage.getItem("employee_resolution_note") ||
+  "Belum ada bukti penyelesaian yang diunggah oleh HR.";
+
+window.lihatBuktiPenyelesaian = function () {
+  const note = localStorage.getItem("employee_resolution_note") ||
+    "Belum ada bukti penyelesaian yang tersedia saat ini.";
+
+  alert(note);
+};
+
+window.logoutEmployee = function () {
+  const konfirmasi = confirm("Yakin ingin logout dari dashboard karyawan?");
+
+  if (!konfirmasi) return;
+
+  localStorage.removeItem("employee_nik");
+  localStorage.removeItem("employee_nama");
+  localStorage.removeItem("employee_jabatan");
+  localStorage.removeItem("employee_departemen");
+  localStorage.removeItem("employee_role");
+
+  window.location.href = "login.html";
+};
 </script>
 
 </body>
