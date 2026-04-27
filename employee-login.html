@@ -152,7 +152,7 @@ window.loginUser = async function () {
 
         const role = (data.role || "").toLowerCase();
 
-        if (role === "staff") {
+        if (role === "employee") {
           window.location.href = "./employee-complaint.html";
         } 
         else if (role === "hr") {
