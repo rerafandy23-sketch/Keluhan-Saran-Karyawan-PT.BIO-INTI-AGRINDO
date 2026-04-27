@@ -80,18 +80,33 @@
 
 <div class="login-box">
   <h1>Login Sistem Karyawan</h1>
+
   <p>
     Login menggunakan NIK dan Password<br>
     untuk Employee, HR, Manager, Director, dan Executive
   </p>
 
-  <label>NIK</label>
-  <input type="text" id="nik" placeholder="Masukkan NIK">
+  <form onsubmit="loginUser(); return false;">
 
-  <label>Password</label>
-  <input type="password" id="password" placeholder="Masukkan Password">
+    <label>NIK</label>
+    <input
+      type="text"
+      id="nik"
+      placeholder="Masukkan NIK"
+    >
 
-  <button onclick="loginUser()">Login</button>
+    <label>Password</label>
+    <input
+      type="password"
+      id="password"
+      placeholder="Masukkan Password"
+    >
+
+    <button type="submit">
+      Login
+    </button>
+
+  </form>
 </div>
 
 <script type="module">
@@ -114,16 +129,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* LOGIN DENGAN ENTER */
-document.addEventListener("keydown", function(event) {
+/* LOGIN DENGAN TOMBOL ENTER */
+document.addEventListener("keydown", function (event) {
   if (event.key === "Enter") {
     loginUser();
   }
 });
 
 window.loginUser = async function () {
+  console.log("LOGIN BUTTON BERJALAN");
+
   const nik = document.getElementById("nik").value.trim();
   const password = document.getElementById("password").value.trim();
+
+  console.log("NIK INPUT:", nik);
+  console.log("PASSWORD INPUT:", password);
 
   if (!nik || !password) {
     alert("NIK dan Password wajib diisi");
@@ -132,16 +152,23 @@ window.loginUser = async function () {
 
   try {
     const snapshot = await getDocs(collection(db, "karyawan"));
+
+    console.log("TOTAL DATA FIREBASE:", snapshot.size);
+
     let loginBerhasil = false;
 
     snapshot.forEach((doc) => {
       const data = doc.data();
+
+      console.log("DATA USER:", data);
 
       if (
         data.nik === nik &&
         data.password === password &&
         data.status_aktif === "Aktif"
       ) {
+        console.log("USER DITEMUKAN");
+
         loginBerhasil = true;
 
         localStorage.setItem("employee_nik", data.nik || "");
@@ -152,21 +179,23 @@ window.loginUser = async function () {
 
         const role = (data.role || "").toLowerCase();
 
+        console.log("ROLE:", role);
+
         if (role === "employee") {
           window.location.href = "./employee-complaint.html";
-        } 
+        }
         else if (role === "hr") {
           window.location.href = "./index.html";
-        } 
+        }
         else if (role === "manager") {
           window.location.href = "./manager.html";
-        } 
+        }
         else if (role === "director") {
           window.location.href = "./direktur.html";
-        } 
+        }
         else if (role === "executive") {
           window.location.href = "./executive.html";
-        } 
+        }
         else {
           alert("Role user tidak dikenali");
         }
@@ -174,11 +203,12 @@ window.loginUser = async function () {
     });
 
     if (!loginBerhasil) {
+      console.log("LOGIN GAGAL");
       alert("Login gagal. Periksa NIK dan Password");
     }
 
   } catch (error) {
-    console.error("Login Error:", error);
+    console.error("LOGIN ERROR:", error);
     alert("Terjadi kesalahan saat login");
   }
 };
