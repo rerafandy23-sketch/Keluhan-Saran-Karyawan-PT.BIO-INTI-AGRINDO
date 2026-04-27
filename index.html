@@ -392,29 +392,26 @@ loadComplaints();
 
   window.toggleSidebar = toggleSidebar;
 </script>
-  <script>
 function logoutUser() {
- localStorage.removeItem("userRole");
-  localStorage.removeItem("userName");
-  localStorage.removeItem("user");
+  localStorage.removeItem("employee_nik");
+  localStorage.removeItem("employee_nama");
+  localStorage.removeItem("employee_jabatan");
+  localStorage.removeItem("employee_departemen");
+  localStorage.removeItem("employee_role");
 
   alert("Logout berhasil");
-
   window.location.href = "./employee-login.html";
 }
-</script>
-  <script>
+
 function applyRoleAccess() {
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const nikLogin = localStorage.getItem("employee_nik");
+  const roleLogin = (localStorage.getItem("employee_role") || "").toLowerCase();
 
-if (!userData) {
-  window.location.href = "./employee-login.html";
-  return;
-}
+  if (!nikLogin) {
+    window.location.href = "./employee-login.html";
+    return;
+  }
 
-  const role = userData.role ? userData.role.toLowerCase() : "";
-
-  // Default semua tampil
   const allMenus = [
     "menu-dashboard",
     "menu-complaint",
@@ -426,33 +423,35 @@ if (!userData) {
 
   allMenus.forEach(id => {
     const menu = document.getElementById(id);
-    if (menu) menu.style.display = "block";
+    if (menu) {
+      menu.style.display = "block";
+    }
   });
 
-  // Role: Employee
-  if (role === "employee") {
+  // Employee
+  if (roleLogin === "employee") {
     document.getElementById("menu-followup").style.display = "none";
     document.getElementById("menu-caseclose").style.display = "none";
     document.getElementById("menu-reports").style.display = "none";
     document.getElementById("menu-settings").style.display = "none";
   }
 
-  // Role: Manager
-  if (role === "manager") {
+  // Manager
+  if (roleLogin === "manager") {
     document.getElementById("menu-complaint").style.display = "none";
     document.getElementById("menu-caseclose").style.display = "none";
     document.getElementById("menu-settings").style.display = "none";
   }
 
-  // Role: Director
-  if (role === "director") {
+  // Director
+  if (roleLogin === "director") {
     document.getElementById("menu-complaint").style.display = "none";
     document.getElementById("menu-followup").style.display = "none";
     document.getElementById("menu-caseclose").style.display = "none";
     document.getElementById("menu-settings").style.display = "none";
   }
 
-  // Admin = full access
+  // HR = full access
 }
 
 applyRoleAccess();
