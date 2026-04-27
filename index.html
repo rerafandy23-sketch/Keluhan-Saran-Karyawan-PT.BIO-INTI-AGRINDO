@@ -394,22 +394,23 @@ loadComplaints();
 </script>
   <script>
 function logoutUser() {
-  localStorage.removeItem("userRole");
+ localStorage.removeItem("userRole");
   localStorage.removeItem("userName");
+  localStorage.removeItem("user");
 
   alert("Logout berhasil");
 
-  window.location.href = "login.html";
+  window.location.href = "./employee-login.html";
 }
 </script>
   <script>
 function applyRoleAccess() {
   const userData = JSON.parse(localStorage.getItem("user"));
 
-  if (!userData) {
-    window.location.href = "login.html";
-    return;
-  }
+if (!userData) {
+  window.location.href = "./employee-login.html";
+  return;
+}
 
   const role = userData.role ? userData.role.toLowerCase() : "";
 
