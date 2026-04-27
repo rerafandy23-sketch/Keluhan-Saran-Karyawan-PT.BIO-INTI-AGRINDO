@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Karyawan</title>
+  <title>Login Sistem Karyawan</title>
 
   <style>
     * {
@@ -23,23 +23,24 @@
 
     .login-box {
       width: 100%;
-      max-width: 420px;
+      max-width: 430px;
       background: white;
       padding: 32px;
-      border-radius: 16px;
+      border-radius: 18px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 10px;
       color: #0f4c81;
+      margin-bottom: 10px;
     }
 
     p {
       text-align: center;
       color: #666;
       margin-bottom: 24px;
+      line-height: 1.5;
     }
 
     label {
@@ -66,8 +67,8 @@
       background: #1e88e5;
       color: white;
       font-weight: bold;
-      cursor: pointer;
       font-size: 15px;
+      cursor: pointer;
     }
 
     button:hover {
@@ -78,16 +79,19 @@
 <body>
 
 <div class="login-box">
-  <h1>Login Karyawan</h1>
-  <p>Masuk menggunakan NIK dan tanggal lahir</p>
+  <h1>Login Sistem Karyawan</h1>
+  <p>
+    Login menggunakan NIK dan Password<br>
+    untuk Employee, HR, Manager, Director, dan Executive
+  </p>
 
   <label>NIK</label>
   <input type="text" id="nik" placeholder="Masukkan NIK">
 
-  <label>Password (Tanggal Lahir)</label>
-  <input type="password" id="password" placeholder="Contoh: 25/04/1998">
+  <label>Password</label>
+  <input type="password" id="password" placeholder="Masukkan Password">
 
-  <button onclick="loginEmployee()">Login</button>
+  <button onclick="loginUser()">Login</button>
 </div>
 
 <script type="module">
@@ -110,19 +114,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-/* AUTO REDIRECT JIKA SUDAH LOGIN */
-if (localStorage.getItem("employee_nik")) {
-  window.location.href = "employee-complaint.html";
-}
-
-/* LOGIN DENGAN TOMBOL ENTER */
+/* LOGIN DENGAN ENTER */
 document.addEventListener("keydown", function(event) {
   if (event.key === "Enter") {
-    loginEmployee();
+    loginUser();
   }
 });
 
-window.loginEmployee = async function () {
+window.loginUser = async function () {
   const nik = document.getElementById("nik").value.trim();
   const password = document.getElementById("password").value.trim();
 
@@ -140,8 +139,8 @@ window.loginEmployee = async function () {
 
       if (
         data.nik === nik &&
-        data.tgl_lahir === password &&
-        data.role === "staff"
+        data.password === password &&
+        data.status_aktif === "Aktif"
       ) {
         loginBerhasil = true;
 
@@ -151,7 +150,26 @@ window.loginEmployee = async function () {
         localStorage.setItem("employee_departemen", data.departemen || "");
         localStorage.setItem("employee_role", data.role || "");
 
-        window.location.href = "employee-complaint.html";
+        const role = (data.role || "").toLowerCase();
+
+        if (role === "staff") {
+          window.location.href = "./employee-complaint.html";
+        } 
+        else if (role === "hr") {
+          window.location.href = "./index.html";
+        } 
+        else if (role === "manager") {
+          window.location.href = "./manager.html";
+        } 
+        else if (role === "director") {
+          window.location.href = "./direktur.html";
+        } 
+        else if (role === "executive") {
+          window.location.href = "./executive.html";
+        } 
+        else {
+          alert("Role user tidak dikenali");
+        }
       }
     });
 
