@@ -154,11 +154,13 @@ async function loadData() {
 
     total++;
 
-    if (d.status === "Closed") {
-      closed++;
-    } else {
-      open++;
-    }
+  const status = (d.status || "").toLowerCase();
+
+if (status === "closed") {
+  closed++;
+} else {
+  open++;
+}
 
     table.innerHTML += `
       <tr>
@@ -166,11 +168,14 @@ async function loadData() {
         <td>${d.nama}</td>
         <td>${d.departemen}</td>
         <td>${d.jenis}</td>
-        <td>${d.status}</td>
+        const statusText = (d.status || "");
+const statusLower = statusText.toLowerCase();
+  ${d.status}
+</td>
         <td>
-          <a href="./case-close.html?id=${doc.id}">
-            <button class="btn-close">Close</button>
-          </a>
+          <button class="btn-close" onclick="closeCase('${doc.id}')">
+  Close
+</button>
         </td>
       </tr>
     `;
@@ -180,7 +185,19 @@ async function loadData() {
   document.getElementById("open").innerText = open;
   document.getElementById("closed").innerText = closed;
 }
+async function closeCase(id) {
+  try {
+    await updateDoc(doc(db, "complaints", id), {
+      status: "Closed"
+    });
 
+    alert("Case berhasil di-close");
+    location.reload();
+  } catch (error) {
+    alert("Gagal close case");
+    console.error(error);
+  }
+}
 loadData();
 </script>
 
