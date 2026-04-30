@@ -1,137 +1,18 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BIACARE HR SYSTEM - Dashboard</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-    }
-
-    .sidebar {
-      width: 250px;
-      height: 100vh;
-      background: #0f172a;
-      color: white;
-      position: fixed;
-      padding: 20px;
-    }
-
-    .sidebar h2 {
-      margin-bottom: 30px;
-    }
-
-    .sidebar a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      padding: 12px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-    }
-
-    .sidebar a:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .main {
-      margin-left: 250px;
-      padding: 20px;
-    }
-
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    button {
-      padding: 6px 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .btn-close {
-      background: green;
-      color: white;
-    }
-
-  </style>
-</head>
-<body>
-
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <h2>HR System</h2>
-
-  <a href="#">Dashboard</a>
-  <a href="./employee-complaint.html">Employee Complaint</a>
-  <a href="./case-close.html">Case Close</a>
-  <a href="#" onclick="logoutUser()">Logout</a>
-</div>
-
-<!-- MAIN -->
-<div class="main">
-
-  <h1>Dashboard HR Complaint</h1>
-
-  <!-- CARD -->
-  <div class="card">
-    <h3>Total Complaint: <span id="total">0</span></h3>
-    <h3>Open: <span id="open">0</span></h3>
-    <h3>Closed: <span id="closed">0</span></h3>
-  </div>
-
-  <!-- TABLE -->
-  <div class="card">
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama</th>
-          <th>Departemen</th>
-          <th>Jenis</th>
-          <th>Status</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
-
-</div>
-
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore,
   collection,
-  getDocs
+  getDocs,
+  doc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCy9-XeYCtRIizGgReyiFmfEY6wj7kbKl4",
   authDomain: "hr-complaint-system-dc65e.firebaseapp.com",
   projectId: "hr-complaint-system-dc65e",
-  storageBucket: "hr-complaint-system-dc65e.firebasestorage.app",
+  storageBucket: "hr-complaint-system-dc65e.appspot.com",
   messagingSenderId: "687763805360",
   appId: "1:687763805360:web:b914603af7c1057ce69775"
 };
@@ -141,41 +22,44 @@ const db = getFirestore(app);
 
 async function loadData() {
   const snapshot = await getDocs(collection(db, "complaints"));
-
   const table = document.getElementById("tableBody");
+
+  table.innerHTML = ""; // 🔥 penting biar tidak double
 
   let total = 0;
   let open = 0;
   let closed = 0;
   let no = 1;
 
-  snapshot.forEach(doc => {
-    const d = doc.data();
+  snapshot.forEach(docSnap => {
+    const d = docSnap.data();
 
     total++;
 
-  const status = (d.status || "").toLowerCase();
+    // ✅ STATUS FIX
+    const statusText = d.status || "Open";
+    const statusLower = statusText.toLowerCase();
 
-if (status === "closed") {
-  closed++;
-} else {
-  open++;
-}
+    if (statusLower === "closed") {
+      closed++;
+    } else {
+      open++;
+    }
 
+    // ✅ RENDER TABLE (BERSIH)
     table.innerHTML += `
       <tr>
         <td>${no++}</td>
-        <td>${d.nama}</td>
-        <td>${d.departemen}</td>
-        <td>${d.jenis}</td>
-        const statusText = (d.status || "");
-const statusLower = statusText.toLowerCase();
-  ${d.status}
-</td>
+        <td>${d.nama || "-"}</td>
+        <td>${d.departemen || "-"}</td>
+        <td>${d.jenis || "-"}</td>
+        <td style="color:${statusLower === "closed" ? "green" : "orange"}">
+          ${statusText}
+        </td>
         <td>
-          <button class="btn-close" onclick="closeCase('${doc.id}')">
-  Close
-</button>
+          <button class="btn-close" onclick="closeCase('${docSnap.id}')">
+            Close
+          </button>
         </td>
       </tr>
     `;
@@ -185,36 +69,24 @@ const statusLower = statusText.toLowerCase();
   document.getElementById("open").innerText = open;
   document.getElementById("closed").innerText = closed;
 }
-async function closeCase(id) {
+
+// ✅ CLOSE CASE REAL FIREBASE
+window.closeCase = async function (id) {
+  if (!confirm("Yakin ingin close case ini?")) return;
+
   try {
     await updateDoc(doc(db, "complaints", id), {
       status: "Closed"
     });
 
     alert("Case berhasil di-close");
-    location.reload();
+    loadData(); // reload data tanpa refresh
   } catch (error) {
-    alert("Gagal close case");
     console.error(error);
+    alert("Gagal close case");
   }
-}
+};
+
+// LOAD DATA
 loadData();
 </script>
-
-<!-- AUTH SYSTEM -->
-<script>
-function logoutUser() {
-  localStorage.clear();
-  window.location.href = "./employee-login.html";
-}
-
-// PROTEKSI LOGIN (INI YANG BIKIN KAMU TADI ERROR)
-const nik = localStorage.getItem("employee_nik");
-
-if (!nik) {
-  window.location.href = "./employee-login.html";
-}
-</script>
-
-</body>
-</html>
