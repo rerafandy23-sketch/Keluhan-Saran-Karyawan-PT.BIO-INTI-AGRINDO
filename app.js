@@ -133,6 +133,7 @@ const operatorStatus = document.querySelector("#operatorStatus");
 const operatorLogout = document.querySelector("#operatorLogout");
 const operatorTabs = document.querySelectorAll(".operator-tab");
 const operatorActiveBadge = document.querySelector("#operatorActiveBadge");
+const operatorSuccess = document.querySelector("#operatorSuccess");
 const deleteAllProducts = document.querySelector("#deleteAllProducts");
 const excelFile = document.querySelector("#excelFile");
 const importExcel = document.querySelector("#importExcel");
@@ -322,9 +323,10 @@ function setOperatorAccess(active, code = "") {
   productForm.hidden = !active;
   operatorSuggestions.hidden = !active;
   operatorActiveBadge.hidden = !active;
+  operatorSuccess.hidden = !active;
   updateOperatorVisibility();
   if (active) {
-    operatorStatus.textContent = "Login operator berhasil. Anda masuk sebagai operator KUNBsmart.";
+    operatorStatus.textContent = "";
     operatorCode.value = "";
   }
 }

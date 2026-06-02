@@ -567,6 +567,16 @@ textarea {
   font-weight: 900;
 }
 
+.operator-success {
+  margin-bottom: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(46, 125, 50, 0.22);
+  border-radius: 12px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  font-weight: 900;
+}
+
 .suggestion-item {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
